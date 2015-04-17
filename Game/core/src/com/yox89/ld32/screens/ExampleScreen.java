@@ -30,8 +30,8 @@ public class ExampleScreen extends BaseScreen {
 
 		final float mvx = GAME_WORLD_WIDTH / 4;
 		actor.addAction(Actions.forever(Actions.sequence(
-				Actions.moveBy(mvx, 0f, 2f, Interpolation.sine),
-				Actions.moveBy(-mvx, 0f, 2f, Interpolation.sine))));
+				Actions.moveBy(mvx, 0f, 2f, Interpolation.bounce),
+				Actions.moveBy(-mvx, 0f, 2f, Interpolation.bounce))));
 
 		final Label label = new Label("Hello, I am ui", new LabelStyle(
 				new BitmapFont(), Color.CYAN)) {
