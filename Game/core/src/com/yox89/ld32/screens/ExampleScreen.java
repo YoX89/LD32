@@ -77,7 +77,7 @@ public class ExampleScreen extends BaseScreen {
 			batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
 					getWidth(), getHeight(), getScaleX(), getScaleY(),
 					getRotation(), 0, 0, mTexture.getWidth(),
-					mTexture.getHeight(), false, false);
+					mTexture.getHeight(), false, true);
 		}
 	}
 }
