@@ -44,7 +44,7 @@ public class ExampleScreen extends BaseScreen {
 						.format("%.0f | %.0f", actor.getX(), actor.getY()));
 			}
 		};
-		label.setPosition(50, 50);
+		label.setPosition(50, 45);
 
 		ui.addActor(label);
 	}
