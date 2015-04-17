@@ -15,9 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class ExampleScreen extends BaseScreen {
-
+	private Stage game;
+	
 	@Override
 	protected void init(Stage game, Stage ui) {
+		this.game = game;
 		final Texture img = manage(new Texture("badlogic.jpg"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -47,6 +49,29 @@ public class ExampleScreen extends BaseScreen {
 		label.setPosition(50, 45);
 
 		ui.addActor(label);
+		
+		setUpUsAdamTheCrime(img);
+	}
+
+	private void setUpUsAdamTheCrime(Texture img) {
+		final AdamActor actor = new AdamActor();
+		game.addActor(actor);
+		
+		final float mvx = GAME_WORLD_WIDTH / 4;
+		actor.addAction(Actions.forever(
+				Actions.sequence(
+				Actions.moveBy(mvx*2, 0f, 4f, Interpolation.sine),
+				Actions.moveBy(0f, mvx, 4f, Interpolation.sineOut),
+				Actions.moveBy(- mvx*2, 0f, 4f, Interpolation.circleIn),
+				Actions.moveBy(0f, -mvx, 4f, Interpolation.pow2)
+				
+						)));
+		
+		final float size = Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f;
+		actor.setSize(size, size);
+		actor.setPosition(GAME_WORLD_WIDTH / 4 , GAME_WORLD_HEIGHT / 4);
+		
+		
 	}
 
 	private class ExampleActor extends Actor {
@@ -75,6 +100,44 @@ public class ExampleScreen extends BaseScreen {
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
 			batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
+					getWidth(), getHeight(), getScaleX(), getScaleY(),
+					getRotation(), 0, 0, mTexture.getWidth(),
+					mTexture.getHeight(), false, false);
+		}
+	}
+	
+	private class AdamActor extends Actor {
+
+		private final Texture mTexture;
+		private float magicMultiplier;
+
+		public AdamActor() {
+			final Texture img = manage(new Texture("epl11737fig2.jpg"));
+			img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			mTexture = img;
+			magicMultiplier = 1f;
+		}
+
+	
+
+		public void increaseSpeed(float f){
+			magicMultiplier += f;
+		}
+		
+		@Override
+		public void act(float delta) {
+			if(Gdx.input.isKeyJustPressed(Keys.A)){
+				addAction(Actions.rotateBy(-11f, .25f, Interpolation.circleOut));
+				increaseSpeed(0.3f);
+			}
+			super.act(delta*magicMultiplier);
+
+
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			batch.draw(mTexture, getX(), getY(), getOriginX() + (getWidth()/2), getOriginY() + (getHeight()/2),
 					getWidth(), getHeight(), getScaleX(), getScaleY(),
 					getRotation(), 0, 0, mTexture.getWidth(),
 					mTexture.getHeight(), false, false);
