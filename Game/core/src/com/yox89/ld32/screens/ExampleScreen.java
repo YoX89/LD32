@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.yox89.ld32.ShadyActor;
 
 public class ExampleScreen extends BaseScreen {
 
@@ -20,6 +21,10 @@ public class ExampleScreen extends BaseScreen {
 	protected void init(Stage game, Stage ui) {
 		final Texture img = manage(new Texture("badlogic.jpg"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+		final ShadyActor shady = manage(new ShadyActor(img));
+		shady.setBounds(0, 0, 20, 20);
+		game.addActor(shady);
 
 		final ExampleActor actor = new ExampleActor(img);
 		game.addActor(actor);
