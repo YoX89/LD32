@@ -319,6 +319,7 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	}
 	
 	public void loseGame() {
-		
+		stopUserInput = false;
+		mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
 	}
 }
