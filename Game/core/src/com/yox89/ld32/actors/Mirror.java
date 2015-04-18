@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -48,10 +49,13 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 			}
 		}));
 		setSize(1f, 1f);
-		// setOrigin(1f, 1f);
-		addAction(Actions.forever(Actions.rotateBy(360f, 25f)));
 	}
 
+	@Override
+	public Actor hit(float x, float y, boolean touchable) {
+		return super.hit(x + .5f, y + .5f, touchable);
+	}
+	
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x + .5f, y + .5f);

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -62,38 +63,32 @@ public class PlayerActor extends PhysicsActor {
 	public void act(float delta) {
 		super.act(delta);
 
-		float xMovement = 0;
-		float yMovement = 0;
+		final Vector2 movement = new Vector2();
 
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			yMovement = 1f;
+		if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
+			movement.y++;
 			rotationPriority = ROTATION_UP;
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			yMovement = -1f;
+		if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+			movement.y--;
 			rotationPriority = ROTATION_DOWN;
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			xMovement = 1f;
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)
+				|| Gdx.input.isKeyPressed(Keys.D)) {
+			movement.x++;
 			rotationPriority = ROTATION_RIGHT;
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			xMovement = -1f;
+		if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
+			movement.x--;
 			rotationPriority = ROTATION_LEFT;
 		}
 
-		
-		
-		if (yMovement != 0 && xMovement != 0) {
-			xMovement = xMovement * 0.7f;
-			yMovement = yMovement * 0.7f;
-		}
-
+		movement.nor().scl(delta * speed);
 		rotateTowards(rotationPriority, angularSpeed);
-		moveBy(delta * speed * xMovement, delta * speed * yMovement);
+		moveBy(movement.x, movement.y);
 	}
 
 	private void rotateTowards(float rotationGoal, float rotationChange) {

@@ -58,15 +58,6 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 				mRayDispatcher));
 	}
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		final Vector2 t = mGameStage.screenToStageCoordinates(new Vector2(
-				screenX, screenY));
-		System.out.println(t);
-		System.out.println(mGameStage.hit(t.x, t.y, false));
-		return super.touchDown(screenX, screenY, pointer, button);
-	}
-
 	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
 
 	protected <T extends Disposable> T manage(T res) {
@@ -79,7 +70,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mPhysicsUpdateBuf += delta;
 		while (mPhysicsUpdateBuf >= PHYSICS_TICK_DT) {
 			mPhysicsUpdateBuf -= PHYSICS_TICK_DT;
-			mWorld.step(PHYSICS_TICK_DT, 4, 4);
+			mWorld.step(PHYSICS_TICK_DT, 0, 4);
 		}
 
 		Gdx.gl.glClearColor(.3f, .3f, .3f, 1);

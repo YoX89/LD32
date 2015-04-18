@@ -2,6 +2,10 @@ package com.yox89.ld32.screens;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -36,9 +40,18 @@ public class TiledLevelScreen extends BaseScreen {
 	private final MapLayer mObjectLayer;
 	private boolean[][] mLightNotAllowed;
 
+	private ShapeRenderer mFocusRenderer;
+	private Actor mFocus;
+	final Vector2 mLastHoverCoords = new Vector2();
+
+
+	private Physics mPhysics;
+
 	public TiledLevelScreen(int level) {
-		TiledMap levelMap = new TmxMapLoader().load("levels/level" + level
-				+ ".tmx");
+		mFocusRenderer = manage(new ShapeRenderer());
+
+		final TiledMap levelMap = new TmxMapLoader().load("levels/level"
+				+ level + ".tmx");
 
 		TiledMapTileLayer levelMapLayer = (TiledMapTileLayer) levelMap
 				.getLayers().get("Tile Layer");
@@ -51,16 +64,19 @@ public class TiledLevelScreen extends BaseScreen {
 		MapLayer objectLayer = (MapLayer) levelMap.getLayers().get(
 				"Object Layer");
 		this.mObjectLayer = objectLayer;
+
+		levelMap.dispose();
 	}
 
 	@Override
 	protected void init(Stage game, Stage ui, Physics physics) {
+		mPhysics = physics;
+
 		final PlayerActor player = new PlayerActor(physics);
 		game.addActor(player);
-
 		player.setPosition(GAME_WORLD_WIDTH / 2 - player.getWidth() / 2,
 				GAME_WORLD_HEIGHT / 2);
-		
+
 		MapObjects mapObjects = this.mObjectLayer.getObjects();
 
 		for (MapObject mapObject : mapObjects) {
@@ -102,6 +118,46 @@ public class TiledLevelScreen extends BaseScreen {
 			} else if (type.equals(MIRROR)) {
 				add(game, new Mirror(physics), x, y);
 			}
+		}
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		mGameStage.screenToStageCoordinates(mLastHoverCoords.set(screenX, screenY));
+		mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y, false);
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		mouseMoved(screenX, screenY);
+		if (mFocus == null) {
+			final Mirror mirror = new Mirror(mPhysics);
+			add(mGameStage, mirror, (int)mLastHoverCoords.x, (int)mLastHoverCoords.y);
+			mFocus = mirror;
+		} else if (mFocus instanceof Mirror) {
+			mFocus.rotateBy(45f);
+		} else {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void render(float delta) {
+		super.render(delta);
+
+		if (mLastHoverCoords != null) {
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+			mFocusRenderer.setProjectionMatrix(mGameStage.getCamera().combined);
+			mFocusRenderer.begin(ShapeType.Filled);
+			mFocusRenderer.setColor(1f, 1f, 1f, .15f);
+			mFocusRenderer.rect((int)mLastHoverCoords.x, (int)mLastHoverCoords.y, 1f, 1f);
+			mFocusRenderer.end();
+
+			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
 	}
 
