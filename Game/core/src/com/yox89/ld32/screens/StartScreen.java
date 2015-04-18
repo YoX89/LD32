@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.actors.Torch;
 
 public class StartScreen extends BaseScreen {
 	private Stage game;
@@ -28,13 +29,18 @@ public class StartScreen extends BaseScreen {
 	@Override
 	protected void init(Stage game, Stage ui, Physics physics) {
 		this.game = game;
-		final Texture img = manage(new Texture("startButton.png"));
+		final Texture img = manage(new Texture("startButtonEng.png"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		final StartGameButtonActor actor = new StartGameButtonActor(img, physics.world,
 				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
 		game.addActor(actor);
 
+		Torch torchUpCorner = new Torch(physics);
+		torchUpCorner.setPosition(GAME_WORLD_WIDTH-1, GAME_WORLD_HEIGHT-1);
+		game.addActor(new Torch(physics));
+		game.addActor(torchUpCorner);
+		
 
 		actor.setPosition(GAME_WORLD_WIDTH / 2 - actor.getWidth() / 2,
 				GAME_WORLD_HEIGHT / 2);
@@ -42,6 +48,7 @@ public class StartScreen extends BaseScreen {
 		final Label label = new Label("Hello, I am ui", new LabelStyle(
 				new BitmapFont(), Color.CYAN)) {
 
+			
 			@Override
 			public void act(float delta) {
 				super.act(delta);
@@ -50,10 +57,30 @@ public class StartScreen extends BaseScreen {
 //						.format("%.0f | %.0f", actor.getX(), actor.getY()));
 			}
 		};
-		label.setText("V�lkommen till sp�ke p� vift");
+		label.setText("Welcome to ghost in the house");
 		label.setPosition(200, 400);
+		
+		
+		
+		final Label label2 = new Label("Hello, I am ui", new LabelStyle(
+				new BitmapFont(), Color.CYAN)) {
+
+			
+			@Override
+			public void act(float delta) {
+				super.act(delta);
+
+//				setText(String
+//						.format("%.0f | %.0f", actor.getX(), actor.getY()));
+			}
+		};
+		label2.setText("Coopyright: Anton Risberg, Jonathan Hagberg, "
+				+ "\n \t \t \t Adam Nilsson, Marie Versland");
+		label2.setFontScale(0.9f);
+		label2.setPosition(300, 50);
 
 		ui.addActor(label);
+		ui.addActor(label2);
 
 	}
 
