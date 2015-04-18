@@ -56,19 +56,35 @@ public class PlayerActor extends PhysicsActor {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+		
+		float xMovement = 0;
+		float yMovement = 0;
+		
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			moveBy(0f, delta * speed);
+			yMovement = 1f;
 			rotateTowards(ROTATION_UP, angularSpeed);
-		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			moveBy(0f, delta * -speed);
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			yMovement = -1f;
 			rotateTowards(ROTATION_DOWN, angularSpeed);
-		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			moveBy(delta * speed, 0f);
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			xMovement = 1f;
 			rotateTowards(ROTATION_RIGHT, angularSpeed);
-		} else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			moveBy(delta * -speed, 0f);
+		} 
+
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			xMovement = -1f;
 			rotateTowards(ROTATION_LEFT, angularSpeed);
 		}
+		
+		if(yMovement != 0 && xMovement != 0){
+			xMovement = xMovement*0.7f;
+			yMovement = yMovement*0.7f;
+		}
+		moveBy(delta *speed*xMovement, delta * speed*yMovement);
 	}
 
 	private void rotateTowards(float rotationGoal, float rotationChange) {
