@@ -84,7 +84,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mGameStage.act(delta);
 		mGameStage.draw();
 		final Matrix4 gameProj = mGameStage.getCamera().combined;
-		mPhysicsDebugger.render(mWorld, gameProj);
+//		mPhysicsDebugger.render(mWorld, gameProj);
 		mRayHandler.setCombinedMatrix(gameProj);
 		mRayHandler.setAmbientLight(new Color(.7f, .7f, .7f, .1f));
 		mRayHandler.updateAndRender();

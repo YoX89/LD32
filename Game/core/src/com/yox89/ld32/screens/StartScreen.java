@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.Torch;
+import com.yox89.ld32.util.PhysicsUtil;
+import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class StartScreen extends BaseScreen {
 	private Stage game;
@@ -24,64 +27,56 @@ public class StartScreen extends BaseScreen {
 
 	public StartScreen(Gajm gajm) {
 		super();
-		this.gajm= gajm;
+		this.gajm = gajm;
 	}
+
 	@Override
 	protected void init(Stage game, Stage ui, Physics physics) {
 		this.game = game;
 		final Texture img = manage(new Texture("StartButtonEng.png"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		final StartGameButtonActor actor = new StartGameButtonActor(img, physics.world,
+		final StartGameButtonActor startBtn = new StartGameButtonActor(img,
+				physics.world,
 				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
-		game.addActor(actor);
-
-		Torch torchUpCorner = new Torch(physics);
-		torchUpCorner.setPosition(GAME_WORLD_WIDTH-1, GAME_WORLD_HEIGHT-1);
-		game.addActor(new Torch(physics));
-		game.addActor(torchUpCorner);
-		
-
-		actor.setPosition(GAME_WORLD_WIDTH / 2 - actor.getWidth() / 2,
+		game.addActor(startBtn);
+		startBtn.setPosition(GAME_WORLD_WIDTH / 2 - startBtn.getWidth() / 2,
 				GAME_WORLD_HEIGHT / 2);
 
-		final Label label = new Label("Hello, I am ui", new LabelStyle(
-				new BitmapFont(), Color.CYAN)) {
+		PhysicsUtil.createBody(new BodyParams(physics.world) {
 
-			
 			@Override
-			public void act(float delta) {
-				super.act(delta);
-
-//				setText(String
-//						.format("%.0f | %.0f", actor.getX(), actor.getY()));
+			public void setShape(PolygonShape ps) {
+				ps.setAsBox(startBtn.getWidth() / 2, startBtn.getHeight() / 2f);
 			}
-		};
-		label.setText("Welcome to ghost in the house");
-		label.setPosition(50, 400);
-		label.setFontScale(2f);
-		
-		
-		
-		final Label label2 = new Label("Hello, I am ui", new LabelStyle(
-				new BitmapFont(), Color.CYAN)) {
+		}).setTransform(startBtn.getX() + startBtn.getWidth() / 2,
+				startBtn.getY() + startBtn.getHeight() / 2, 0f);
 
-			
-			@Override
-			public void act(float delta) {
-				super.act(delta);
+		Torch startBtnTorch = new Torch(physics, Color.MAGENTA);
+		startBtnTorch.setPosition(startBtn.getX() + startBtn.getWidth() / 2f,
+				startBtn.getY() + startBtn.getHeight() / 2);
+		game.addActor(startBtnTorch);
 
-//				setText(String
-//						.format("%.0f | %.0f", actor.getX(), actor.getY()));
-			}
-		};
-		label2.setText("Coopyright: Anton Risberg, Jonathan Hagberg, "
-				+ "\n \t \t \t Adam Nilsson, Marie Versland");
-		label2.setFontScale(0.9f);
-		label2.setPosition(300, 50);
+		Torch torchUpCorner = new Torch(physics);
+		torchUpCorner.setPosition(GAME_WORLD_WIDTH - 1, GAME_WORLD_HEIGHT - 1);
+		game.addActor(new Torch(physics));
+		game.addActor(torchUpCorner);
 
-		ui.addActor(label);
-		ui.addActor(label2);
+		final Label titleLbl = new Label("LD32 Work in progress",
+				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
+		titleLbl.setPosition(
+				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(), 400);
+		titleLbl.setFontScale(2f);
+
+		final Label copyLbl = new Label(
+				"Made by: Kevlanche, Jonathan Hagberg, "
+						+ "\n \t \t Adam Nilsson, Marie Versland in ~24 hours so far",
+				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
+		copyLbl.setFontScale(0.9f);
+		copyLbl.setPosition(300, 50);
+
+		ui.addActor(titleLbl);
+		ui.addActor(copyLbl);
 
 	}
 
@@ -91,8 +86,8 @@ public class StartScreen extends BaseScreen {
 
 		public StartGameButtonActor(Texture tex, World world, final float size) {
 			mTexture = tex;
-			setSize(size*2, size);
-			
+			setSize(size * 2, size);
+
 			addListener(new InputListener() {
 
 				public boolean touchDown(InputEvent event, float x, float y,
@@ -100,28 +95,45 @@ public class StartScreen extends BaseScreen {
 					gajm.setScreen(new TiledLevelScreen(gajm, 1));
 					return true;
 				};
+
+				@Override
+				public void enter(InputEvent event, float x, float y,
+						int pointer, Actor fromActor) {
+					setColor(Color.WHITE);
+					super.enter(event, x, y, pointer, fromActor);
+				}
+
+				@Override
+				public void exit(InputEvent event, float x, float y,
+						int pointer, Actor toActor) {
+					setColor(Color.LIGHT_GRAY);
+					super.exit(event, x, y, pointer, toActor);
+				}
 			});
+			setColor(Color.LIGHT_GRAY);
+
 		}
 
 		@Override
 		public void act(float delta) {
 			super.act(delta);
 
-			if (Gdx.input.isKeyPressed(Keys.O)){
-				gajm.setScreen(new TiledLevelScreen(gajm,0));
+			if (Gdx.input.isKeyPressed(Keys.O)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 0));
 			}
-			
-			if (Gdx.input.isKeyPressed(Keys.U)){
-				gajm.setScreen(new TiledLevelScreen(gajm,2));
+
+			if (Gdx.input.isKeyPressed(Keys.U)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 2));
 			}
-			
-			if (Gdx.input.isKeyPressed(Keys.T)){
-				gajm.setScreen(new TiledLevelScreen(gajm,3));
+
+			if (Gdx.input.isKeyPressed(Keys.T)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 3));
 			}
 		}
 
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
+			batch.setColor(getColor());
 			batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
 					getWidth(), getHeight(), getScaleX(), getScaleY(),
 					getRotation(), 0, 0, mTexture.getWidth(),
