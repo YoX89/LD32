@@ -3,17 +3,17 @@ package com.yox89.ld32.actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.util.Collision;
-import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class PlayerActor extends PhysicsActor {
 
@@ -22,20 +22,35 @@ public class PlayerActor extends PhysicsActor {
 	private static final float ROTATION_RIGHT = 0;
 	private static final float ROTATION_LEFT = 180;
 
-	private Texture bodyTexture;
 	private float speed;
 	private float angularSpeed;
+	private Animation animation;
 
-	public PlayerActor(Texture bodyTexture,Physics physics) {
-		this.bodyTexture = bodyTexture;
+	public PlayerActor(Physics physics) {
+		this.animation = setupAnimation();
 		this.speed = 10f;
 		this.angularSpeed = 3;
-		setSize(5f, 5f);
-		
-		
-		
-		initPhysicsBody(createBody(physics, BodyType.StaticBody, Collision.WORLD, (short)(Collision.WORLD | Collision.PLAYER)));
+		setSize(2f, 2f);
+		initPhysicsBody(createBody(physics, BodyType.DynamicBody, Collision.PLAYER, (short)(Collision.WORLD | Collision.GHOST)));
 
+	}
+
+	private Animation setupAnimation() {
+		int frameRows = 5;
+		int frameColumns = 6;
+		Texture walkSheet = new Texture(Gdx.files.internal("animation_sheet.png")); 
+        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/frameColumns, walkSheet.getHeight()/frameRows);              // #10
+        TextureRegion[] walkFrames = new TextureRegion[frameColumns * frameRows	];
+        int index = 0;
+        for (int i = 0; i < frameRows; i++) {
+            for (int j = 0; j < frameColumns; j++) {
+                walkFrames[index++] = tmp[i][j];
+            }
+        }
+        animation = new Animation(0.925f, walkFrames);
+        animation.setPlayMode(PlayMode.LOOP);
+        return animation;
+        
 	}
 
 	@Override
@@ -83,13 +98,13 @@ public class PlayerActor extends PhysicsActor {
 
 	}
 
+	float stateTime = 0f;
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(bodyTexture, getX(), getY(),
+		batch.draw(animation.getKeyFrame(++stateTime)	, getX()-(getWidth()/2), getY()-(getHeight()/2),
 				getOriginX() + (getWidth() / 2), getOriginY()
-						+ (getHeight() / 2), getWidth(), getHeight(),
-				getScaleX(), getScaleY(), getRotation(), 0, 0,
-				bodyTexture.getWidth(), bodyTexture.getHeight(), false, false);
+						+ (getHeight() / 2), getWidth(), getHeight()	,
+				getScaleX(), getScaleY(), getRotation());
 	}
 
 	
@@ -111,6 +126,7 @@ public class PlayerActor extends PhysicsActor {
 		fd.friction = 0.0f;
 
 		final CircleShape shape = new CircleShape();
+		shape.setRadius(0.4f);
 		fd.shape = shape;
 
 		body.createFixture(fd);
@@ -118,5 +134,6 @@ public class PlayerActor extends PhysicsActor {
 		shape.dispose();
 
 		return body;
+	
 	}
 }
