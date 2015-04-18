@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
@@ -25,6 +25,8 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 	private Texture mTexture;
 
 	public Mirror(Physics physics) {
+		setTouchable(Touchable.enabled);
+
 		mTexture = new Texture(Gdx.files.internal("mirror.png"));
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 

@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.util.Collision;
 
@@ -39,6 +40,8 @@ public class PlayerActor extends PhysicsActor {
 	private PointLight mLight;
 
 	public PlayerActor(Physics physics) {
+		setTouchable(Touchable.disabled);
+		
 		this.animation = setupAnimation();
 		this.speed = 10f;
 		this.angularSpeed = 10f;

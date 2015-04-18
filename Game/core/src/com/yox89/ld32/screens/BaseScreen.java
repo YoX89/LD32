@@ -43,7 +43,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 	@Override
 	public void show() {
-		mGameStage = manage(new Stage(new ScalingViewport(Scaling.none,
+		mGameStage = manage(new Stage(new ScalingViewport(Scaling.fit,
 				GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT)));
 		mUiStage = manage(new Stage());
 

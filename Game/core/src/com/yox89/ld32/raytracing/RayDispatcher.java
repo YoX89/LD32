@@ -40,7 +40,7 @@ public class RayDispatcher {
 						Vector2 normal, float fraction) {
 					final short cat = fixture.getFilterData().categoryBits;
 					if ((cat & (Collision.GHOST | Collision.MIRROR | Collision.WORLD)) == 0) {
-						return fraction * 0.9f;
+						return 1;
 					}
 
 					if (fraction < minFraction) {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.yox89.ld32.util.Assets;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
@@ -14,7 +15,8 @@ import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 public class Wall extends TexturedPhysicsActor {
 
 	public Wall(World world, final float width, final float height) {
-
+		setTouchable(Touchable.enabled);
+		
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(world) {
 
 			@Override

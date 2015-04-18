@@ -3,6 +3,7 @@ package com.yox89.ld32.screens;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
@@ -44,7 +46,7 @@ public class TiledLevelScreen extends BaseScreen {
 
 	private ShapeRenderer mFocusRenderer;
 	private Actor mFocus;
-	final Vector2 mLastHoverCoords = new Vector2();
+	final Vector2 mLastHoverCoords = new Vector2(-1f, -1f);
 
 	protected int mNumberRemainingMirrors;
 	protected int mNumberTotalMirrors;
@@ -53,7 +55,12 @@ public class TiledLevelScreen extends BaseScreen {
 
 	private PlayerActor mPlayer;
 
-	public TiledLevelScreen(int level) {
+	private final Gajm mGajm;
+	private final int mLevelId;
+
+	public TiledLevelScreen(Gajm gajm, int level) {
+		mGajm = gajm;
+		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
 
 		mNumberRemainingMirrors = 5;
@@ -123,12 +130,12 @@ public class TiledLevelScreen extends BaseScreen {
 			} else if (type.equals(GHOST)) {
 				if (mapObject instanceof PolylineMapObject) {
 					PolylineMapObject ghostObject = (PolylineMapObject) mapObject;
-					
+
 					ArrayList<Vector2> path = getPathForGhost(ghostObject);
 					Vector2 startPosition = path.get(0);
-					
-					add(game, new GhostActor(physics,
-							path), startPosition.x, startPosition.y);
+
+					add(game, new GhostActor(physics, path), startPosition.x,
+							startPosition.y);
 				} else {
 					assert false : "The ghost must be a PolylineMapObject";
 				}
@@ -144,7 +151,7 @@ public class TiledLevelScreen extends BaseScreen {
 				screenY));
 		if (hoverInRangeOfPlayer()) {
 			mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y,
-					false);
+					true);
 		}
 		return false;
 	}
@@ -156,10 +163,19 @@ public class TiledLevelScreen extends BaseScreen {
 	}
 
 	@Override
+	public boolean keyDown(int keycode) {
+		if (keycode == Keys.R) {
+			mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
+		}
+		return super.keyDown(keycode);
+	}
+
+	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		mouseMoved(screenX, screenY);
 		if (hoverInRangeOfPlayer()) {
-			if (mFocus == null) {
+			if (mFocus == null && mNumberRemainingMirrors > 0) {
+				mNumberRemainingMirrors--;
 				final Mirror mirror = new Mirror(mPhysics);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
 						(int) mLastHoverCoords.y);
@@ -177,7 +193,8 @@ public class TiledLevelScreen extends BaseScreen {
 	public void render(float delta) {
 		super.render(delta);
 
-		if (hoverInRangeOfPlayer()) {
+		if (hoverInRangeOfPlayer()
+				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mNumberRemainingMirrors > 0)) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 

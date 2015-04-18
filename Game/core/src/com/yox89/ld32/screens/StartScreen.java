@@ -97,7 +97,7 @@ public class StartScreen extends BaseScreen {
 
 				public boolean touchDown(InputEvent event, float x, float y,
 						int pointer, int button) {
-					gajm.setScreen(new TiledLevelScreen(1));
+					gajm.setScreen(new TiledLevelScreen(gajm, 1));
 					return true;
 				};
 			});

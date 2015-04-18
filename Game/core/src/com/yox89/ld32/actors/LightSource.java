@@ -43,10 +43,11 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	public LightSource(Physics physics, LightColor color,
 			Direction... lightDirections) {
+		setTouchable(Touchable.enabled);
+
 		mPhysics = physics;
 		mColor = color;
 		mDirections = lightDirections;
-		setTouchable(Touchable.enabled);
 
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
