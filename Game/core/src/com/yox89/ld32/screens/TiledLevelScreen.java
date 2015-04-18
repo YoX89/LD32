@@ -250,10 +250,10 @@ public class TiledLevelScreen extends BaseScreen {
 			dirs.add(Direction.WEST);
 		}
 		if (this.lightAllowedAtTile(x, y + 1)) {
-			dirs.add(Direction.SOUTH);
+			dirs.add(Direction.NORTH);
 		}
 		if (this.lightAllowedAtTile(x, y - 1)) {
-			dirs.add(Direction.NORTH);
+			dirs.add(Direction.SOUTH);
 		}
 		return dirs.toArray(Direction.class);
 	}
