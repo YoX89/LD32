@@ -118,6 +118,14 @@ public class StartScreen extends BaseScreen {
 		public void act(float delta) {
 			super.act(delta);
 
+			if (Gdx.input.isKeyPressed(Keys.J)){
+				gajm.setScreen(new TiledLevelScreen(gajm,5));
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.K)){
+				gajm.setScreen(new TiledLevelScreen(gajm,6));
+			}
+			
 			if (Gdx.input.isKeyPressed(Keys.O)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 0));
 			}

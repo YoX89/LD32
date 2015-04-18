@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="1" tileheight="1" nextobjectid="58">
+ <layer name="Tile Layer" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApIBwAGQAAB
+  </data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <object id="4" type="Wall" x="0" y="0" width="20" height="1"/>
+  <object id="6" type="Wall" x="0" y="1" width="1" height="18"/>
+  <object id="7" type="Wall" x="0" y="19" width="20" height="1"/>
+  <object id="9" type="Wall" x="19" y="1" width="1" height="18"/>
+  <object id="22" type="Torch" x="18" y="18" width="1" height="1"/>
+  <object id="23" type="Torch" x="1" y="1" width="1" height="1"/>
+  <object id="24" type="Torch" x="18" y="1" width="1" height="1"/>
+  <object id="25" type="GreenLaser" x="12" y="0" width="1" height="1"/>
+  <object id="57" type="Ghost" x="3" y="15">
+   <polyline points="0,0 1,0"/>
+  </object>
+ </objectgroup>
+</map>
