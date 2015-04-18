@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
@@ -19,6 +21,8 @@ import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Gajm;
@@ -31,6 +35,7 @@ import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
 import com.yox89.ld32.raytracing.Direction;
 import com.yox89.ld32.raytracing.LightColor;
+import com.yox89.ld32.util.Ui;
 
 public class TiledLevelScreen extends BaseScreen {
 
@@ -57,6 +62,7 @@ public class TiledLevelScreen extends BaseScreen {
 
 	private final Gajm mGajm;
 	private final int mLevelId;
+	private Ui ui;
 
 	public TiledLevelScreen(Gajm gajm, int level) {
 		mGajm = gajm;
@@ -85,7 +91,8 @@ public class TiledLevelScreen extends BaseScreen {
 	}
 
 	@Override
-	protected void init(Stage game, Stage ui, Physics physics) {
+	protected void init(Stage game, Stage uiStage, Physics physics) {
+		ui = new Ui(uiStage, mNumberTotalMirrors);
 		mPhysics = physics;
 
 		mPlayer = new PlayerActor(physics);
@@ -176,6 +183,7 @@ public class TiledLevelScreen extends BaseScreen {
 		if (hoverInRangeOfPlayer()) {
 			if (mFocus == null && mNumberRemainingMirrors > 0) {
 				mNumberRemainingMirrors--;
+				ui.setMirrorsLeftText(mNumberRemainingMirrors+"");
 				final Mirror mirror = new Mirror(mPhysics);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
 						(int) mLastHoverCoords.y);
