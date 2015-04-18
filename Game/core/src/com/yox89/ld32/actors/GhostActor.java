@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -18,6 +19,7 @@ import com.yox89.ld32.raytracing.RayDispatcher.Dispatcher;
 import com.yox89.ld32.raytracing.RayDispatcher.Ray;
 import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
 import com.yox89.ld32.raytracing.RayDispatcher.RayTarget;
+import com.yox89.ld32.screens.TiledLevelScreen;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
@@ -27,8 +29,11 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 	private static final float SPEED = 3f;
 	private final Texture mTexture;
 
-	public GhostActor(Physics physicsWorld, ArrayList<Vector2> positions) {
+	private final TiledLevelScreen mOwner;
 
+	public GhostActor(TiledLevelScreen owner, Physics physicsWorld,
+			ArrayList<Vector2> positions) {
+		mOwner = owner;
 		final Texture img = new Texture("ghost_pixelart.png");
 		this.mTexture = img;
 
@@ -105,8 +110,8 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 							@Override
 							public void run() {
-								RotateToAction rotateToAction = getRotateActionUsingClosestDirection(diff.angle(),
-										duration / 4);
+								RotateToAction rotateToAction = getRotateActionUsingClosestDirection(
+										diff.angle(), duration / 4);
 								addAction(rotateToAction);
 							}
 						}), Actions.moveTo(newPosition.x, newPosition.y,
@@ -126,8 +131,8 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 						@Override
 						public void run() {
-							RotateToAction rotateToAction = getRotateActionUsingClosestDirection(diff.angle(),
-									duration / 4);
+							RotateToAction rotateToAction = getRotateActionUsingClosestDirection(
+									diff.angle(), duration / 4);
 							addAction(rotateToAction);
 						}
 					}), Actions.moveTo(startPosition.x, startPosition.y,
@@ -135,13 +140,15 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 			SequenceAction moveActions = Actions.sequence(actions);
 
-			RotateToAction rotateToAction = getRotateActionUsingClosestDirection(diff.angle(), 0f);
+			RotateToAction rotateToAction = getRotateActionUsingClosestDirection(
+					diff.angle(), 0f);
 			addAction(rotateToAction);
 			this.addAction(Actions.forever(moveActions));
 		}
 	}
 
-	public RotateToAction getRotateActionUsingClosestDirection(float targetAngle, float duration) {
+	public RotateToAction getRotateActionUsingClosestDirection(
+			float targetAngle, float duration) {
 		float curr = getRotation();
 		if (curr >= 360f) {
 			curr %= 360f;
@@ -158,13 +165,25 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		return Actions.rotateTo(targetAngle, duration);
 	}
 
+	boolean mIsHit = false;
+
 	@Override
 	public void onHitWithRay(Ray ray, Dispatcher dispatcher) {
+		mIsHit = true;
 		addAction(Actions.removeActor());
+
 
 		Array<RayRequest> reqs = new Array<RayRequest>();
 		reqs.add(new RayRequest(ray.color, ray.dst, ray.direction));
 		dispatcher.dispatch(reqs);
+		
+		
+		for (Actor a : getStage().getActors()) {
+			if (a instanceof GhostActor && !((GhostActor) a).mIsHit) {
+				return;		
+			}
+		}
+		mOwner.onAllGhostsDead();
 	}
 
 	@Override

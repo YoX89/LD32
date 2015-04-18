@@ -166,24 +166,26 @@ public class TiledLevelScreen extends BaseScreen implements
 				} else if (type.equals(GHOST)) {
 					if (mapObject instanceof PolylineMapObject) {
 						PolylineMapObject ghostObject = (PolylineMapObject) mapObject;
-						
+
 						ArrayList<Vector2> path = getPathForGhost(ghostObject);
 						Vector2 startPosition = path.get(0);
-						
-						GhostActor ghostActor = new GhostActor(physics, path);
-						
+
+						GhostActor ghostActor = new GhostActor(this, physics,
+								path);
+
 						add(game, ghostActor, startPosition.x, startPosition.y);
 					} else {
 						Vector2 startPosition = new Vector2(x, y);
 						ArrayList<Vector2> path = new ArrayList<Vector2>();
 						path.add(startPosition);
-						GhostActor ghostActor = new GhostActor(physics, path);
+						GhostActor ghostActor = new GhostActor(this, physics,
+								path);
 						System.out.println(Float.parseFloat(mapProperties.get(
 								"AngleDegrees").toString()));
-						
-						ghostActor.setRotation(Float.parseFloat(mapProperties.get(
-								"AngleDegrees").toString()));
-						
+
+						ghostActor.setRotation(Float.parseFloat(mapProperties
+								.get("AngleDegrees").toString()));
+
 						add(game, ghostActor, startPosition.x, startPosition.y);
 					}
 				} else if (type.equals(MIRROR)) {
@@ -197,15 +199,26 @@ public class TiledLevelScreen extends BaseScreen implements
 	public boolean mouseMoved(int screenX, int screenY) {
 		mGameStage.screenToStageCoordinates(mLastHoverCoords.set(screenX,
 				screenY));
-		if (mouseIsInRangeOfPlayer()) {
-			mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y,
-					true);
+		mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y, true);
+		for (Actor a : mGameStage.getActors()) {
+			if (a instanceof Mirror && new Vector2(((Mirror) a).gamePosition).sub(new Vector2((int) mLastHoverCoords.x,
+					(int) mLastHoverCoords.y)).len() < .05f) {
+				// Don't know why mFocus isn't this mirror.. but let's force it in.
+				mFocus = (Mirror)a;
+			}
 		}
 		return false;
 	}
 
 	public boolean mouseIsInRangeOfPlayer() {
 		final AtomicBoolean foundWall = new AtomicBoolean(false);
+		final Vector2 dst;
+		if (mFocus != null) {
+			dst = new Vector2(mFocus.getX() + mFocus.getWidth() / 2,
+					mFocus.getY() + mFocus.getHeight() / 2);
+		} else {
+			dst = mLastHoverCoords;
+		}
 		mPhysics.world.rayCast(new RayCastCallback() {
 
 			@Override
@@ -217,7 +230,7 @@ public class TiledLevelScreen extends BaseScreen implements
 				}
 				return 1;
 			}
-		}, new Vector2(mPlayer.getX(), mPlayer.getY()), mLastHoverCoords);
+		}, new Vector2(mPlayer.getX(), mPlayer.getY()), dst);
 		if (foundWall.get()) {
 			return false;
 		}
@@ -392,7 +405,7 @@ public class TiledLevelScreen extends BaseScreen implements
 
 	public void loseGame() {
 		switchScreen(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
@@ -401,12 +414,40 @@ public class TiledLevelScreen extends BaseScreen implements
 	}
 
 	public void onNoMoreLights() {
-		final Label msg = new Label("No more laser charges\nPress 'R' to restart", new LabelStyle(manage(new BitmapFont()),
-				Color.CYAN));
+		if (mDidEnd) {
+			return;
+		}
+		final Label msg = new Label(
+				"No more laser charges\nPress 'R' to restart", new LabelStyle(
+						manage(new BitmapFont()), Color.CYAN));
 		msg.setAlignment(Align.center);
 		msg.getColor().a = 0f;
-		msg.setPosition(mUiStage.getWidth()/2 - msg.getMinWidth()/2, 50f);
+		msg.setPosition(mUiStage.getWidth() / 2 - msg.getMinWidth() / 2, 50f);
 		mUiStage.addActor(msg);
 		msg.addAction(Actions.delay(1f, Actions.fadeIn(1f)));
+	}
+
+	private boolean mDidEnd;
+
+	public void onAllGhostsDead() {
+		if (mDidEnd) {
+			return;
+		}
+		mDidEnd = true;
+		mUiStage.addAction(Actions.delay(1f, Actions.run(new Runnable() {
+
+			@Override
+			public void run() {
+				switchScreen(new Runnable() {
+
+					@Override
+					public void run() {
+						mGajm.setScreen(new TiledLevelScreen(mGajm,
+								mLevelId + 1));
+					}
+				});
+
+			}
+		})));
 	}
 }

@@ -24,6 +24,8 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 
 	private Texture mTexture;
 
+	public Vector2 gamePosition = new Vector2(-1, -1);
+
 	public Mirror(Physics physics) {
 		setTouchable(Touchable.enabled);
 
@@ -57,9 +59,10 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 	public Actor hit(float x, float y, boolean touchable) {
 		return super.hit(x + .5f, y + .5f, touchable);
 	}
-	
+
 	@Override
 	public void setPosition(float x, float y) {
+		gamePosition.set(x, y);
 		super.setPosition(x + .5f, y + .5f);
 	}
 

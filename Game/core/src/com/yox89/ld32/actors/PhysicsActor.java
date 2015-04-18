@@ -129,7 +129,7 @@ public class PhysicsActor extends Actor {
 	public Actor hit(float x, float y, boolean touchable) {
 		if (touchable && getTouchable() != Touchable.enabled)
 			return null;
-		return x >= 0 && x < getWidth() && y >= 0 && y < getHeight() ? this
+		return x >= 0 && x <= getWidth() && y >= 0 && y <= getHeight() ? this
 				: null;
 	}
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
@@ -79,7 +80,6 @@ public class StartScreen extends BaseScreen {
 
 		ui.addActor(titleLbl);
 		ui.addActor(copyLbl);
-
 	}
 
 	private class StartGameButtonActor extends Actor {
@@ -132,15 +132,15 @@ public class StartScreen extends BaseScreen {
 			if (Gdx.input.isKeyPressed(Keys.K)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 6));
 			}
-			
-			if (Gdx.input.isKeyPressed(Keys.M)){
-				gajm.setScreen(new TiledLevelScreen(gajm,7));
+
+			if (Gdx.input.isKeyPressed(Keys.M)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 7));
 			}
-			
-			if (Gdx.input.isKeyPressed(Keys.L)){
-				gajm.setScreen(new TiledLevelScreen(gajm,8));
+
+			if (Gdx.input.isKeyPressed(Keys.L)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 8));
 			}
-			
+
 			if (Gdx.input.isKeyPressed(Keys.O)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 0));
 			}
@@ -152,7 +152,7 @@ public class StartScreen extends BaseScreen {
 			if (Gdx.input.isKeyPressed(Keys.T)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 3));
 			}
-			
+
 			if (Gdx.input.isKeyPressed(Keys.N)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 4));
 			}
@@ -165,6 +165,7 @@ public class StartScreen extends BaseScreen {
 					getWidth(), getHeight(), getScaleX(), getScaleY(),
 					getRotation(), 0, 0, mTexture.getWidth(),
 					mTexture.getHeight(), false, false);
+
 		}
 	}
 

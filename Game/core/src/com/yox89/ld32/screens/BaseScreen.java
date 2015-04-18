@@ -68,6 +68,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		fade.addAction(Actions.sequence(Actions.fadeOut(.25f),
 				Actions.removeActor()));
 		mUiStage.addActor(fade);
+		
 	}
 
 	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
