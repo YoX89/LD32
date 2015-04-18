@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.yox89.ld32.screens.LevelScreen;
 import com.yox89.ld32.screens.StartScreen;
 import com.yox89.ld32.util.Assets;
 
