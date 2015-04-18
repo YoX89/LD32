@@ -109,7 +109,11 @@ public class StartScreen extends BaseScreen {
 
 			
 			if (Gdx.input.isKeyPressed(Keys.U)){
-				gajm.setScreen(new LevelScreen(1));
+				gajm.setScreen(new TiledLevelScreen(2));
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.T)){
+				gajm.setScreen(new TiledLevelScreen(3));
 			}
 		}
 
