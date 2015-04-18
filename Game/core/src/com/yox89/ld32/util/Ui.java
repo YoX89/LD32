@@ -5,8 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.yox89.ld32.screens.TiledLevelScreen;
@@ -34,32 +37,31 @@ public class Ui {
 		rightUiImage.setPosition(uiStage.getWidth()- rightUiImage.getWidth(), 0);
 		
 		inventoryLabel = new Label(UI_INVENTORY_STRING + numberTotalMirrors + "/" + numberTotalMirrors, 
-				new LabelStyle(new BitmapFont(), Color.WHITE)) {
-			
-			@Override
-			public void act(float delta) {
-				super.act(delta);
-
-			}
-		};
+				new LabelStyle(new BitmapFont(), Color.WHITE));
 		uiStage.addActor(inventoryLabel);
 		inventoryLabel.setFontScale(1f);
 		inventoryLabel.setPosition(20, 5);
 		
 		Label restartInfo = new Label("'R' to restart", 
-				new LabelStyle(new BitmapFont(), Color.WHITE)) {
-			
-			@Override
-			public void act(float delta) {
-				super.act(delta);
-
-			}
-		};
+				new LabelStyle(new BitmapFont(), Color.WHITE));
 		uiStage.addActor(restartInfo);
 		restartInfo.setFontScale(1f);
 		restartInfo.setPosition(uiStage.getWidth()- (20 +restartInfo.getWidth()), 5);
+		restartInfo.addAction(Actions.forever(Actions.sequence(
+				Actions.fadeOut(3f, Interpolation.pow5In),
+				Actions.delay(3f),
+				Actions.fadeIn(3f,  Interpolation.pow5In))));
 		
-		
+		Label menuInfo = new Label("'Q' for menu", 
+				new LabelStyle(new BitmapFont(), Color.WHITE));
+		uiStage.addActor(menuInfo);
+		menuInfo.setFontScale(1f);
+		menuInfo.setPosition(uiStage.getWidth()- (20 +restartInfo.getWidth()), 5);
+		menuInfo.addAction(Actions.fadeOut(0f));
+		menuInfo.addAction(Actions.forever(Actions.sequence(
+				Actions.fadeIn(3f, Interpolation.pow5In),
+				Actions.delay(3f),
+				Actions.fadeOut(3f,  Interpolation.pow5In))));
 
 	}
 
