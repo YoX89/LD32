@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.yox89.ld32.Physics;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
@@ -25,7 +26,7 @@ public class PlayerActor extends PhysicsActor {
 	private float speed;
 	private float angularSpeed;
 
-	public PlayerActor(Texture bodyTexture,World world) {
+	public PlayerActor(Texture bodyTexture,Physics physics) {
 		this.bodyTexture = bodyTexture;
 		this.speed = 10f;
 		this.angularSpeed = 3;
@@ -33,7 +34,7 @@ public class PlayerActor extends PhysicsActor {
 		
 		
 		
-		initPhysicsBody(createBody(world, BodyType.StaticBody, Collision.WORLD, (short)(Collision.WORLD | Collision.PLAYER)));
+		initPhysicsBody(createBody(physics, BodyType.StaticBody, Collision.WORLD, (short)(Collision.WORLD | Collision.PLAYER)));
 
 	}
 
@@ -92,13 +93,13 @@ public class PlayerActor extends PhysicsActor {
 	}
 
 	
-	public static Body createBody(World world, BodyType bodyType, short collisionType, short collisionMask) {
+	public static Body createBody(Physics physics, BodyType bodyType, short collisionType, short collisionMask) {
 		final BodyDef bd = new BodyDef();
 		bd.type = bodyType;
 		bd.position.set(0.0f, 10.0f);
 		bd.linearDamping = 0.2f;
 
-		final Body body = world.createBody(bd);
+		final Body body =  physics.world.createBody(bd);
 
 		final FixtureDef fd = new FixtureDef();
 		fd.density = 0.0f;
