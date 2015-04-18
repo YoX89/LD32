@@ -31,6 +31,8 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		final Texture img = new Texture("ghost_pixelart.png");
 		this.mTexture = img;
 
+		final Vector2[] polygonShape = this.getShapeVertices();
+		
 		this.initPhysicsBody(PhysicsUtil.createBody(new BodyParams(
 				physicsWorld.world) {
 
@@ -46,12 +48,12 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 			@Override
 			public short getCollisionMask() {
-				return Collision.NONE;
+				return Collision.PLAYER;
 			}
 
 			@Override
 			public void setShape(PolygonShape ps) {
-				ps.setAsBox(1f / 2, 1f / 2, new Vector2(1f / 2, 1f / 2), 0f);
+				ps.set(polygonShape);
 			}
 
 			@Override
@@ -69,6 +71,16 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 		this.setupActions(positions);
 	}
+	
+	private Vector2[] getShapeVertices() {
+		Vector2[] vertices = new Vector2[3];
+		
+		vertices[0] = new Vector2(0f, 0f);
+		vertices[1] = new Vector2(4f, -2f);
+		vertices[2] = new Vector2(4f, 2f);
+		
+		return vertices;
+	}
 
 	private void setupActions(ArrayList<Vector2> positions) {
 
@@ -76,26 +88,30 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 			Vector2 startPosition = positions.get(0);
 			Vector2 currentPosition = startPosition;
 
-			Action[] actions = new Action[positions.size()];
+			Action[] actions = new Action[positions.size() * 2];
 
 			for (int i = 1; i < positions.size(); i++) {
 				Vector2 newPosition = positions.get(i);
 				
-				float length = new Vector2(newPosition.x - currentPosition.x, newPosition.y - currentPosition.y).len();
+				 Vector2 diff = new Vector2(newPosition.x - currentPosition.x, newPosition.y - currentPosition.y);
+				 float length = diff.len();
 
 				float duration = length / SPEED;
 				
-				actions[i - 1] = Actions.moveTo(newPosition.x, newPosition.y,
+				actions[i * 2 - 2] = Actions.rotateTo(diff.angle());
+				actions[i * 2 - 1] = Actions.moveTo(newPosition.x, newPosition.y,
 						duration);
+				diff.angle();
 				
 				currentPosition = newPosition;
 			}
 			
-			float length = new Vector2(startPosition.x - currentPosition.x, startPosition.y - currentPosition.y).len();
-
+			Vector2 diff = new Vector2(startPosition.x - currentPosition.x, startPosition.y - currentPosition.y);
+			float length = diff.len();
 			float duration = length / SPEED;
 			
-			actions[positions.size() - 1] = Actions.moveTo(startPosition.x,
+			actions[actions.length - 2] = Actions.rotateTo(diff.angle());
+			actions[actions.length - 1] = Actions.moveTo(startPosition.x,
 					startPosition.y, duration);
 
 			SequenceAction moveActions = Actions.sequence(actions);
@@ -121,7 +137,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
+		batch.draw(mTexture, getX() - getWidth() / 2, getY() - getHeight() / 2, getOriginX() + getWidth() / 2, getOriginY() + getHeight() / 2,
 				getWidth(), getHeight(), getScaleX(), getScaleY(),
 				getRotation(), 0, 0, mTexture.getWidth(), mTexture.getHeight(),
 				false, false);
