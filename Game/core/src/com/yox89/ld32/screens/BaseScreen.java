@@ -42,8 +42,9 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 				GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT)));
 		mUiStage = manage(new Stage());
 
-		mWorld = manage(new World(new Vector2(0f, -9.82f), false));
+		mWorld = manage(new World(new Vector2(0f, 0f), false));
 		mRayHandler = manage(new RayHandler(mWorld));
+
 		mPhysicsDebugger = new Box2DDebugRenderer();
 
 		Gdx.input.setInputProcessor(this);
