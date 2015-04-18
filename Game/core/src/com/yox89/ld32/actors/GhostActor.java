@@ -2,24 +2,28 @@ package com.yox89.ld32.actors;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
-public class GhostActor extends PhysicsActor {
-	private final TextureRegion mTextureRegion;
+public class GhostActor extends PhysicsActor implements Disposable {
 	
-	public GhostActor(TextureRegion textureRegion, Physics physicsWorld, final float size, ArrayList<Vector2>positions) {
-		this.mTextureRegion = textureRegion;
+	private final Texture mTexture;
+	
+	public GhostActor(Physics physicsWorld, ArrayList<Vector2>positions) {
+		
+		final Texture img = new Texture("ghost_pixelart.png");
+		this.mTexture = img;
 		
 		this.initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physicsWorld.world) {
 
@@ -40,8 +44,8 @@ public class GhostActor extends PhysicsActor {
 
 			@Override
 			public void setShape(PolygonShape ps) {
-				ps.setAsBox(size / 2, size / 2, new Vector2(size / 2,
-						size / 2), 0f);
+				ps.setAsBox(1f / 2, 1f / 2, new Vector2(1f / 2,
+						1f / 2), 0f);
 			}
 			
 			@Override
@@ -50,7 +54,7 @@ public class GhostActor extends PhysicsActor {
 			}
 			
 		}));
-		this.setSize(size, size);
+		this.setSize(1f, 1f);
 		
 		assert (positions.size() > 0) : "The ghost must have at least one position";
 		Vector2 initialPosition = positions.get(0);
@@ -90,7 +94,14 @@ public class GhostActor extends PhysicsActor {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(mTextureRegion, this.getX(), this.getY(), this.getOriginX(), this.getOriginY(),
-				this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
+		batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
+				getWidth(), getHeight(), getScaleX(), getScaleY(),
+				getRotation(), 0, 0, mTexture.getWidth(),
+				mTexture.getHeight(), false, false);
+	}
+
+	@Override
+	public void dispose() {
+		mTexture.dispose();
 	}
 }

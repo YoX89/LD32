@@ -1,5 +1,7 @@
 package com.yox89.ld32.screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -7,11 +9,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
@@ -78,6 +82,10 @@ public class TiledLevelScreen extends BaseScreen {
 			} else if (type.equals(GREEN_LASER)) {
 				add(game, new LightSource(physics, LightColor.GREEN,
 						parseLightDirection((int) x, (int) y)), x, y);
+			} else if (type.equals(GHOST)) {
+				ArrayList<Vector2> positions = new ArrayList<Vector2>();
+				positions.add(new Vector2(x, y));
+				add(game, new GhostActor(physics, positions), x, y);
 			}
 		}
 	}
