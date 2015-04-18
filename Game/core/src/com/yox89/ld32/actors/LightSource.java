@@ -22,12 +22,15 @@ import com.yox89.ld32.raytracing.Direction;
 import com.yox89.ld32.raytracing.LightColor;
 import com.yox89.ld32.raytracing.RayDispatcher.Ray;
 import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
+import com.yox89.ld32.screens.TiledLevelScreen;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class LightSource extends TexturedPhysicsActor implements Disposable {
 
+	private static final boolean DEBUG_LASERS = false;
+	
 	private LightColor mColor;
 
 	private PointLight mLight;
@@ -41,13 +44,14 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	private Array<Ray> res = null;
 	private Array<ConeLight> mRayCones = new Array<ConeLight>();
 
-	public LightSource(Physics physics, LightColor color,
-			Direction... lightDirections) {
+	public LightSource(final TiledLevelScreen levelScreen, Physics physics,
+			LightColor color, Direction... lightDirections) {
 		setTouchable(Touchable.enabled);
 
 		mPhysics = physics;
 		mColor = color;
 		mDirections = lightDirections;
+		setTouchable(Touchable.enabled);
 
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
@@ -84,6 +88,9 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
+				if (!levelScreen.mouseIsInRangeOfPlayer()) {
+					return false;
+				}
 				final Array<RayRequest> reqs = new Array<RayRequest>();
 				final Vector2 lightPos = new Vector2(mLight.getPosition());
 				for (Direction dir : mDirections) {
@@ -146,52 +153,56 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 
-		if (mDirections != null && mDirections.length != 0) {
-			batch.end();
-			mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-			mShapeRenderer.begin();
+		if (DEBUG_LASERS) {
+			if (mDirections != null && mDirections.length != 0) {
+				batch.end();
+				mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+				mShapeRenderer.begin();
 
-			final float LIGHT_LEN = 10f;
-			mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f, 0f,
-					.25f));
+				final float LIGHT_LEN = 10f;
+				mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f,
+						0f, .25f));
 
-			for (Direction d : mDirections) {
-				switch (d) {
-				case EAST:
-					mShapeRenderer.rect(getX() + getWidth(), getY(), LIGHT_LEN,
-							getHeight());
-					break;
-				case SOUTH:
-					mShapeRenderer.rect(getX(), getY() - LIGHT_LEN, getWidth(),
-							LIGHT_LEN);
-					break;
-				case WEST:
-					mShapeRenderer.rect(getX() - LIGHT_LEN, getY(), LIGHT_LEN,
-							getHeight());
-					break;
-				case NORTH:
-					mShapeRenderer.rect(getX(), getY() + getHeight(),
-							getWidth(), LIGHT_LEN);
-					break;
-				default:
-					System.err.println("Illegal direction for light source "
-							+ d);
-					break;
+				for (Direction d : mDirections) {
+					switch (d) {
+					case EAST:
+						mShapeRenderer.rect(getX() + getWidth(), getY(),
+								LIGHT_LEN, getHeight());
+						break;
+					case SOUTH:
+						mShapeRenderer.rect(getX(), getY() - LIGHT_LEN,
+								getWidth(), LIGHT_LEN);
+						break;
+					case WEST:
+						mShapeRenderer.rect(getX() - LIGHT_LEN, getY(),
+								LIGHT_LEN, getHeight());
+						break;
+					case NORTH:
+						mShapeRenderer.rect(getX(), getY() + getHeight(),
+								getWidth(), LIGHT_LEN);
+						break;
+					default:
+						System.err
+								.println("Illegal direction for light source "
+										+ d);
+						break;
+					}
 				}
-			}
-			if (res != null) {
-				mShapeRenderer.setColor(Color.MAGENTA);
-				Gdx.gl.glLineWidth(.1f);
-				mShapeRenderer.set(ShapeType.Line);
+				if (res != null) {
+					mShapeRenderer.setColor(Color.MAGENTA);
+					Gdx.gl.glLineWidth(.1f);
+					mShapeRenderer.set(ShapeType.Line);
 
-				for (Ray ray : res) {
-					mShapeRenderer.line(ray.src, ray.dst);
+					for (Ray ray : res) {
+						mShapeRenderer.line(ray.src, ray.dst);
+					}
 				}
-			}
 
-			mShapeRenderer.end();
-			batch.begin();
+				mShapeRenderer.end();
+				batch.begin();
+			}
 		}
+
 	}
 
 	@Override

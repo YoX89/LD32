@@ -43,7 +43,7 @@ public class PlayerActor extends PhysicsActor {
 		setTouchable(Touchable.disabled);
 		
 		this.animation = setupAnimation();
-		this.speed = 10f;
+		this.speed = 5f;
 		this.angularSpeed = 10f;
 		setSize(2.3f, 2.3f);
 		initPhysicsBody(createBody(physics, BodyType.DynamicBody,

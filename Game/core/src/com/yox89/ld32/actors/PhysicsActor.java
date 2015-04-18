@@ -29,6 +29,10 @@ public class PhysicsActor extends Actor {
 
 	}
 
+	public Body getPhysicsBody() {
+		return mPhysicsBody;
+	}
+
 	@Override
 	public boolean remove() {
 		if (super.remove()) {

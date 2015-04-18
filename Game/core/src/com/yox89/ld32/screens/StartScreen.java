@@ -29,7 +29,7 @@ public class StartScreen extends BaseScreen {
 	@Override
 	protected void init(Stage game, Stage ui, Physics physics) {
 		this.game = game;
-		final Texture img = manage(new Texture("startButtonEng.png"));
+		final Texture img = manage(new Texture("StartButtonEng.png"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		final StartGameButtonActor actor = new StartGameButtonActor(img, physics.world,

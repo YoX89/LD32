@@ -18,9 +18,12 @@ public abstract class PhysicsUtil {
 		private short mCollisionMask;
 
 		public BodyParams(World world) {
-			this(world, BodyType.StaticBody, Collision.WORLD, (short)(Collision.WORLD | Collision.PLAYER));
+			this(world, BodyType.StaticBody, Collision.WORLD,
+					(short) (Collision.WORLD | Collision.PLAYER));
 		}
-		public BodyParams(World world, BodyType bodyType, short collisionType, short collisionMask) {
+
+		public BodyParams(World world, BodyType bodyType, short collisionType,
+				short collisionMask) {
 			mWorld = world;
 			mBodyType = bodyType;
 			mCollisionType = collisionType;
@@ -42,7 +45,7 @@ public abstract class PhysicsUtil {
 		public void setShape(PolygonShape ps) {
 			ps.setAsBox(.5f, .5f, new Vector2(.5f, .5f), 0f);
 		}
-		
+
 		public boolean isSensor() {
 			return false;
 		}
@@ -61,7 +64,7 @@ public abstract class PhysicsUtil {
 		fd.filter.categoryBits = params.getCollisionType();
 
 		fd.filter.maskBits = params.getCollisionMask();
-		
+
 		fd.isSensor = params.isSensor();
 
 		fd.restitution = 0.0f;

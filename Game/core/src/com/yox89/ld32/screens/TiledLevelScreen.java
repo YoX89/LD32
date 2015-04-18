@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
@@ -21,8 +19,6 @@ import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Gajm;
@@ -129,10 +125,10 @@ public class TiledLevelScreen extends BaseScreen {
 			} else if (type.equalsIgnoreCase(TORCH)) {
 				add(game, new Torch(physics), x, y);
 			} else if (type.equals(RED_LASER)) {
-				add(game, new LightSource(physics, LightColor.RED,
+				add(game, new LightSource(this, physics, LightColor.RED,
 						parseLightDirection((int) x, (int) y)), x, y);
 			} else if (type.equals(GREEN_LASER)) {
-				add(game, new LightSource(physics, LightColor.GREEN,
+				add(game, new LightSource(this, physics, LightColor.GREEN,
 						parseLightDirection((int) x, (int) y)), x, y);
 			} else if (type.equals(GHOST)) {
 				if (mapObject instanceof PolylineMapObject) {
@@ -156,23 +152,31 @@ public class TiledLevelScreen extends BaseScreen {
 	public boolean mouseMoved(int screenX, int screenY) {
 		mGameStage.screenToStageCoordinates(mLastHoverCoords.set(screenX,
 				screenY));
-		if (hoverInRangeOfPlayer()) {
+		if (mouseIsInRangeOfPlayer()) {
 			mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y,
 					true);
 		}
 		return false;
 	}
 
-	private boolean hoverInRangeOfPlayer() {
-		return new Vector2(mPlayer.getX(),
-				mPlayer.getY()).sub(mLastHoverCoords)
-				.len() < 5;
+	public boolean mouseIsInRangeOfPlayer() {
+		return new Vector2(mPlayer.getX(), mPlayer.getY())
+				.sub(mLastHoverCoords).len() < 5;
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
 		if (keycode == Keys.R) {
 			mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
+			return true;
+		} else if (keycode == Keys.E) {
+			if (mFocus instanceof Mirror) {
+				mFocus.remove();
+				mNumberRemainingMirrors++;
+				updateMirrorsLabel();
+				return true;
+			}
+			return true;
 		}
 		return super.keyDown(keycode);
 	}
@@ -180,10 +184,10 @@ public class TiledLevelScreen extends BaseScreen {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		mouseMoved(screenX, screenY);
-		if (hoverInRangeOfPlayer()) {
+		if (mouseIsInRangeOfPlayer()) {
 			if (mFocus == null && mNumberRemainingMirrors > 0) {
 				mNumberRemainingMirrors--;
-				ui.setMirrorsLeftText(mNumberRemainingMirrors+"");
+				updateMirrorsLabel();
 				final Mirror mirror = new Mirror(mPhysics);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
 						(int) mLastHoverCoords.y);
@@ -197,11 +201,15 @@ public class TiledLevelScreen extends BaseScreen {
 		return false;
 	}
 
+	private void updateMirrorsLabel() {
+		ui.setMirrorsLeftText(mNumberRemainingMirrors + "");
+	}
+
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 
-		if (hoverInRangeOfPlayer()
+		if (mouseIsInRangeOfPlayer()
 				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mNumberRemainingMirrors > 0)) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

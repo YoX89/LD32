@@ -17,7 +17,7 @@ public class Torch extends Actor implements Disposable {
 	float flickerTime;
 
 	public Torch(Physics physics) {
-		mLight = new PointLight(physics.rayHandler, 30, new Color(1f, .7f, .2f,
+		mLight = new PointLight(physics.rayHandler, 500, new Color(1f, .7f, .2f,
 				1f), 12f, 2f, 2f);
 		mLight.setSoftnessLength(.5f);
 
