@@ -10,9 +10,11 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -117,9 +119,17 @@ public class TiledLevelScreen extends BaseScreen {
 				add(game, new LightSource(physics, LightColor.GREEN,
 						parseLightDirection((int) x, (int) y)), x, y);
 			} else if (type.equals(GHOST)) {
-				ArrayList<Vector2> positions = new ArrayList<Vector2>();
-				positions.add(new Vector2(x, y));
-				add(game, new GhostActor(physics, positions), x, y);
+				if (mapObject instanceof PolylineMapObject) {
+					PolylineMapObject ghostObject = (PolylineMapObject) mapObject;
+					
+					ArrayList<Vector2> path = getPathForGhost(ghostObject);
+					Vector2 startPosition = path.get(0);
+					
+					add(game, new GhostActor(physics,
+							path), startPosition.x, startPosition.y);
+				} else {
+					assert false : "The ghost must be a PolylineMapObject";
+				}
 			} else if (type.equals(MIRROR)) {
 				add(game, new Mirror(physics), x, y);
 			}
@@ -164,6 +174,21 @@ public class TiledLevelScreen extends BaseScreen {
 
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
+	}
+
+	private ArrayList<Vector2> getPathForGhost(PolylineMapObject ghostObject) {
+		Polyline polyline = ghostObject.getPolyline();
+
+		ArrayList<Vector2> positions = new ArrayList<Vector2>();
+
+		float vertices[] = polyline.getTransformedVertices();
+
+		for (int i = 0; i < vertices.length; i = i + 2) {
+			Vector2 position = new Vector2(vertices[i], vertices[i + 1]);
+			positions.add(position);
+		}
+
+		return positions;
 	}
 
 	private boolean lightAllowedAtTile(int x, int y) {
