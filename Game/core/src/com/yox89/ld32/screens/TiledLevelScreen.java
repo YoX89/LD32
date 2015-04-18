@@ -76,6 +76,7 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	private Ui ui;
 
 	public TiledLevelScreen(Gajm gajm, int level) {
+		
 		mGajm = gajm;
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
@@ -103,14 +104,16 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
-		ui = new Ui(this,uiStage, mNumberTotalMirrors);
+
+		ui = new Ui(this,uiStage, mNumberTotalMirrors,mObjectLayer.getProperties());
 
 		mPhysics = physics;
 
 		mCollisionManager = new CollisionManager(physics.world);
 		mCollisionManager.mCollisionManagerListener = this;
 		
-		mPlayer = new PlayerActor(physics);
+		mPlayer = new PlayerActor(physics,ui);
+
 		game.addActor(mPlayer);
 		mPlayer.setPosition(GAME_WORLD_WIDTH / 2 - mPlayer.getWidth() / 2,
 				GAME_WORLD_HEIGHT / 2);

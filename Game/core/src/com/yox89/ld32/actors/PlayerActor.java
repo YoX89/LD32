@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.screens.TiledLevelScreen;
 import com.yox89.ld32.util.Collision;
+import com.yox89.ld32.util.Ui;
 
 public class PlayerActor extends PhysicsActor {
 
@@ -39,10 +40,11 @@ public class PlayerActor extends PhysicsActor {
 	private float stateTime = ANIMATION_START;
 	
 	private PointLight mLight;
+	private Ui ui;
 
-	public PlayerActor(Physics physics) {
+	public PlayerActor(Physics physics, Ui ui) {
 		setTouchable(Touchable.disabled);
-		
+		this.ui = ui;
 		this.animation = setupAnimation();
 		this.speed = 5f;
 		this.angularSpeed = 10f;
@@ -106,6 +108,7 @@ public class PlayerActor extends PhysicsActor {
 
 		if(movement.x != 0 ||  movement.y != 0){
 			moving =  true;
+			ui.removeFluffText();
 		} else {
 			moving =  false;
 			stateTime = ANIMATION_START;
