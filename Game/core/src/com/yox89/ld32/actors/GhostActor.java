@@ -23,6 +23,7 @@ import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
+	private static final float SPEED = 3f;
 	private final Texture mTexture;
 
 	public GhostActor(Physics physicsWorld, ArrayList<Vector2> positions) {
@@ -72,23 +73,30 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 	private void setupActions(ArrayList<Vector2> positions) {
 
 		if (positions.size() > 1) {
-			Vector2 currentPosition = positions.get(0);
+			Vector2 startPosition = positions.get(0);
+			Vector2 currentPosition = startPosition;
 
 			Action[] actions = new Action[positions.size()];
 
 			for (int i = 1; i < positions.size(); i++) {
 				Vector2 newPosition = positions.get(i);
-				actions[i - 1] = Actions.moveTo(newPosition.x, newPosition.y,
-						2f);
-				System.out.println("Adding action to x:" + newPosition.x
-						+ " y:" + newPosition.y + " to index " + (i - 1));
-			}
+				
+				float length = new Vector2(newPosition.x - currentPosition.x, newPosition.y - currentPosition.y).len();
 
-			actions[positions.size() - 1] = Actions.moveTo(currentPosition.x,
-					currentPosition.y, 2f);
-			System.out.println("Adding action to x: " + currentPosition.x
-					+ " y:" + currentPosition.y + " to index "
-					+ (positions.size() - 1));
+				float duration = length / SPEED;
+				
+				actions[i - 1] = Actions.moveTo(newPosition.x, newPosition.y,
+						duration);
+				
+				currentPosition = newPosition;
+			}
+			
+			float length = new Vector2(startPosition.x - currentPosition.x, startPosition.y - currentPosition.y).len();
+
+			float duration = length / SPEED;
+			
+			actions[positions.size() - 1] = Actions.moveTo(startPosition.x,
+					startPosition.y, duration);
 
 			SequenceAction moveActions = Actions.sequence(actions);
 
