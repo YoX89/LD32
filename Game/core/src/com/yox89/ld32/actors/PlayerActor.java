@@ -23,10 +23,15 @@ public class PlayerActor extends PhysicsActor {
 	private static final float ROTATION_RIGHT = 0;
 	private static final float ROTATION_LEFT = 180;
 
+	private static final float ANIMATION_START = 10f;
+	private static final float ANIMATION_DURATION = 2.30f;
+	
 	private float speed;
 	private float angularSpeed;
 	private Animation animation;
 	private float rotationPriority = 0f;
+	private boolean moving;
+	private float stateTime = ANIMATION_START;
 
 	public PlayerActor(Physics physics) {
 		this.animation = setupAnimation();
@@ -45,7 +50,7 @@ public class PlayerActor extends PhysicsActor {
 				Gdx.files.internal("animation_sheet2.png"));
 		TextureRegion[][] tmp = TextureRegion.split(walkSheet,
 				walkSheet.getWidth() / frameColumns, walkSheet.getHeight()
-						/ frameRows); // #10
+						/ frameRows);
 		TextureRegion[] walkFrames = new TextureRegion[frameColumns * frameRows];
 		int index = 0;
 		for (int i = 0; i < frameRows; i++) {
@@ -53,7 +58,7 @@ public class PlayerActor extends PhysicsActor {
 				walkFrames[index++] = tmp[i][j];
 			}
 		}
-		animation = new Animation(2.25f, walkFrames);
+		animation = new Animation(ANIMATION_DURATION, walkFrames);
 		animation.setPlayMode(PlayMode.LOOP);
 		return animation;
 
@@ -62,8 +67,8 @@ public class PlayerActor extends PhysicsActor {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-
 		final Vector2 movement = new Vector2();
+
 
 		if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
 			movement.y++;
@@ -86,19 +91,24 @@ public class PlayerActor extends PhysicsActor {
 			rotationPriority = ROTATION_LEFT;
 		}
 
+
+
+		if(movement.x != 0 ||  movement.y != 0){
+			moving =  true;
+		} else {
+			moving =  false;
+			stateTime = ANIMATION_START;
+		}
+
+		
 		movement.nor().scl(delta * speed);
-		rotateTowards(rotationPriority, angularSpeed);
+		rotateTowards(rotationPriority,getCurrentRotationNegative180ToPositive180(), angularSpeed);
 		moveBy(movement.x, movement.y);
+
 	}
 
-	private void rotateTowards(float rotationGoal, float rotationChange) {
-
-		float currentRotation = getRotation() % 360;
-		if (currentRotation > 180) {
-			currentRotation = -180 + (currentRotation - 180);
-		} else if (currentRotation < -180) {
-			currentRotation = 180 + (currentRotation + 180);
-		}
+	private void rotateTowards(float rotationGoal, float currentRotationNegative180ToPositive180, float rotationChange) {
+		float currentRotation = currentRotationNegative180ToPositive180;
 
 		boolean leftSemi = currentRotation < -90 || currentRotation > 90;
 		boolean lowerSemi = currentRotation < 0;
@@ -113,20 +123,31 @@ public class PlayerActor extends PhysicsActor {
 		} else if (rotationGoal == ROTATION_RIGHT) {
 			clockWise = lowerSemi ? 1 : -1;
 		}
-		rotationChange = (Math.abs(rotationGoal - currentRotation) < rotationChange) ? 1
+		rotationChange = (Math.abs(rotationGoal - currentRotation) < rotationChange) ? 0
 				: rotationChange;
 
 		rotateBy(rotationChange * clockWise);
 
 	}
 
-	float stateTime = 0f;
+	private float getCurrentRotationNegative180ToPositive180(){
+		float currentRotation = getRotation() % 360;
+		if (currentRotation > 180) {
+			currentRotation = -180 + (currentRotation - 180);
+		} else if (currentRotation < -180) {
+			currentRotation = 180 + (currentRotation + 180);
+		}
+		return currentRotation;
+	}
+	
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(animation.getKeyFrame(++stateTime), getX()
-				- (getWidth() / 2), getY() - (getHeight() / 2), getOriginX()
-				+ (getWidth() / 2), getOriginY() + (getHeight() / 2),
+		batch.draw(animation.getKeyFrame((moving?++stateTime:10)), 
+				getX() - (getWidth() / 2), 
+				getY() - (getHeight() / 2), 
+				getOriginX() + (getWidth() / 2), 
+				getOriginY() + (getHeight() / 2),
 				getWidth(), getHeight(), getScaleX(), getScaleY(),
 				getRotation(), true);
 	}
