@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.yox89.ld32.actors.PhysicsActor;
 import com.yox89.ld32.actors.ShadyActor;
+import com.yox89.ld32.actors.Wall;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
@@ -33,24 +34,24 @@ public class ExampleScreen extends BaseScreen {
 		final Texture img = manage(new Texture("badlogic.jpg"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		final ShadyActor shady = manage(new ShadyActor(img));
+		final ShadyActor shady = manage(new ShadyActor());
 		shady.setBounds(0, 0, 20, 20);
 		game.addActor(shady);
 
-		final ExampleActor actor = new ExampleActor(img, physicsWorld, Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
+		final ExampleActor actor = new ExampleActor(img, physicsWorld,
+				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
 		game.addActor(actor);
 
-		final Body wall = PhysicsUtil.createBody(new BodyParams(physicsWorld) {
+		float xpos = 0f;
+		while (xpos < GAME_WORLD_WIDTH) {
+			final Wall wall = new Wall(physicsWorld);
+			wall.setX(xpos);
+			xpos += Wall.WALL_SIZE;
+			game.addActor(wall);
+		}
 
-			@Override
-			public void setShape(PolygonShape ps) {
-				ps.setAsBox(GAME_WORLD_WIDTH / 2f, .5f, new Vector2(
-						GAME_WORLD_WIDTH / 2, .25f), 0f);
-			}
-		});
-		wall.setTransform(0f, 1f, 0f);
-
-		actor.setPosition(GAME_WORLD_WIDTH / 2 - actor.getWidth()/2, GAME_WORLD_HEIGHT / 2);
+		actor.setPosition(GAME_WORLD_WIDTH / 2 - actor.getWidth() / 2,
+				GAME_WORLD_HEIGHT / 2);
 
 		final float mvx = GAME_WORLD_WIDTH / 4;
 		actor.addAction(Actions.forever(Actions.sequence(
@@ -117,10 +118,11 @@ public class ExampleScreen extends BaseScreen {
 				public short getCollisionMask() {
 					return Collision.WORLD;
 				}
-				
+
 				@Override
 				public void setShape(PolygonShape ps) {
-					ps.setAsBox(size/2, size/2, new Vector2(size/2, size/2), 0f);
+					ps.setAsBox(size / 2, size / 2, new Vector2(size / 2,
+							size / 2), 0f);
 				}
 			}));
 			setSize(size, size);

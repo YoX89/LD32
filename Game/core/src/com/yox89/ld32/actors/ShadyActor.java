@@ -5,16 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
+import com.yox89.ld32.util.Assets;
 
 public class ShadyActor extends Actor implements Disposable {
 
 	ShaderProgram shader;
-	private final Texture mTexture;
 
 	private float mTime;
 
-	public ShadyActor(Texture texture) {
-		mTexture = texture;
+	public ShadyActor() {
 		mTime = 0f;
 		rebuildShader();
 		if (shader == null) {
@@ -54,7 +53,8 @@ public class ShadyActor extends Actor implements Disposable {
 				+ ShaderProgram.TEXCOORD_ATTRIBUTE
 				+ "0;\n" //
 				+ "   gl_Position =  (u_projTrans * "
-				+ ShaderProgram.POSITION_ATTRIBUTE + ") + vec4(1, 1, 0, 0.75 + cos(time)/4.0);\n" //
+				+ ShaderProgram.POSITION_ATTRIBUTE
+				+ ") + vec4(1, 1, 0, 0.75 + cos(time)/4.0);\n" //
 				+ "}\n";
 		String fragmentShader = "#ifdef GL_ES\n" //
 				+ "#define LOWP lowp\n" //
@@ -85,16 +85,16 @@ public class ShadyActor extends Actor implements Disposable {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 
-		// TODO don't constantly rebuild shader when we release. Keep around for debugging only
+		// TODO don't constantly rebuild shader when we release. Keep around for
+		// debugging only
 		rebuildShader();
 
 		batch.setShader(shader);
 		shader.setUniformf("time", mTime);
 
-		batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
-				getWidth(), getHeight(), getScaleX(), getScaleY(),
-				getRotation(), 0, 0, mTexture.getWidth(), mTexture.getHeight(),
-				false, false);
+		batch.draw(Assets.get("tileGrey_01"), getX(), getY(), getOriginX(),
+				getOriginY(), getWidth(), getHeight(), getScaleX(),
+				getScaleY(), getRotation());
 
 		batch.setShader(null);
 	}
