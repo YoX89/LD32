@@ -43,7 +43,7 @@ public class ExampleScreen extends BaseScreen {
 		game.addActor(actor);
 
 		for (int x = 0; x < GAME_WORLD_WIDTH; x++) {
-			final Wall wall = new Wall(physics.world);
+			final Wall wall = new Wall(physics.world, 1, 1);
 			wall.setX(x);
 			game.addActor(wall);
 		}

@@ -49,7 +49,7 @@ public class LevelScreen extends BaseScreen {
 					// Do nothing
 					break;
 				case WALL:
-					add(game, new Wall(physics.world), x, GAME_WORLD_HEIGHT - y
+					add(game, new Wall(physics.world, 1f, 1f), x, GAME_WORLD_HEIGHT - y
 							- 1);
 					break;
 				case RED_LAZER:
