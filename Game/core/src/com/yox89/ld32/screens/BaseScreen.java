@@ -1,5 +1,6 @@
 package com.yox89.ld32.screens;
 
+import box2dLight.Light;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.raytracing.RayDispatcher;
+import com.yox89.ld32.util.Collision;
 
 public abstract class BaseScreen extends InputAdapter implements Screen {
 
@@ -51,10 +53,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mPhysicsDebugger = new Box2DDebugRenderer();
 		mRayDispatcher = new RayDispatcher(mWorld);
 
-		// TODO figure out how to filter out player for only some lights.. It
-		// looks bad when the player is filtered away from torches.
-		// Light.setContactFilter((short)~0, (short)0,
-		// (short)~Collision.PLAYER);
+		Light.setContactFilter((short) ~0, (short) 0, (short) ~Collision.GHOST);
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this, mUiStage,
 				mGameStage));
@@ -84,7 +83,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mGameStage.act(delta);
 		mGameStage.draw();
 		final Matrix4 gameProj = mGameStage.getCamera().combined;
-//		mPhysicsDebugger.render(mWorld, gameProj);
+		mPhysicsDebugger.render(mWorld, gameProj);
 		mRayHandler.setCombinedMatrix(gameProj);
 		mRayHandler.setAmbientLight(new Color(.7f, .7f, .7f, .1f));
 		mRayHandler.updateAndRender();

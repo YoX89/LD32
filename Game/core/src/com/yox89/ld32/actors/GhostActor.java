@@ -32,7 +32,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		this.mTexture = img;
 
 		final Vector2[] polygonShape = this.getShapeVertices();
-		
+
 		this.initPhysicsBody(PhysicsUtil.createBody(new BodyParams(
 				physicsWorld.world) {
 
@@ -71,14 +71,14 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 		this.setupActions(positions);
 	}
-	
+
 	private Vector2[] getShapeVertices() {
 		Vector2[] vertices = new Vector2[3];
-		
+
 		vertices[0] = new Vector2(0f, 0f);
 		vertices[1] = new Vector2(4f, -2f);
 		vertices[2] = new Vector2(4f, 2f);
-		
+
 		return vertices;
 	}
 
@@ -88,59 +88,89 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 			Vector2 startPosition = positions.get(0);
 			Vector2 currentPosition = startPosition;
 
-			Action[] actions = new Action[positions.size() * 2];
+			Action[] actions = new Action[positions.size()];
 
 			for (int i = 1; i < positions.size(); i++) {
 				Vector2 newPosition = positions.get(i);
-				
-				 Vector2 diff = new Vector2(newPosition.x - currentPosition.x, newPosition.y - currentPosition.y);
-				 float length = diff.len();
 
-				float duration = length / SPEED;
-				
-				actions[i * 2 - 2] = Actions.rotateTo(diff.angle());
-				actions[i * 2 - 1] = Actions.moveTo(newPosition.x, newPosition.y,
-						duration);
+				final Vector2 diff = new Vector2(newPosition.x
+						- currentPosition.x, newPosition.y - currentPosition.y);
+				float length = diff.len();
+
+				final float duration = length / SPEED;
+
+				actions[i - 1] = Actions.sequence(Actions.parallel(
+						Actions.run(new Runnable() {
+
+							@Override
+							public void run() {
+								// setRotation(getCurrentRotationNegative180ToPositive180());
+								rotateUsingClosestDirection(diff.angle(),
+										duration / 4);
+							}
+						}), Actions.moveTo(newPosition.x, newPosition.y,
+								duration)));
 				diff.angle();
-				
+
 				currentPosition = newPosition;
 			}
-			
-			Vector2 diff = new Vector2(startPosition.x - currentPosition.x, startPosition.y - currentPosition.y);
+
+			final Vector2 diff = new Vector2(startPosition.x
+					- currentPosition.x, startPosition.y - currentPosition.y);
 			float length = diff.len();
-			float duration = length / SPEED;
-			
-			actions[actions.length - 2] = Actions.rotateTo(diff.angle());
-			actions[actions.length - 1] = Actions.moveTo(startPosition.x,
-					startPosition.y, duration);
+			final float duration = length / SPEED;
+
+			actions[actions.length - 1] = Actions.parallel(
+					Actions.run(new Runnable() {
+
+						@Override
+						public void run() {
+							rotateUsingClosestDirection(diff.angle(),
+									duration / 4);
+						}
+					}), Actions.moveTo(startPosition.x, startPosition.y,
+							duration));
 
 			SequenceAction moveActions = Actions.sequence(actions);
 
+			rotateUsingClosestDirection(diff.angle(), 0f);
 			this.addAction(Actions.forever(moveActions));
-
 		}
+	}
+
+	protected void rotateUsingClosestDirection(float targetAngle, float duration) {
+		float curr = getRotation();
+		if (curr >= 360f) {
+			curr %= 360f;
+		} else if (curr <= -360f) {
+			curr = 360f + (curr % -360f);
+		}
+		setRotation(curr);
+
+		final float diff = targetAngle - curr;
+
+		if (Math.abs(diff) > 180f) {
+			setRotation(curr - 360f);
+		}
+		addAction(Actions.rotateTo(targetAngle, duration));
 	}
 
 	@Override
 	public void onHitWithRay(Ray ray, Dispatcher dispatcher) {
 		addAction(Actions.removeActor());
-		
+
 		Array<RayRequest> reqs = new Array<RayRequest>();
 		reqs.add(new RayRequest(ray.color, ray.dst, ray.direction));
 		dispatcher.dispatch(reqs);
 	}
 
 	@Override
-	public void act(float delta) {
-		super.act(delta);
-	}
-
-	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(mTexture, getX() - getWidth() / 2, getY() - getHeight() / 2, getOriginX() + getWidth() / 2, getOriginY() + getHeight() / 2,
+		batch.draw(mTexture, getX() - getWidth() / 2, getY() - getHeight() / 2,
+				getOriginX() + getWidth() / 2, getOriginY() + getHeight() / 2,
 				getWidth(), getHeight(), getScaleX(), getScaleY(),
-				getRotation(), 0, 0, mTexture.getWidth(), mTexture.getHeight(),
-				false, false);
+				getRotation() + 180f, 0, 0, mTexture.getWidth(),
+				mTexture.getHeight(), false, false);
 	}
 
 	@Override
