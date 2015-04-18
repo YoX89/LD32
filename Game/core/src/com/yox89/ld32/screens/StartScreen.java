@@ -126,6 +126,14 @@ public class StartScreen extends BaseScreen {
 				gajm.setScreen(new TiledLevelScreen(gajm,6));
 			}
 			
+			if (Gdx.input.isKeyPressed(Keys.M)){
+				gajm.setScreen(new TiledLevelScreen(gajm,7));
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.L)){
+				gajm.setScreen(new TiledLevelScreen(gajm,8));
+			}
+			
 			if (Gdx.input.isKeyPressed(Keys.O)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 0));
 			}
@@ -136,6 +144,10 @@ public class StartScreen extends BaseScreen {
 
 			if (Gdx.input.isKeyPressed(Keys.T)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 3));
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.N)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 4));
 			}
 		}
 

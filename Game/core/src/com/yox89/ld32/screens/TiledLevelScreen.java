@@ -160,7 +160,11 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 					add(game, ghostActor, startPosition.x,
 							startPosition.y);
 				} else {
-					assert false : "The ghost must be a PolylineMapObject";
+					Vector2 startPosition = new Vector2(x,y);
+					ArrayList<Vector2> path = new ArrayList<Vector2>();
+					path.add(startPosition);
+					add(game, new GhostActor(physics, path), startPosition.x,
+							startPosition.y);
 				}
 			} else if (type.equals(MIRROR)) {
 				add(game, new Mirror(physics), x, y);
