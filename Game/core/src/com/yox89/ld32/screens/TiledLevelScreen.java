@@ -164,8 +164,8 @@ public class TiledLevelScreen extends BaseScreen {
 	}
 
 	private boolean hoverInRangeOfPlayer() {
-		return new Vector2(mPlayer.getX() + mPlayer.getWidth() / 2,
-				mPlayer.getY() + mPlayer.getHeight() / 2).sub(mLastHoverCoords)
+		return new Vector2(mPlayer.getX(),
+				mPlayer.getY()).sub(mLastHoverCoords)
 				.len() < 5;
 	}
 

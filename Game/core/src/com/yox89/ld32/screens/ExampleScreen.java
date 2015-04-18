@@ -57,16 +57,7 @@ public class ExampleScreen extends BaseScreen {
 				Actions.moveTo(-mvx, 0f, 2f, Interpolation.bounce))));
 
 		final Label label = new Label("Hello, I am ui", new LabelStyle(
-				new BitmapFont(), Color.CYAN)) {
-
-			@Override
-			public void act(float delta) {
-				super.act(delta);
-
-				setText(String
-						.format("%.0f | %.0f", actor.getX(), actor.getY()));
-			}
-		};
+				new BitmapFont(), Color.CYAN));
 		label.setPosition(50, 45);
 
 		ui.addActor(label);
