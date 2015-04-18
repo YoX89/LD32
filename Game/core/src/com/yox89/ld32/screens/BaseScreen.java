@@ -18,17 +18,20 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 	protected Stage mGameStage, mUiStage;
 	protected Array<Disposable> mDisposables;
 
-	protected static final float GAME_WORLD_WIDTH = 64f;
-	protected static final float GAME_WORLD_HEIGHT = 48f;
+	protected int GAME_WORLD_WIDTH = 32;
+	protected int GAME_WORLD_HEIGHT = 24;
 
 	private World mWorld;
 	private Box2DDebugRenderer mPhysicsDebugger;
 	private float mPhysicsUpdateBuf;
 	private static final float PHYSICS_TICK_DT = 1f / 60f;
 
+	public BaseScreen() {
+		mDisposables = new Array<Disposable>();
+	}
+
 	@Override
 	public void show() {
-		mDisposables = new Array<Disposable>();
 		mGameStage = manage(new Stage(new ScalingViewport(Scaling.none,
 				GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT)));
 		mUiStage = manage(new Stage());
@@ -65,7 +68,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 		mUiStage.act(delta);
 		mUiStage.draw();
-		
+
 	}
 
 	@Override

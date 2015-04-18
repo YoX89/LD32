@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -42,11 +41,9 @@ public class ExampleScreen extends BaseScreen {
 				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
 		game.addActor(actor);
 
-		float xpos = 0f;
-		while (xpos < GAME_WORLD_WIDTH) {
+		for (int x = 0; x < GAME_WORLD_WIDTH; x++) {
 			final Wall wall = new Wall(physicsWorld);
-			wall.setX(xpos);
-			xpos += Wall.WALL_SIZE;
+			wall.setX(x);
 			game.addActor(wall);
 		}
 
