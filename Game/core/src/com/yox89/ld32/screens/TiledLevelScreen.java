@@ -5,7 +5,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
@@ -27,6 +29,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.CollisionManager;
@@ -73,7 +78,7 @@ public class TiledLevelScreen extends BaseScreen implements
 	private Ui ui;
 
 	public TiledLevelScreen(Gajm gajm, int level) {
-		
+
 		mGajm = gajm;
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
@@ -102,19 +107,25 @@ public class TiledLevelScreen extends BaseScreen implements
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
 
-		ui = new Ui(this,uiStage, mNumberTotalMirrors,mObjectLayer.getProperties());
+		ui = new Ui(this, uiStage, mNumberTotalMirrors,
+				mObjectLayer.getProperties());
 
 		mPhysics = physics;
 
 		mCollisionManager = new CollisionManager(physics.world);
 		mCollisionManager.mCollisionManagerListener = this;
-		
-		mPlayer = new PlayerActor(physics,ui);
+
+		mPlayer = new PlayerActor(physics, ui);
 
 		game.addActor(mPlayer);
 		mPlayer.setPosition(GAME_WORLD_WIDTH / 2 - mPlayer.getWidth() / 2,
 				GAME_WORLD_HEIGHT / 2);
 
+		parseMap(game, physics, true);
+		parseMap(game, physics, false);
+	}
+
+	private void parseMap(Stage game, Physics physics, boolean wallOnly) {
 		MapObjects mapObjects = this.mObjectLayer.getObjects();
 
 		for (MapObject mapObject : mapObjects) {
@@ -132,48 +143,52 @@ public class TiledLevelScreen extends BaseScreen implements
 				System.err.println("Null type on " + mapProperties);
 				continue;
 			}
-			if (type.equals(WALL)) {
+			if (wallOnly) {
+				if (type.equals(WALL)) {
 
-				for (int i = (int) x; i < x + width; i++) {
-					for (int j = (int) y; j < y + height; j++) {
-						this.mLightNotAllowed[i][j] = true;
+					for (int i = (int) x; i < x + width; i++) {
+						for (int j = (int) y; j < y + height; j++) {
+							this.mLightNotAllowed[i][j] = true;
+						}
 					}
+
+					add(game, new Wall(physics.world, width, height), x, y);
 				}
-
-				add(game, new Wall(physics.world, width, height), x, y);
-			} else if (type.equalsIgnoreCase(TORCH)) {
-				add(game, new Torch(physics), x, y);
-			} else if (type.equals(RED_LASER)) {
-				add(game, new LightSource(this, physics, LightColor.RED,
-						parseLightDirection((int) x, (int) y)), x, y);
-			} else if (type.equals(GREEN_LASER)) {
-				add(game, new LightSource(this, physics, LightColor.GREEN,
-						parseLightDirection((int) x, (int) y)), x, y);
-			} else if (type.equals(GHOST)) {
-				if (mapObject instanceof PolylineMapObject) {
-					PolylineMapObject ghostObject = (PolylineMapObject) mapObject;
-
-					ArrayList<Vector2> path = getPathForGhost(ghostObject);
-					Vector2 startPosition = path.get(0);
-
-					GhostActor ghostActor = new GhostActor(physics, path);
-
-					add(game, ghostActor, startPosition.x, startPosition.y);
-				} else {
-					Vector2 startPosition = new Vector2(x, y);
-					ArrayList<Vector2> path = new ArrayList<Vector2>();
-					path.add(startPosition);
-					GhostActor ghostActor = new GhostActor(physics, path);
-					System.out.println(Float.parseFloat(mapProperties.get(
-							"AngleDegrees").toString()));
-
-					ghostActor.setRotation(Float.parseFloat(mapProperties.get(
-							"AngleDegrees").toString()));
-
-					add(game, ghostActor, startPosition.x, startPosition.y);
+			} else {
+				if (type.equalsIgnoreCase(TORCH)) {
+					add(game, new Torch(physics), x, y);
+				} else if (type.equals(RED_LASER)) {
+					add(game, new LightSource(this, physics, LightColor.RED,
+							parseLightDirection((int) x, (int) y)), x, y);
+				} else if (type.equals(GREEN_LASER)) {
+					add(game, new LightSource(this, physics, LightColor.GREEN,
+							parseLightDirection((int) x, (int) y)), x, y);
+				} else if (type.equals(GHOST)) {
+					if (mapObject instanceof PolylineMapObject) {
+						PolylineMapObject ghostObject = (PolylineMapObject) mapObject;
+						
+						ArrayList<Vector2> path = getPathForGhost(ghostObject);
+						Vector2 startPosition = path.get(0);
+						
+						GhostActor ghostActor = new GhostActor(physics, path);
+						
+						add(game, ghostActor, startPosition.x, startPosition.y);
+					} else {
+						Vector2 startPosition = new Vector2(x, y);
+						ArrayList<Vector2> path = new ArrayList<Vector2>();
+						path.add(startPosition);
+						GhostActor ghostActor = new GhostActor(physics, path);
+						System.out.println(Float.parseFloat(mapProperties.get(
+								"AngleDegrees").toString()));
+						
+						ghostActor.setRotation(Float.parseFloat(mapProperties.get(
+								"AngleDegrees").toString()));
+						
+						add(game, ghostActor, startPosition.x, startPosition.y);
+					}
+				} else if (type.equals(MIRROR)) {
+					add(game, new Mirror(physics), x, y);
 				}
-			} else if (type.equals(MIRROR)) {
-				add(game, new Mirror(physics), x, y);
 			}
 		}
 	}
@@ -349,6 +364,7 @@ public class TiledLevelScreen extends BaseScreen implements
 		final float duration = length / 5f;
 
 		Gdx.input.setInputProcessor(null);
+		mPlayer.mBlockInput = true;
 		ParallelAction parallelAction = Actions.parallel(
 				Actions.run(new Runnable() {
 
@@ -375,6 +391,22 @@ public class TiledLevelScreen extends BaseScreen implements
 	}
 
 	public void loseGame() {
-		mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
+		switchScreen(new Runnable() {
+			
+			@Override
+			public void run() {
+				mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
+			}
+		});
+	}
+
+	public void onNoMoreLights() {
+		final Label msg = new Label("No more laser charges\nPress 'R' to restart", new LabelStyle(manage(new BitmapFont()),
+				Color.CYAN));
+		msg.setAlignment(Align.center);
+		msg.getColor().a = 0f;
+		msg.setPosition(mUiStage.getWidth()/2 - msg.getMinWidth()/2, 50f);
+		mUiStage.addActor(msg);
+		msg.addAction(Actions.delay(1f, Actions.fadeIn(1f)));
 	}
 }

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Align;
 import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.Torch;
@@ -70,8 +71,9 @@ public class StartScreen extends BaseScreen {
 
 		final Label copyLbl = new Label(
 				"Made by: Kevlanche, Jonathan Hagberg, "
-						+ "\n \t \t Adam Nilsson, Marie Versland in ~24 hours so far",
+						+ "\nAdam Nilsson & Marie Versland in ~24 hours so far",
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
+		copyLbl.setAlignment(Align.center);
 		copyLbl.setFontScale(0.9f);
 		copyLbl.setPosition(300, 50);
 

@@ -27,7 +27,7 @@ public class RayDispatcher {
 			final Vector2 dst = new Vector2(src);
 
 			final Vector2 ang = req.direction.getAngleVec2().nor();
-			ang.scl(60f);
+			ang.scl(50f);
 			dst.add(ang);
 
 			final Ray[] res = new Ray[1];

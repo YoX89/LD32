@@ -1,5 +1,7 @@
 package com.yox89.ld32.actors;
 
+import java.util.Arrays;
+
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 
@@ -11,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -111,7 +114,7 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 					final float dist = new Vector2(ray.src).sub(ray.dst).len() * 2;
 					final ConeLight cone = new ConeLight(mPhysics.rayHandler,
 							10, ray.color.toColor(), dist, x, y,
-							ray.direction.getAngleDegrees(), 100 / dist);
+							ray.direction.getAngleDegrees(), 50 / dist);
 
 					cone.setPosition(ray.src);
 					mRayCones.add(cone);
@@ -122,7 +125,15 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 					@Override
 					public void run() {
 						disposeRays();
-						setColor(Color.BLACK);
+						mLight.setActive(false);
+						
+						for (Actor a : getStage().getActors()) {
+							if (a instanceof LightSource && ((LightSource) a).mCanBeActivated) {
+								return;
+							}
+						}
+						
+						levelScreen.onNoMoreLights();
 					}
 
 				})));

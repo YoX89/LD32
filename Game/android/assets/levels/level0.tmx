@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="1" tileheight="1" nextobjectid="53">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="1" tileheight="1" nextobjectid="55">
  <layer name="Tile Layer" width="20" height="20">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMApIBwAGQAAB
   </data>
  </layer>
  <objectgroup name="Object Layer">
-  <object id="4" type="Wall" x="0" y="0" width="20" height="1"/>
+  <properties>
+   <property name="fluff" value="First level explanation todo todo todo... tooooodoooothiis"/>
+  </properties>
+  <object id="4" type="Wall" x="0" y="0" width="9" height="1"/>
   <object id="6" type="Wall" x="0" y="1" width="1" height="18"/>
   <object id="7" type="Wall" x="0" y="19" width="20" height="1"/>
   <object id="9" type="Wall" x="19" y="1" width="1" height="18"/>
@@ -18,8 +21,6 @@
    <polyline points="0,0 2,0 4,0 6,0 8,0 10,0 12,0 12,-1 11,-1 10,-1 9,-1 7,-1 5,-1 2,-1 1,-1 0,-1 0,0"/>
   </object>
   <object id="52" type="Wall" x="4" y="11" width="8" height="1"/>
- <properties>
- <property name="fluff" value="First level explanation todo todo todo... tooooodoooothiis"/>
- </properties>
+  <object id="54" type="Wall" x="10" y="0" width="10" height="1"/>
  </objectgroup>
 </map>

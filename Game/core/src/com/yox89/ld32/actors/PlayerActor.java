@@ -40,6 +40,8 @@ public class PlayerActor extends PhysicsActor {
 
 	private PointLight mLight;
 	private Ui ui;
+	
+	public boolean mBlockInput;
 
 	public PlayerActor(Physics physics, Ui ui) {
 		setTouchable(Touchable.disabled);
@@ -83,25 +85,27 @@ public class PlayerActor extends PhysicsActor {
 		super.act(delta);
 		final Vector2 movement = new Vector2();
 
-		if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
-			movement.y++;
-			rotationPriority = ROTATION_UP;
-		}
-
-		if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-			movement.y--;
-			rotationPriority = ROTATION_DOWN;
-		}
-
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)
-				|| Gdx.input.isKeyPressed(Keys.D)) {
-			movement.x++;
-			rotationPriority = ROTATION_RIGHT;
-		}
-
-		if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
-			movement.x--;
-			rotationPriority = ROTATION_LEFT;
+		if (!mBlockInput) {
+			if (Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.W)) {
+				movement.y++;
+				rotationPriority = ROTATION_UP;
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+				movement.y--;
+				rotationPriority = ROTATION_DOWN;
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.RIGHT)
+					|| Gdx.input.isKeyPressed(Keys.D)) {
+				movement.x++;
+				rotationPriority = ROTATION_RIGHT;
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
+				movement.x--;
+				rotationPriority = ROTATION_LEFT;
+			}
 		}
 
 		if(movement.x != 0 ||  movement.y != 0){
