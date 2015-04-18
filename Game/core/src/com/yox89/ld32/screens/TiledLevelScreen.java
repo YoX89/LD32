@@ -19,13 +19,21 @@ import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.yox89.ld32.CollisionManager;
+import com.yox89.ld32.CollisionManager.CollisionManagerListener;
 import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
 import com.yox89.ld32.actors.Mirror;
+import com.yox89.ld32.actors.PhysicsActor;
 import com.yox89.ld32.actors.PlayerActor;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
@@ -33,7 +41,7 @@ import com.yox89.ld32.raytracing.Direction;
 import com.yox89.ld32.raytracing.LightColor;
 import com.yox89.ld32.util.Ui;
 
-public class TiledLevelScreen extends BaseScreen {
+public class TiledLevelScreen extends BaseScreen implements CollisionManagerListener {
 
 	private static final String WALL = "Wall";
 	private static final String RED_LASER = "RedLaser";
@@ -42,8 +50,11 @@ public class TiledLevelScreen extends BaseScreen {
 	private static final String GHOST = "Ghost";
 	private static final String TORCH = "Torch";
 
+	public static boolean stopUserInput;
+	
 	private final MapLayer mObjectLayer;
 	private boolean[][] mLightNotAllowed;
+	private CollisionManager mCollisionManager;
 
 	private ShapeRenderer mFocusRenderer;
 	private Actor mFocus;
@@ -64,7 +75,7 @@ public class TiledLevelScreen extends BaseScreen {
 		mGajm = gajm;
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
-
+		
 		mNumberRemainingMirrors = 5;
 		mNumberTotalMirrors = 5;
 
@@ -89,8 +100,12 @@ public class TiledLevelScreen extends BaseScreen {
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
 		ui = new Ui(this,uiStage, mNumberTotalMirrors);
+
 		mPhysics = physics;
 
+		mCollisionManager = new CollisionManager(physics.world);
+		mCollisionManager.mCollisionManagerListener = this;
+		
 		mPlayer = new PlayerActor(physics);
 		game.addActor(mPlayer);
 		mPlayer.setPosition(GAME_WORLD_WIDTH / 2 - mPlayer.getWidth() / 2,
@@ -137,7 +152,9 @@ public class TiledLevelScreen extends BaseScreen {
 					ArrayList<Vector2> path = getPathForGhost(ghostObject);
 					Vector2 startPosition = path.get(0);
 
-					add(game, new GhostActor(physics, path), startPosition.x,
+					GhostActor ghostActor = new GhostActor(physics, path);
+					
+					add(game, ghostActor, startPosition.x,
 							startPosition.y);
 				} else {
 					assert false : "The ghost must be a PolylineMapObject";
@@ -277,4 +294,31 @@ public class TiledLevelScreen extends BaseScreen {
 		game.addActor(actor);
 	}
 
+	@Override
+	public void playerDiscoveredByGhost(PhysicsActor ghost) {
+		ghost.clearActions();
+		
+		Vector2 diff = new Vector2(ghost.getX() - mPlayer.getX(), ghost.getY() - mPlayer.getY());
+		float length = diff.len();
+		
+		float duration = length / 5f;
+		
+		stopUserInput = true;
+		RotateToAction rotateAction = Actions.rotateTo(diff.angle());
+		MoveToAction moveAction = Actions.moveTo(mPlayer.getX(), mPlayer.getY(), duration);
+		RunnableAction runnableAction = Actions.run(new Runnable() {
+
+			@Override
+			public void run() {
+				loseGame();
+			}
+		});
+		
+		SequenceAction sequenceAction = Actions.sequence(rotateAction, moveAction, runnableAction);
+		ghost.addAction(sequenceAction);
+	}
+	
+	public void loseGame() {
+		
+	}
 }
