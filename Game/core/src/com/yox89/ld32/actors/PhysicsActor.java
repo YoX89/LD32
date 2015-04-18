@@ -46,6 +46,16 @@ public class PhysicsActor extends Actor {
 	public float getY() {
 		return mPhysicsBody.getPosition().y;
 	}
+	
+	@Override
+	public float getX(int alignment) {
+		return getX();
+	}
+	
+	@Override
+	public float getY(int alignment) {
+		return getY();
+	}
 
 	@Override
 	public void setX(float x) {
@@ -66,6 +76,11 @@ public class PhysicsActor extends Actor {
 	public void moveBy(float x, float y) {
 		setPosition(getX() + x, getY() + y);
 	}
+	@Override
+	public void setPosition(float x, float y, int alignment) {
+		setPosition(x, y);
+	}
+	
 	@Override
 	public void rotateBy(float amountInDegrees) {
 		setRotation(getRotation() + amountInDegrees);
