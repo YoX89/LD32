@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="1" tileheight="1" nextobjectid="50">
+ <layer name="Tile Layer" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApIBwAGQAAB
+  </data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <object id="4" type="Wall" x="0" y="0" width="20" height="1"/>
+  <object id="6" type="Wall" x="0" y="1" width="1" height="18"/>
+  <object id="7" type="Wall" x="0" y="19" width="20" height="1"/>
+  <object id="9" type="Wall" x="19" y="1" width="1" height="18"/>
+  <object id="15" type="Wall" x="13" y="2" width="1" height="4"/>
+  <object id="18" type="Wall" x="6" y="14" width="1" height="5"/>
+  <object id="21" type="Torch" x="8" y="9" width="1" height="1"/>
+  <object id="22" type="Torch" x="18" y="18" width="1" height="1"/>
+  <object id="23" type="Torch" x="1" y="1" width="1" height="1"/>
+  <object id="24" type="Torch" x="18" y="1" width="1" height="1"/>
+  <object id="25" type="GreenLaser" x="19" y="13" width="1" height="1"/>
+  <object id="29" type="RedLaser" x="5" y="6" width="1" height="1"/>
+  <object id="37" type="Wall" x="8" y="8" width="11" height="1"/>
+  <object id="43" type="Wall" x="9" y="12" width="6" height="1"/>
+  <object id="45" type="Ghost" x="15" y="4">
+   <polyline points="0,0 0,1 0,2 2,2 3,2 3,0 3,-1 1,-1 0,-1 0,0"/>
+  </object>
+  <object id="47" type="Ghost" x="4" y="2">
+   <polyline points="0,0 7,0"/>
+  </object>
+  <object id="48" type="Ghost" x="2" y="18">
+   <polyline points="0,0 3,-3"/>
+  </object>
+  <object id="49" type="Ghost" x="9" y="17">
+   <polyline points="0,0 0,-1 8,-1 8,1 4,1 4,0 0,0"/>
+  </object>
+ </objectgroup>
+</map>
