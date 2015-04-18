@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
+import com.yox89.ld32.actors.PlayerActor;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
 import com.yox89.ld32.raytracing.Direction;
@@ -52,6 +53,12 @@ public class TiledLevelScreen extends BaseScreen {
 
 	@Override
 	protected void init(Stage game, Stage ui, Physics physics) {
+		final PlayerActor player = new PlayerActor(physics);
+		game.addActor(player);
+
+		player.setPosition(GAME_WORLD_WIDTH / 2 - player.getWidth() / 2,
+				GAME_WORLD_HEIGHT / 2);
+		
 		MapObjects mapObjects = this.mObjectLayer.getObjects();
 
 		for (MapObject mapObject : mapObjects) {

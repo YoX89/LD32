@@ -25,112 +25,125 @@ public class PlayerActor extends PhysicsActor {
 	private float speed;
 	private float angularSpeed;
 	private Animation animation;
+	private float rotationPriority = 0f;
 
 	public PlayerActor(Physics physics) {
 		this.animation = setupAnimation();
 		this.speed = 10f;
-		this.angularSpeed = 3;
-		setSize(2f, 2f);
-		initPhysicsBody(createBody(physics, BodyType.DynamicBody, Collision.PLAYER, (short)(Collision.WORLD | Collision.GHOST)));
+		this.angularSpeed = 10f;
+		setSize(2.3f, 2.3f);
+		initPhysicsBody(createBody(physics, BodyType.DynamicBody,
+				Collision.PLAYER, (short) (Collision.WORLD | Collision.GHOST)));
 
 	}
 
 	private Animation setupAnimation() {
-		int frameRows = 5;
-		int frameColumns = 6;
-		Texture walkSheet = new Texture(Gdx.files.internal("animation_sheet.png")); 
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/frameColumns, walkSheet.getHeight()/frameRows);              // #10
-        TextureRegion[] walkFrames = new TextureRegion[frameColumns * frameRows	];
-        int index = 0;
-        for (int i = 0; i < frameRows; i++) {
-            for (int j = 0; j < frameColumns; j++) {
-                walkFrames[index++] = tmp[i][j];
-            }
-        }
-        animation = new Animation(0.925f, walkFrames);
-        animation.setPlayMode(PlayMode.LOOP);
-        return animation;
-        
+		int frameRows = 4;
+		int frameColumns = 4;
+		Texture walkSheet = new Texture(
+				Gdx.files.internal("animation_sheet2.png"));
+		TextureRegion[][] tmp = TextureRegion.split(walkSheet,
+				walkSheet.getWidth() / frameColumns, walkSheet.getHeight()
+						/ frameRows); // #10
+		TextureRegion[] walkFrames = new TextureRegion[frameColumns * frameRows];
+		int index = 0;
+		for (int i = 0; i < frameRows; i++) {
+			for (int j = 0; j < frameColumns; j++) {
+				walkFrames[index++] = tmp[i][j];
+			}
+		}
+		animation = new Animation(2.25f, walkFrames);
+		animation.setPlayMode(PlayMode.LOOP);
+		return animation;
+
 	}
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		
+
 		float xMovement = 0;
 		float yMovement = 0;
-		
+
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			yMovement = 1f;
-			rotateTowards(ROTATION_UP, angularSpeed);
+			rotationPriority = ROTATION_UP;
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			yMovement = -1f;
-			rotateTowards(ROTATION_DOWN, angularSpeed);
+			rotationPriority = ROTATION_DOWN;
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			xMovement = 1f;
-			rotateTowards(ROTATION_RIGHT, angularSpeed);
-		} 
+			rotationPriority = ROTATION_RIGHT;
+		}
 
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			xMovement = -1f;
-			rotateTowards(ROTATION_LEFT, angularSpeed);
+			rotationPriority = ROTATION_LEFT;
 		}
+
 		
-		if(yMovement != 0 && xMovement != 0){
-			xMovement = xMovement*0.7f;
-			yMovement = yMovement*0.7f;
+		
+		if (yMovement != 0 && xMovement != 0) {
+			xMovement = xMovement * 0.7f;
+			yMovement = yMovement * 0.7f;
 		}
-		moveBy(delta *speed*xMovement, delta * speed*yMovement);
+
+		rotateTowards(rotationPriority, angularSpeed);
+		moveBy(delta * speed * xMovement, delta * speed * yMovement);
 	}
 
 	private void rotateTowards(float rotationGoal, float rotationChange) {
+
 		float currentRotation = getRotation() % 360;
 		if (currentRotation > 180) {
 			currentRotation = -180 + (currentRotation - 180);
 		} else if (currentRotation < -180) {
 			currentRotation = 180 + (currentRotation + 180);
 		}
-		
+
 		boolean leftSemi = currentRotation < -90 || currentRotation > 90;
 		boolean lowerSemi = currentRotation < 0;
 		int clockWise = 1;
-		
-		
+
 		if (rotationGoal == ROTATION_UP) {
-			clockWise = leftSemi? -1:1;
+			clockWise = leftSemi ? -1 : 1;
 		} else if (rotationGoal == ROTATION_DOWN) {
-			clockWise = leftSemi? 1:-1;
-		}else if (rotationGoal == ROTATION_LEFT) {
-			clockWise = lowerSemi? -1:1;
-		}else if (rotationGoal == ROTATION_RIGHT) {
-			clockWise = lowerSemi? 1:-1;
+			clockWise = leftSemi ? 1 : -1;
+		} else if (rotationGoal == ROTATION_LEFT) {
+			clockWise = lowerSemi ? -1 : 1;
+		} else if (rotationGoal == ROTATION_RIGHT) {
+			clockWise = lowerSemi ? 1 : -1;
 		}
-		
-		rotateBy(rotationChange*clockWise);
+		rotationChange = (Math.abs(rotationGoal - currentRotation) < rotationChange) ? 1
+				: rotationChange;
+
+		rotateBy(rotationChange * clockWise);
 
 	}
 
 	float stateTime = 0f;
+
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(animation.getKeyFrame(++stateTime)	, getX()-(getWidth()/2), getY()-(getHeight()/2),
-				getOriginX() + (getWidth() / 2), getOriginY()
-						+ (getHeight() / 2), getWidth(), getHeight()	,
-				getScaleX(), getScaleY(), getRotation());
+		batch.draw(animation.getKeyFrame(++stateTime), getX()
+				- (getWidth() / 2), getY() - (getHeight() / 2), getOriginX()
+				+ (getWidth() / 2), getOriginY() + (getHeight() / 2),
+				getWidth(), getHeight(), getScaleX(), getScaleY(),
+				getRotation(), true);
 	}
 
-	
-	public static Body createBody(Physics physics, BodyType bodyType, short collisionType, short collisionMask) {
+	public static Body createBody(Physics physics, BodyType bodyType,
+			short collisionType, short collisionMask) {
 		final BodyDef bd = new BodyDef();
 		bd.type = bodyType;
 		bd.position.set(0.0f, 10.0f);
 		bd.linearDamping = 0.2f;
 
-		final Body body =  physics.world.createBody(bd);
+		final Body body = physics.world.createBody(bd);
 
 		final FixtureDef fd = new FixtureDef();
 		fd.density = 0.0f;
@@ -150,6 +163,6 @@ public class PlayerActor extends PhysicsActor {
 		shape.dispose();
 
 		return body;
-	
+
 	}
 }
