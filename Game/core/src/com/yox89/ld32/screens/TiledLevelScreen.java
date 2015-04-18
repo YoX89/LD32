@@ -13,10 +13,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.LightSource;
-import com.yox89.ld32.actors.LightSource.Direction;
-import com.yox89.ld32.actors.LightSource.LightColor;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
+import com.yox89.ld32.raytracing.Direction;
+import com.yox89.ld32.raytracing.LightColor;
 
 public class TiledLevelScreen extends BaseScreen {
 
@@ -43,8 +43,6 @@ public class TiledLevelScreen extends BaseScreen {
 		MapLayer objectLayer = (MapLayer) levelMap.getLayers().get(
 				"Object Layer");
 		this.mObjectLayer = objectLayer;
-
-		System.out.println(GAME_WORLD_HEIGHT + " width: " + GAME_WORLD_WIDTH);
 	}
 
 	@Override
@@ -61,8 +59,6 @@ public class TiledLevelScreen extends BaseScreen {
 			float height = mapProperties.get("height", Float.class);
 
 			String type = mapProperties.get("type", String.class);
-
-			System.out.println(x + " " + y + " " + width + " " + height);
 
 			if (type.equals(WALL)) {
 
@@ -94,16 +90,16 @@ public class TiledLevelScreen extends BaseScreen {
 	private Direction[] parseLightDirection(int x, int y) {
 		Array<Direction> dirs = new Array<Direction>(4);
 		if (this.lightAllowedAtTile(x + 1, y)) {
-			dirs.add(Direction.RIGHT);
+			dirs.add(Direction.EAST);
 		}
 		if (this.lightAllowedAtTile(x - 1, y)) {
-			dirs.add(Direction.LEFT);
+			dirs.add(Direction.WEST);
 		}
 		if (this.lightAllowedAtTile(x, y + 1)) {
-			dirs.add(Direction.DOWN);
+			dirs.add(Direction.SOUTH);
 		}
 		if (this.lightAllowedAtTile(x, y - 1)) {
-			dirs.add(Direction.UP);
+			dirs.add(Direction.NORTH);
 		}
 		return dirs.toArray(Direction.class);
 	}

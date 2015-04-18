@@ -50,7 +50,7 @@ public class StartScreen extends BaseScreen {
 //						.format("%.0f | %.0f", actor.getX(), actor.getY()));
 			}
 		};
-		label.setText("Välkommen till spöke på vift");
+		label.setText("Vï¿½lkommen till spï¿½ke pï¿½ vift");
 		label.setPosition(200, 400);
 
 		ui.addActor(label);
@@ -69,7 +69,7 @@ public class StartScreen extends BaseScreen {
 
 				public boolean touchDown(InputEvent event, float x, float y,
 						int pointer, int button) {
-					gajm.setScreen(new LevelScreen(1));
+					gajm.setScreen(new TiledLevelScreen(1));
 					return true;
 				};
 			});
