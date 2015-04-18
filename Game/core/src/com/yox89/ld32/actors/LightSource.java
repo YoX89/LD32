@@ -3,6 +3,7 @@ package com.yox89.ld32.actors;
 import box2dLight.PointLight;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,31 +11,22 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.raytracing.Direction;
+import com.yox89.ld32.raytracing.LightColor;
+import com.yox89.ld32.raytracing.RayDispatcher.Ray;
+import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class LightSource extends TexturedPhysicsActor implements Disposable {
-
-	public enum LightColor {
-		GREEN, RED;
-
-		public Color toColor() {
-			switch (this) {
-			case GREEN:
-				return Color.GREEN;
-			case RED:
-			default:
-				return Color.RED;
-			}
-		}
-	}
-
-	public enum Direction {
-		LEFT, RIGHT, UP, DOWN
-	}
 
 	private LightColor mColor;
 
@@ -44,10 +36,14 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	private Direction[] mDirections;
 
+	private final Physics mPhysics;
+
 	public LightSource(Physics physics, LightColor color,
 			Direction... lightDirections) {
+		mPhysics = physics;
 		mColor = color;
 		mDirections = lightDirections;
+		setTouchable(Touchable.enabled);
 
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
@@ -76,8 +72,32 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 		mLight.setSoftnessLength(.2f);
 
 		mShapeRenderer = new ShapeRenderer();
+		mShapeRenderer.setAutoShapeType(true);
 
 		setSize(1f, 1f);
+
+		addListener(new InputListener() {
+
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				final Array<RayRequest> reqs = new Array<RayRequest>();
+				final Vector2 lightPos = new Vector2(mLight.getPosition());
+				for (Direction dir : mDirections) {
+					reqs.add(new RayRequest(mColor, lightPos, dir));
+				}
+
+				res = mPhysics.rayDispatcher.dispatch(reqs);
+
+				addAction(Actions.delay(1f, Actions.run(new Runnable() {
+
+					@Override
+					public void run() {
+						res = null;
+					}
+				})));
+				return true;
+			};
+		});
 	}
 
 	@Override
@@ -86,6 +106,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 		mLight.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
 	}
+
+	private Array<Ray> res = null;
 
 	@Override
 	protected String getTextureName() {
@@ -102,35 +124,48 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 
-		if (mDirections != null && mDirections.length != 0 && Gdx.graphics.getFrameId() % 120 < 60) {
+		if (mDirections != null && mDirections.length != 0) {
 			batch.end();
 			mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-			mShapeRenderer.begin(ShapeType.Filled);
+			mShapeRenderer.begin();
 
 			final float LIGHT_LEN = 10f;
 			mShapeRenderer.setColor(mColor.toColor().sub(0f, 0f, 0f, .25f));
-			
+
 			for (Direction d : mDirections) {
 				switch (d) {
-				case RIGHT:
+				case EAST:
 					mShapeRenderer.rect(getX() + getWidth(), getY(), LIGHT_LEN,
 							getHeight());
 					break;
-				case DOWN:
+				case SOUTH:
 					mShapeRenderer.rect(getX(), getY() - LIGHT_LEN, getWidth(),
 							LIGHT_LEN);
 					break;
-				case LEFT:
+				case WEST:
 					mShapeRenderer.rect(getX() - LIGHT_LEN, getY(), LIGHT_LEN,
 							getHeight());
 					break;
-				case UP:
+				case NORTH:
 					mShapeRenderer.rect(getX(), getY() + getHeight(),
 							getWidth(), LIGHT_LEN);
 					break;
-
+				default:
+					System.err.println("Illegal direction for light source "
+							+ d);
+					break;
 				}
 			}
+			if (res != null) {
+				mShapeRenderer.setColor(Color.MAGENTA);
+				Gdx.gl.glLineWidth(.1f);
+				mShapeRenderer.set(ShapeType.Line);
+
+				for (Ray ray : res) {
+					mShapeRenderer.line(ray.src, ray.dst);
+				}
+			}
+
 			mShapeRenderer.end();
 			batch.begin();
 		}

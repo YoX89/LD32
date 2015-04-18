@@ -4,6 +4,7 @@ import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.raytracing.RayDispatcher;
 
 public abstract class BaseScreen extends InputAdapter implements Screen {
 
@@ -30,6 +32,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 	private Box2DDebugRenderer mPhysicsDebugger;
 	private float mPhysicsUpdateBuf;
 	private RayHandler mRayHandler;
+	private RayDispatcher mRayDispatcher;
 	private static final float PHYSICS_TICK_DT = 1f / 60f;
 
 	public BaseScreen() {
@@ -46,10 +49,13 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mRayHandler = manage(new RayHandler(mWorld));
 
 		mPhysicsDebugger = new Box2DDebugRenderer();
+		mRayDispatcher = new RayDispatcher(mWorld);
 
-		Gdx.input.setInputProcessor(this);
+		Gdx.input.setInputProcessor(new InputMultiplexer(this, mUiStage,
+				mGameStage));
 
-		init(mGameStage, mUiStage, new Physics(mWorld, mRayHandler));
+		init(mGameStage, mUiStage, new Physics(mWorld, mRayHandler,
+				mRayDispatcher));
 	}
 
 	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
@@ -77,16 +83,15 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mRayHandler.setCombinedMatrix(gameProj);
 		mRayHandler.setAmbientLight(new Color(.2f, .2f, .2f, .1f));
 		mRayHandler.updateAndRender();
-	
+
 		mUiStage.act(delta);
 		mUiStage.draw();
-
 
 	}
 
 	@Override
 	public void resize(int width, int height) {
-
+		mGameStage.getViewport().setScreenBounds(0, 0, width, height);
 	}
 
 	@Override

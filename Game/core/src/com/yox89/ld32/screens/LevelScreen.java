@@ -8,10 +8,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.LightSource;
-import com.yox89.ld32.actors.LightSource.Direction;
-import com.yox89.ld32.actors.LightSource.LightColor;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
+import com.yox89.ld32.raytracing.Direction;
+import com.yox89.ld32.raytracing.LightColor;
 
 public class LevelScreen extends BaseScreen {
 
@@ -62,7 +62,6 @@ public class LevelScreen extends BaseScreen {
 			}
 		}
 	}
-
 	private int pixelAt(int x, int y) {
 		if (x >= 0 && y >= 0 && x < mLevelSrc.getWidth()
 				&& y < mLevelSrc.getHeight()) {
@@ -75,16 +74,16 @@ public class LevelScreen extends BaseScreen {
 	private Direction[] parseLightDirection(int x, int y) {
 		Array<Direction> dirs = new Array<Direction>(4);
 		if (pixelAt(x + 1, y) == EMPTY) {
-			dirs.add(Direction.RIGHT);
+			dirs.add(Direction.EAST);
 		}
 		if (pixelAt(x - 1, y) == EMPTY) {
-			dirs.add(Direction.LEFT);
+			dirs.add(Direction.WEST);
 		}
 		if (pixelAt(x, y + 1) == EMPTY) {
-			dirs.add(Direction.DOWN);
+			dirs.add(Direction.SOUTH);
 		}
 		if (pixelAt(x, y - 1) == EMPTY) {
-			dirs.add(Direction.UP);
+			dirs.add(Direction.NORTH);
 		}
 		return dirs.toArray(Direction.class);
 	}
