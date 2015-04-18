@@ -21,7 +21,8 @@ import com.yox89.ld32.raytracing.LightColor;
 public class TiledLevelScreen extends BaseScreen {
 
 	private static final String WALL = "Wall";
-	private static final String RED_LASER = "Laser";
+	private static final String RED_LASER = "RedLaser";
+	private static final String GREEN_LASER = "GreenLaser";
 	private static final String GHOST = "Ghost";
 	private static final String TORCH = "Torch";
 
@@ -73,6 +74,9 @@ public class TiledLevelScreen extends BaseScreen {
 				add(game, new Torch(physics), x, y);
 			} else if (type.equals(RED_LASER)) {
 				add(game, new LightSource(physics, LightColor.RED,
+						parseLightDirection((int) x, (int) y)), x, y);
+			} else if (type.equals(GREEN_LASER)) {
+				add(game, new LightSource(physics, LightColor.GREEN,
 						parseLightDirection((int) x, (int) y)), x, y);
 			}
 		}
