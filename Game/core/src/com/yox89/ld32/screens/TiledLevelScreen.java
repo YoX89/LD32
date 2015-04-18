@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -37,7 +38,6 @@ import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
 import com.yox89.ld32.actors.Mirror;
-import com.yox89.ld32.actors.PhysicsActor;
 import com.yox89.ld32.actors.PlayerActor;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
@@ -326,17 +326,26 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	}
 
 	@Override
-	public void playerDiscoveredByGhost(PhysicsActor ghost) {
+	public void playerDiscoveredByGhost(final GhostActor ghost) {
 		ghost.clearActions();
 		
-		Vector2 diff = new Vector2(ghost.getX() - mPlayer.getX(), ghost.getY() - mPlayer.getY());
-		float length = diff.len();
+		final Vector2 diff = new Vector2(ghost.getX() - mPlayer.getX(), ghost.getY() - mPlayer.getY());
+		final float length = diff.len();
 		
-		float duration = length / 5f;
+		final float duration = length / 5f;
 		
 		stopUserInput = true;
-		RotateToAction rotateAction = Actions.rotateTo(diff.angle());
-		MoveToAction moveAction = Actions.moveTo(mPlayer.getX(), mPlayer.getY(), duration);
+		ParallelAction parallelAction = Actions.parallel(
+				Actions.run(new Runnable() {
+
+					@Override
+					public void run() {
+						RotateToAction rotateToAction = ghost.getRotateActionUsingClosestDirection(diff.angle() - 180,
+								duration / 4);
+						ghost.addAction(rotateToAction);
+					}
+				}), Actions.moveTo(mPlayer.getX(), mPlayer.getY(), duration));
+		
 		RunnableAction runnableAction = Actions.run(new Runnable() {
 
 			@Override
@@ -345,7 +354,7 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 			}
 		});
 		
-		SequenceAction sequenceAction = Actions.sequence(rotateAction, moveAction, runnableAction);
+		SequenceAction sequenceAction = Actions.sequence(parallelAction, runnableAction);
 		ghost.addAction(sequenceAction);
 	}
 	

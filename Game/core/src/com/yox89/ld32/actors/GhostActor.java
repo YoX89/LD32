@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -104,9 +105,9 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 							@Override
 							public void run() {
-								// setRotation(getCurrentRotationNegative180ToPositive180());
-								rotateUsingClosestDirection(diff.angle(),
+								RotateToAction rotateToAction = getRotateActionUsingClosestDirection(diff.angle(),
 										duration / 4);
+								addAction(rotateToAction);
 							}
 						}), Actions.moveTo(newPosition.x, newPosition.y,
 								duration)));
@@ -125,20 +126,22 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 						@Override
 						public void run() {
-							rotateUsingClosestDirection(diff.angle(),
+							RotateToAction rotateToAction = getRotateActionUsingClosestDirection(diff.angle(),
 									duration / 4);
+							addAction(rotateToAction);
 						}
 					}), Actions.moveTo(startPosition.x, startPosition.y,
 							duration));
 
 			SequenceAction moveActions = Actions.sequence(actions);
 
-			rotateUsingClosestDirection(diff.angle(), 0f);
+			RotateToAction rotateToAction = getRotateActionUsingClosestDirection(diff.angle(), 0f);
+			addAction(rotateToAction);
 			this.addAction(Actions.forever(moveActions));
 		}
 	}
 
-	protected void rotateUsingClosestDirection(float targetAngle, float duration) {
+	public RotateToAction getRotateActionUsingClosestDirection(float targetAngle, float duration) {
 		float curr = getRotation();
 		if (curr >= 360f) {
 			curr %= 360f;
@@ -152,7 +155,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		if (Math.abs(diff) > 180f) {
 			setRotation(curr - 360f);
 		}
-		addAction(Actions.rotateTo(targetAngle, duration));
+		return Actions.rotateTo(targetAngle, duration);
 	}
 
 	@Override

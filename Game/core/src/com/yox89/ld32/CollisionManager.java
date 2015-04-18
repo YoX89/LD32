@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
-import com.yox89.ld32.actors.PhysicsActor;
+import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.util.Collision;
 
 public class CollisionManager implements ContactListener {
@@ -23,7 +23,7 @@ public class CollisionManager implements ContactListener {
 		
 		if (ca == Collision.PLAYER && cb == Collision.GHOST || ca == Collision.GHOST && cb == Collision.PLAYER) {
 			if (mCollisionManagerListener != null) {
-				PhysicsActor ghost = (PhysicsActor) (ca == Collision.GHOST ? contact.getFixtureA().getUserData() : contact.getFixtureB().getUserData()); 
+				GhostActor ghost = (GhostActor) (ca == Collision.GHOST ? contact.getFixtureA().getUserData() : contact.getFixtureB().getUserData()); 
 				mCollisionManagerListener.playerDiscoveredByGhost(ghost);
 			}
 		}
@@ -48,7 +48,7 @@ public class CollisionManager implements ContactListener {
 	}
 	
 	public interface CollisionManagerListener {
-		public void playerDiscoveredByGhost(PhysicsActor ghost);
+		public void playerDiscoveredByGhost(GhostActor ghost);
 	}
 
 }
