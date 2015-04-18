@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.PhysicsActor;
 import com.yox89.ld32.actors.ShadyActor;
 import com.yox89.ld32.actors.Wall;
@@ -28,7 +29,7 @@ public class ExampleScreen extends BaseScreen {
 	private Stage game;
 
 	@Override
-	protected void init(Stage game, Stage ui, World physicsWorld) {
+	protected void init(Stage game, Stage ui, Physics physics) {
 		this.game = game;
 		final Texture img = manage(new Texture("badlogic.jpg"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -37,12 +38,12 @@ public class ExampleScreen extends BaseScreen {
 		shady.setBounds(0, 0, 20, 20);
 		game.addActor(shady);
 
-		final ExampleActor actor = new ExampleActor(img, physicsWorld,
+		final ExampleActor actor = new ExampleActor(img, physics.world,
 				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
 		game.addActor(actor);
 
 		for (int x = 0; x < GAME_WORLD_WIDTH; x++) {
-			final Wall wall = new Wall(physicsWorld);
+			final Wall wall = new Wall(physics.world);
 			wall.setX(x);
 			game.addActor(wall);
 		}

@@ -1,9 +1,13 @@
 package com.yox89.ld32.screens;
 
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -12,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.yox89.ld32.Physics;
 
 public abstract class BaseScreen extends InputAdapter implements Screen {
 
@@ -24,6 +29,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 	private World mWorld;
 	private Box2DDebugRenderer mPhysicsDebugger;
 	private float mPhysicsUpdateBuf;
+	private RayHandler mRayHandler;
 	private static final float PHYSICS_TICK_DT = 1f / 60f;
 
 	public BaseScreen() {
@@ -37,14 +43,15 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mUiStage = manage(new Stage());
 
 		mWorld = manage(new World(new Vector2(0f, -9.82f), false));
+		mRayHandler = manage(new RayHandler(mWorld));
 		mPhysicsDebugger = new Box2DDebugRenderer();
 
 		Gdx.input.setInputProcessor(this);
 
-		init(mGameStage, mUiStage, mWorld);
+		init(mGameStage, mUiStage, new Physics(mWorld, mRayHandler));
 	}
 
-	protected abstract void init(Stage game, Stage ui, World physicsWorld);
+	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
 
 	protected <T extends Disposable> T manage(T res) {
 		mDisposables.add(res);
@@ -64,10 +71,15 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 		mGameStage.act(delta);
 		mGameStage.draw();
-		mPhysicsDebugger.render(mWorld, mGameStage.getCamera().combined);
-
+		final Matrix4 gameProj = mGameStage.getCamera().combined;
+		mPhysicsDebugger.render(mWorld, gameProj);
+		mRayHandler.setCombinedMatrix(gameProj);
+		mRayHandler.setAmbientLight(new Color(.2f, .2f, .2f, .1f));
+		mRayHandler.updateAndRender();
+	
 		mUiStage.act(delta);
 		mUiStage.draw();
+
 
 	}
 
