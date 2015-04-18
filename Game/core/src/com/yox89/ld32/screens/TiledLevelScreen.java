@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
+import com.yox89.ld32.actors.Mirror;
 import com.yox89.ld32.actors.PlayerActor;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
@@ -28,6 +29,7 @@ public class TiledLevelScreen extends BaseScreen {
 	private static final String WALL = "Wall";
 	private static final String RED_LASER = "RedLaser";
 	private static final String GREEN_LASER = "GreenLaser";
+	private static final String MIRROR = "Mirror";
 	private static final String GHOST = "Ghost";
 	private static final String TORCH = "Torch";
 
@@ -72,6 +74,10 @@ public class TiledLevelScreen extends BaseScreen {
 
 			String type = mapProperties.get("type", String.class);
 
+			if (type == null) {
+				System.err.println("Null type on " + mapProperties);
+				continue;
+			}
 			if (type.equals(WALL)) {
 
 				for (int i = (int) x; i < x + width; i++) {
@@ -93,6 +99,8 @@ public class TiledLevelScreen extends BaseScreen {
 				ArrayList<Vector2> positions = new ArrayList<Vector2>();
 				positions.add(new Vector2(x, y));
 				add(game, new GhostActor(physics, positions), x, y);
+			} else if (type.equals(MIRROR)) {
+				add(game, new Mirror(physics), x, y);
 			}
 		}
 	}

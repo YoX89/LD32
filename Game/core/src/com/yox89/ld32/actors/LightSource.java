@@ -1,9 +1,9 @@
 package com.yox89.ld32.actors;
 
+import box2dLight.ConeLight;
 import box2dLight.PointLight;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -37,6 +37,9 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	private Direction[] mDirections;
 
 	private final Physics mPhysics;
+
+	private Array<Ray> res = null;
+	private Array<ConeLight> mRayCones = new Array<ConeLight>();
 
 	public LightSource(Physics physics, LightColor color,
 			Direction... lightDirections) {
@@ -87,13 +90,23 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 				}
 
 				res = mPhysics.rayDispatcher.dispatch(reqs);
+				for (Ray ray : res) {
+					final float dist = new Vector2(ray.src).sub(ray.dst).len() * 2;
+					final ConeLight cone = new ConeLight(mPhysics.rayHandler,
+							10, ray.color.toColor(), dist, x, y,
+							ray.direction.getAngleDegrees(), 100 / dist);
+
+					cone.setPosition(ray.src);
+					mRayCones.add(cone);
+				}
 
 				addAction(Actions.delay(1f, Actions.run(new Runnable() {
 
 					@Override
 					public void run() {
-						res = null;
+						disposeRays();
 					}
+
 				})));
 				return true;
 			};
@@ -102,12 +115,20 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	@Override
 	public void act(float delta) {
-		super.act(delta);
-
 		mLight.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+		super.act(delta);
 	}
 
-	private Array<Ray> res = null;
+	private void disposeRays() {
+		if (res != null) {
+			for (ConeLight cl : mRayCones) {
+				cl.remove();
+				cl.dispose();
+			}
+			mRayCones.clear();
+			res = null;
+		}
+	}
 
 	@Override
 	protected String getTextureName() {
@@ -130,7 +151,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 			mShapeRenderer.begin();
 
 			final float LIGHT_LEN = 10f;
-			mShapeRenderer.setColor(mColor.toColor().sub(0f, 0f, 0f, .25f));
+			mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f, 0f,
+					.25f));
 
 			for (Direction d : mDirections) {
 				switch (d) {
@@ -174,5 +196,6 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	@Override
 	public void dispose() {
 		mLight.dispose();
+		disposeRays();
 	}
 }

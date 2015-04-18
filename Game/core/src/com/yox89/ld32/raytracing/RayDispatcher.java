@@ -29,8 +29,6 @@ public class RayDispatcher {
 			ang.scl(40f);
 			dst.add(ang);
 			
-			System.out.println("casting "+ src +"--> " + dst);
-
 			final Ray[] res = new Ray[1];
 			mWorld.rayCast(new RayCastCallback() {
 
@@ -41,7 +39,6 @@ public class RayDispatcher {
 						Vector2 normal, float fraction) {
 
 					if (fraction < minFraction) {
-						System.out.println("new best @" + point);
 						res[0] = new Ray(req.direction, req.color, new Vector2(
 								src), new Vector2(point), fixture);
 						minFraction = fraction;
@@ -64,6 +61,8 @@ public class RayDispatcher {
 						}
 					});
 				}
+			} else {
+				ret.add(new Ray(req.direction, req.color, src, dst, null));
 			}
 		}
 		return ret;
