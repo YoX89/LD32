@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.yox89.ld32.Physics;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
@@ -18,10 +18,10 @@ import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 public class GhostActor extends PhysicsActor {
 	private final TextureRegion mTextureRegion;
 	
-	public GhostActor(TextureRegion textureRegion, World world, final float size, ArrayList<Vector2>positions) {
+	public GhostActor(TextureRegion textureRegion, Physics physicsWorld, final float size, ArrayList<Vector2>positions) {
 		this.mTextureRegion = textureRegion;
 		
-		this.initPhysicsBody(PhysicsUtil.createBody(new BodyParams(world) {
+		this.initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physicsWorld.world) {
 
 			@Override
 			public BodyType getBodyType() {

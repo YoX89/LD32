@@ -6,15 +6,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.util.Assets;
 
 public class GhostScreen extends BaseScreen {
 	
 	private Stage game;
-
+	
 	@Override
-	protected void init(Stage game, Stage ui, World physicsWorld) {
+	protected void init(Stage game, Stage ui, Physics physicsWorld) {
 		this.game = game;
 
 		final TextureRegion texture = Assets.get("tilePink_04");
