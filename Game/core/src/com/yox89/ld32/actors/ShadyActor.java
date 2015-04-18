@@ -1,4 +1,4 @@
-package com.yox89.ld32;
+package com.yox89.ld32.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
