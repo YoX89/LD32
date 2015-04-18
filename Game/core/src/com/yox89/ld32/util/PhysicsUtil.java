@@ -42,6 +42,10 @@ public abstract class PhysicsUtil {
 		public void setShape(PolygonShape ps) {
 			ps.setAsBox(.5f, .5f, new Vector2(.5f, .5f), 0f);
 		}
+		
+		public boolean isSensor() {
+			return false;
+		}
 	}
 
 	public static Body createBody(BodyParams params) {
@@ -57,6 +61,8 @@ public abstract class PhysicsUtil {
 		fd.filter.categoryBits = params.getCollisionType();
 
 		fd.filter.maskBits = params.getCollisionMask();
+		
+		fd.isSensor = params.isSensor();
 
 		fd.restitution = 0.0f;
 		fd.friction = 0.0f;
