@@ -3,6 +3,7 @@ package com.yox89.ld32.screens;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -156,14 +157,21 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 					Vector2 startPosition = path.get(0);
 
 					GhostActor ghostActor = new GhostActor(physics, path);
-					
+				
 					add(game, ghostActor, startPosition.x,
 							startPosition.y);
+					
+					
 				} else {
 					Vector2 startPosition = new Vector2(x,y);
 					ArrayList<Vector2> path = new ArrayList<Vector2>();
 					path.add(startPosition);
-					add(game, new GhostActor(physics, path), startPosition.x,
+					GhostActor ghostActor = new GhostActor(physics, path);
+					System.out.println(Float.parseFloat(mapProperties.get("AngleDegrees").toString()));
+				
+					ghostActor.setRotation(Float.parseFloat(mapProperties.get("AngleDegrees").toString()));
+					
+					add(game, ghostActor, startPosition.x,
 							startPosition.y);
 				}
 			} else if (type.equals(MIRROR)) {
