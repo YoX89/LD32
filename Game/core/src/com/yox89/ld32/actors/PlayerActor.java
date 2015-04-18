@@ -1,5 +1,7 @@
 package com.yox89.ld32.actors;
 
+import javax.swing.plaf.basic.BasicScrollPaneUI.HSBChangeListener;
+
 import box2dLight.PointLight;
 
 import com.badlogic.gdx.Gdx;
@@ -9,14 +11,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.Ui;
@@ -31,6 +40,10 @@ public class PlayerActor extends PhysicsActor {
 	private static final float ANIMATION_START = 10f;
 	private static final float ANIMATION_DURATION = 2.30f;
 
+	
+	private static final String MAP_PROPERTIES_FLUFF = "fluff";
+	private static final int URGE_TO_MUTTER = 70;
+
 	private float speed;
 	private float angularSpeed;
 	private Animation animation;
@@ -40,13 +53,19 @@ public class PlayerActor extends PhysicsActor {
 
 	private PointLight mLight;
 	private Ui ui;
+
 	
 	public boolean mBlockInput;
+	private MapProperties mapProperties;
+	
+	private int urgeToMutter = 0;
+	private boolean hasMuttered = false;
 
-	public PlayerActor(Physics physics, Ui ui) {
+
+	public PlayerActor(Physics physics, Ui ui, MapProperties mapProperties) {
 		setTouchable(Touchable.disabled);
 		this.ui = ui;
-
+		this.mapProperties = mapProperties;
 		this.animation = setupAnimation();
 		this.speed = 5f;
 		this.angularSpeed = 10f;
@@ -111,6 +130,7 @@ public class PlayerActor extends PhysicsActor {
 		if(movement.x != 0 ||  movement.y != 0){
 			moving =  true;
 			ui.removeFluffText();
+			mutter();
 		} else {
 			moving = false;
 			stateTime = ANIMATION_START;
@@ -124,8 +144,10 @@ public class PlayerActor extends PhysicsActor {
 		mLight.setPosition(getX(), getY());
 	}
 
+
 	private void rotateTowards(float rotationGoal,
 			float currentRotationNegative180ToPositive180, float rotationChange) {
+
 		float currentRotation = currentRotationNegative180ToPositive180;
 
 		boolean leftSemi = currentRotation < -90 || currentRotation > 90;
@@ -158,6 +180,18 @@ public class PlayerActor extends PhysicsActor {
 		return currentRotation;
 	}
 
+	private void mutter() {
+		if(!hasMuttered ){
+			urgeToMutter++;
+			if(urgeToMutter > URGE_TO_MUTTER){
+				if(urgeToMutter%URGE_TO_MUTTER == 0 && Math.random() < 0.4f){
+					ui.showMutter(mapProperties.get(MAP_PROPERTIES_FLUFF)+"", new Vector2(getX(),getY()));
+					hasMuttered = true;
+				} 
+			}
+		}
+	}
+	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(animation.getKeyFrame((moving ? ++stateTime : 10)), getX()

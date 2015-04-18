@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -107,15 +108,15 @@ public class TiledLevelScreen extends BaseScreen implements
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
 
-		ui = new Ui(this, uiStage, mNumberTotalMirrors,
-				mObjectLayer.getProperties());
+
+		ui = new Ui(this,game,uiStage, mNumberTotalMirrors,mObjectLayer.getProperties());
 
 		mPhysics = physics;
 
 		mCollisionManager = new CollisionManager(physics.world);
 		mCollisionManager.mCollisionManagerListener = this;
-
-		mPlayer = new PlayerActor(physics, ui);
+		
+		mPlayer = new PlayerActor(physics,ui,mObjectLayer.getProperties());
 
 		game.addActor(mPlayer);
 		mPlayer.setPosition(GAME_WORLD_WIDTH / 2 - mPlayer.getWidth() / 2,
@@ -450,4 +451,6 @@ public class TiledLevelScreen extends BaseScreen implements
 			}
 		})));
 	}
+
+	
 }
