@@ -88,7 +88,7 @@ public class TiledLevelScreen extends BaseScreen {
 
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
-		ui = new Ui(uiStage, mNumberTotalMirrors);
+		ui = new Ui(this,uiStage, mNumberTotalMirrors);
 		mPhysics = physics;
 
 		mPlayer = new PlayerActor(physics);

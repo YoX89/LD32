@@ -65,7 +65,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
 
-	protected <T extends Disposable> T manage(T res) {
+	public <T extends Disposable> T manage(T res) {
 		mDisposables.add(res);
 		return res;
 	}
