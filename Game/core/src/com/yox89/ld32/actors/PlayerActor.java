@@ -1,7 +1,10 @@
 package com.yox89.ld32.actors;
 
+import box2dLight.PointLight;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
@@ -32,6 +35,8 @@ public class PlayerActor extends PhysicsActor {
 	private float rotationPriority = 0f;
 	private boolean moving;
 	private float stateTime = ANIMATION_START;
+	
+	private PointLight mLight;
 
 	public PlayerActor(Physics physics) {
 		this.animation = setupAnimation();
@@ -40,6 +45,8 @@ public class PlayerActor extends PhysicsActor {
 		setSize(2.3f, 2.3f);
 		initPhysicsBody(createBody(physics, BodyType.DynamicBody,
 				Collision.PLAYER, (short) (Collision.WORLD | Collision.GHOST)));
+		
+		mLight = new PointLight(physics.rayHandler, 10, new Color(1f, 1f, 1f, 0.5f), 1.5f, 0f, 0f);
 
 	}
 
@@ -105,6 +112,7 @@ public class PlayerActor extends PhysicsActor {
 		rotateTowards(rotationPriority,getCurrentRotationNegative180ToPositive180(), angularSpeed);
 		moveBy(movement.x, movement.y);
 
+		mLight.setPosition(getX(), getY());
 	}
 
 	private void rotateTowards(float rotationGoal, float currentRotationNegative180ToPositive180, float rotationChange) {
