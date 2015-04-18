@@ -177,6 +177,9 @@ public class TiledLevelScreen extends BaseScreen {
 				return true;
 			}
 			return true;
+		}else if (keycode == Keys.Q) {
+			mGajm.setScreen(new StartScreen(mGajm));
+			return true;
 		}
 		return super.keyDown(keycode);
 	}
