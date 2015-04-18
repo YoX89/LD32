@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.LightSource;
+import com.yox89.ld32.actors.Mirror;
 import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
 import com.yox89.ld32.raytracing.Direction;
@@ -20,6 +21,7 @@ public class LevelScreen extends BaseScreen {
 	private static final int RED_LAZER = 0xFF0000FF;
 	private static final int GREEN_LAZER = 0x00FF00FF;
 	private static final int TORCH = 0xFFFF00FF;
+	private static final int MIRROR = 0x0000FFFF;
 
 	private final Pixmap mLevelSrc;
 
@@ -57,6 +59,9 @@ public class LevelScreen extends BaseScreen {
 					break;
 				case TORCH:
 					add(game, new Torch(physics), x, GAME_WORLD_HEIGHT - y - 1);
+					break;
+				case MIRROR:
+					add(game, new Mirror(physics), x, GAME_WORLD_HEIGHT - y - 1);
 					break;
 				}
 			}

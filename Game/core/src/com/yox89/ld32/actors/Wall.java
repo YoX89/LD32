@@ -4,15 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.yox89.ld32.raytracing.RayDispatcher.Dispatcher;
-import com.yox89.ld32.raytracing.RayDispatcher.Ray;
-import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
-import com.yox89.ld32.raytracing.RayDispatcher.RayTarget;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
-public class Wall extends TexturedPhysicsActor implements RayTarget {
+public class Wall extends TexturedPhysicsActor {
 
 	public Wall(World world) {
 
@@ -45,10 +41,4 @@ public class Wall extends TexturedPhysicsActor implements RayTarget {
 	protected String getTextureName() {
 		return "tileGrey_01";
 	}
-
-	@Override
-	public void onHitWithRay(Ray ray, Dispatcher dispatcher) {
-	}
-
-	static int reflects = 0;
 }
