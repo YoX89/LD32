@@ -44,11 +44,16 @@ public class TiledLevelScreen extends BaseScreen {
 	private Actor mFocus;
 	final Vector2 mLastHoverCoords = new Vector2();
 
+	protected int mNumberRemainingMirrors;
+	protected int mNumberTotalMirrors;
 
 	private Physics mPhysics;
 
 	public TiledLevelScreen(int level) {
 		mFocusRenderer = manage(new ShapeRenderer());
+
+		mNumberRemainingMirrors = 5;
+		mNumberTotalMirrors = 5;
 
 		final TiledMap levelMap = new TmxMapLoader().load("levels/level"
 				+ level + ".tmx");

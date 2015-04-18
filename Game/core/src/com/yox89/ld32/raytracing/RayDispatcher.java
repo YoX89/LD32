@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.yox89.ld32.util.Collision;
 
 public class RayDispatcher {
 
@@ -28,7 +29,7 @@ public class RayDispatcher {
 			final Vector2 ang = req.direction.getAngleVec2().nor();
 			ang.scl(40f);
 			dst.add(ang);
-			
+
 			final Ray[] res = new Ray[1];
 			mWorld.rayCast(new RayCastCallback() {
 
@@ -37,6 +38,10 @@ public class RayDispatcher {
 				@Override
 				public float reportRayFixture(Fixture fixture, Vector2 point,
 						Vector2 normal, float fraction) {
+					final short cat = fixture.getFilterData().categoryBits;
+					if ((cat & (Collision.GHOST | Collision.MIRROR | Collision.WORLD)) == 0) {
+						return fraction * 0.9f;
+					}
 
 					if (fraction < minFraction) {
 						res[0] = new Ray(req.direction, req.color, new Vector2(

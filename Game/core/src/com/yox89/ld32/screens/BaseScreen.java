@@ -1,5 +1,6 @@
 package com.yox89.ld32.screens;
 
+import box2dLight.Light;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.raytracing.RayDispatcher;
+import com.yox89.ld32.util.Collision;
 
 public abstract class BaseScreen extends InputAdapter implements Screen {
 
@@ -50,6 +52,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 		mPhysicsDebugger = new Box2DDebugRenderer();
 		mRayDispatcher = new RayDispatcher(mWorld);
+		Light.setContactFilter((short)~0, (short)0, (short)~Collision.PLAYER);
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this, mUiStage,
 				mGameStage));
