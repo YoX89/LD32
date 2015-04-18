@@ -1,6 +1,7 @@
 package com.yox89.ld32.screens;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -177,6 +180,22 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	}
 
 	public boolean mouseIsInRangeOfPlayer() {
+		final AtomicBoolean foundWall = new AtomicBoolean(false);
+		mPhysics.world.rayCast(new RayCastCallback() {
+
+			@Override
+			public float reportRayFixture(Fixture fixture, Vector2 point,
+					Vector2 normal, float fraction) {
+				if (fixture.getUserData() instanceof Wall) {
+					foundWall.set(true);
+					return 0;
+				}
+				return 1;
+			}
+		}, new Vector2(mPlayer.getX(), mPlayer.getY()), mLastHoverCoords);
+		if (foundWall.get()) {
+			return false;
+		}
 		return new Vector2(mPlayer.getX(), mPlayer.getY())
 				.sub(mLastHoverCoords).len() < 5;
 	}
@@ -194,7 +213,7 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 				return true;
 			}
 			return true;
-		}else if (keycode == Keys.Q) {
+		} else if (keycode == Keys.Q) {
 			mGajm.setScreen(new StartScreen(mGajm));
 			return true;
 		}
