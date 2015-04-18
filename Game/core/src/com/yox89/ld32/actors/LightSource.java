@@ -30,7 +30,7 @@ import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	private static final boolean DEBUG_LASERS = false;
-	
+
 	private LightColor mColor;
 
 	private PointLight mLight;
@@ -44,6 +44,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	private Array<Ray> res = null;
 	private Array<ConeLight> mRayCones = new Array<ConeLight>();
 
+	private boolean mCanBeActivated;
+
 	public LightSource(final TiledLevelScreen levelScreen, Physics physics,
 			LightColor color, Direction... lightDirections) {
 		setTouchable(Touchable.enabled);
@@ -52,6 +54,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 		mColor = color;
 		mDirections = lightDirections;
 		setTouchable(Touchable.enabled);
+
+		mCanBeActivated = true;
 
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
@@ -91,6 +95,11 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 				if (!levelScreen.mouseIsInRangeOfPlayer()) {
 					return false;
 				}
+				if (!mCanBeActivated) {
+					return false;
+				}
+				mCanBeActivated = false;
+
 				final Array<RayRequest> reqs = new Array<RayRequest>();
 				final Vector2 lightPos = new Vector2(mLight.getPosition());
 				for (Direction dir : mDirections) {
@@ -113,6 +122,7 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 					@Override
 					public void run() {
 						disposeRays();
+						setColor(Color.BLACK);
 					}
 
 				})));
@@ -151,7 +161,9 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		batch.setColor(getColor());
 		super.draw(batch, parentAlpha);
+		batch.setColor(Color.WHITE);
 
 		if (DEBUG_LASERS) {
 			if (mDirections != null && mDirections.length != 0) {

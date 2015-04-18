@@ -92,7 +92,12 @@ public class StartScreen extends BaseScreen {
 
 				public boolean touchDown(InputEvent event, float x, float y,
 						int pointer, int button) {
-					gajm.setScreen(new TiledLevelScreen(gajm, 0));
+					switchScreen(new Runnable() {
+						@Override
+						public void run() {
+							gajm.setScreen(new TiledLevelScreen(gajm, 0));
+						}
+					});
 					return true;
 				};
 
@@ -118,12 +123,12 @@ public class StartScreen extends BaseScreen {
 		public void act(float delta) {
 			super.act(delta);
 
-			if (Gdx.input.isKeyPressed(Keys.J)){
-				gajm.setScreen(new TiledLevelScreen(gajm,5));
+			if (Gdx.input.isKeyPressed(Keys.J)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 5));
 			}
-			
-			if (Gdx.input.isKeyPressed(Keys.K)){
-				gajm.setScreen(new TiledLevelScreen(gajm,6));
+
+			if (Gdx.input.isKeyPressed(Keys.K)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 6));
 			}
 			
 			if (Gdx.input.isKeyPressed(Keys.M)){

@@ -3,7 +3,6 @@ package com.yox89.ld32.screens;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
@@ -45,7 +43,8 @@ import com.yox89.ld32.raytracing.Direction;
 import com.yox89.ld32.raytracing.LightColor;
 import com.yox89.ld32.util.Ui;
 
-public class TiledLevelScreen extends BaseScreen implements CollisionManagerListener {
+public class TiledLevelScreen extends BaseScreen implements
+		CollisionManagerListener {
 
 	private static final String WALL = "Wall";
 	private static final String RED_LASER = "RedLaser";
@@ -54,8 +53,6 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	private static final String GHOST = "Ghost";
 	private static final String TORCH = "Torch";
 
-	public static boolean stopUserInput;
-	
 	private final MapLayer mObjectLayer;
 	private boolean[][] mLightNotAllowed;
 	private CollisionManager mCollisionManager;
@@ -80,7 +77,7 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 		mGajm = gajm;
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
-		
+
 		mNumberRemainingMirrors = 5;
 		mNumberTotalMirrors = 5;
 
@@ -160,22 +157,20 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 					Vector2 startPosition = path.get(0);
 
 					GhostActor ghostActor = new GhostActor(physics, path);
-				
-					add(game, ghostActor, startPosition.x,
-							startPosition.y);
-					
-					
+
+					add(game, ghostActor, startPosition.x, startPosition.y);
 				} else {
-					Vector2 startPosition = new Vector2(x,y);
+					Vector2 startPosition = new Vector2(x, y);
 					ArrayList<Vector2> path = new ArrayList<Vector2>();
 					path.add(startPosition);
 					GhostActor ghostActor = new GhostActor(physics, path);
-					System.out.println(Float.parseFloat(mapProperties.get("AngleDegrees").toString()));
-				
-					ghostActor.setRotation(Float.parseFloat(mapProperties.get("AngleDegrees").toString()));
-					
-					add(game, ghostActor, startPosition.x,
-							startPosition.y);
+					System.out.println(Float.parseFloat(mapProperties.get(
+							"AngleDegrees").toString()));
+
+					ghostActor.setRotation(Float.parseFloat(mapProperties.get(
+							"AngleDegrees").toString()));
+
+					add(game, ghostActor, startPosition.x, startPosition.y);
 				}
 			} else if (type.equals(MIRROR)) {
 				add(game, new Mirror(physics), x, y);
@@ -218,7 +213,15 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	@Override
 	public boolean keyDown(int keycode) {
 		if (keycode == Keys.R) {
-			mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
+
+			switchScreen(new Runnable() {
+
+				@Override
+				public void run() {
+					mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
+				}
+			});
+
 			return true;
 		} else if (keycode == Keys.E) {
 			if (mFocus instanceof Mirror) {
@@ -229,7 +232,14 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 			}
 			return true;
 		} else if (keycode == Keys.Q) {
-			mGajm.setScreen(new StartScreen(mGajm));
+
+			switchScreen(new Runnable() {
+
+				@Override
+				public void run() {
+					mGajm.setScreen(new StartScreen(mGajm));
+				}
+			});
 			return true;
 		}
 		return super.keyDown(keycode);
@@ -331,24 +341,26 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 	@Override
 	public void playerDiscoveredByGhost(final GhostActor ghost) {
 		ghost.clearActions();
-		
-		final Vector2 diff = new Vector2(ghost.getX() - mPlayer.getX(), ghost.getY() - mPlayer.getY());
+
+		final Vector2 diff = new Vector2(ghost.getX() - mPlayer.getX(),
+				ghost.getY() - mPlayer.getY());
 		final float length = diff.len();
-		
+
 		final float duration = length / 5f;
-		
-		stopUserInput = true;
+
+		Gdx.input.setInputProcessor(null);
 		ParallelAction parallelAction = Actions.parallel(
 				Actions.run(new Runnable() {
 
 					@Override
 					public void run() {
-						RotateToAction rotateToAction = ghost.getRotateActionUsingClosestDirection(diff.angle() - 180,
-								duration / 4);
+						RotateToAction rotateToAction = ghost
+								.getRotateActionUsingClosestDirection(
+										diff.angle() - 180, duration / 4);
 						ghost.addAction(rotateToAction);
 					}
 				}), Actions.moveTo(mPlayer.getX(), mPlayer.getY(), duration));
-		
+
 		RunnableAction runnableAction = Actions.run(new Runnable() {
 
 			@Override
@@ -356,13 +368,13 @@ public class TiledLevelScreen extends BaseScreen implements CollisionManagerList
 				loseGame();
 			}
 		});
-		
-		SequenceAction sequenceAction = Actions.sequence(parallelAction, runnableAction);
+
+		SequenceAction sequenceAction = Actions.sequence(parallelAction,
+				runnableAction);
 		ghost.addAction(sequenceAction);
 	}
-	
+
 	public void loseGame() {
-		stopUserInput = false;
 		mGajm.setScreen(new TiledLevelScreen(mGajm, mLevelId));
 	}
 }

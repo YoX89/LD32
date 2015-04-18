@@ -14,11 +14,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.actors.Fade;
 import com.yox89.ld32.raytracing.RayDispatcher;
 import com.yox89.ld32.util.Collision;
 
@@ -60,6 +62,12 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 		init(mGameStage, mUiStage, new Physics(mWorld, mRayHandler,
 				mRayDispatcher));
+
+		final Fade fade = new Fade();
+		fade.getColor().a = 1f;
+		fade.addAction(Actions.sequence(Actions.fadeOut(.25f),
+				Actions.removeActor()));
+		mUiStage.addActor(fade);
 	}
 
 	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
@@ -90,7 +98,14 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 		mUiStage.act(delta);
 		mUiStage.draw();
-
+	}
+	
+	protected void switchScreen(Runnable onSwitch) {
+		final Fade fade = new Fade();
+		fade.getColor().a = 0f;
+		fade.addAction(Actions.sequence(Actions.fadeIn(.25f),
+				Actions.run(onSwitch)));
+		mUiStage.addActor(fade);
 	}
 
 	@Override
