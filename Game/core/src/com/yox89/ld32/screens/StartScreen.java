@@ -58,7 +58,8 @@ public class StartScreen extends BaseScreen {
 			}
 		};
 		label.setText("Welcome to ghost in the house");
-		label.setPosition(200, 400);
+		label.setPosition(50, 400);
+		label.setFontScale(2f);
 		
 		
 		
