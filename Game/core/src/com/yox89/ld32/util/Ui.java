@@ -71,7 +71,7 @@ public class Ui {
 		normalMirrorsLabel.setPosition(UI_HORIZONTAL_MARGIN * 2, 5);
 
 		final Texture splitterMirrorIconTexture = tiledLevelScreen
-				.manage(new Texture("mirror.png"));
+				.manage(new Texture("mirror_splitter.png"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		UiImageActor splitterMirrorIcon = new UiImageActor(
 				splitterMirrorIconTexture, 16f, 16f);

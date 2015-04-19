@@ -1,7 +1,11 @@
 package com.yox89.ld32.actors;
 
+import box2dLight.PointLight;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -31,13 +35,18 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 	private Vector2 gamePosition = new Vector2(-1, -1);
 
 	private final int mType;
+	private PointLight mLight;
 
 	public Mirror(Physics physics, int type) {
 		setTouchable(Touchable.enabled);
 
 		mType = type;
 
-		mTexture = new Texture(Gdx.files.internal("mirror.png"));
+		mTexture = new Texture(
+				Gdx.files
+						.internal(type == TYPE_SPLITTER ? "mirror_splitter.png"
+								: "mirror.png"));
+		mTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);;
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
 			@Override
@@ -61,6 +70,25 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 			}
 		}));
 		setSize(1f, 1f);
+		mLight = new PointLight(physics.rayHandler, 5, new Color(1f, 1f, 1f,
+				0.75f), 1.5f, 0f, 0f);
+	}
+
+	@Override
+	public boolean remove() {
+		if (super.remove()) {
+			mLight.setActive(false);
+
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+
+		mLight.setPosition(getX(), getY());
 	}
 
 	@Override
@@ -88,8 +116,10 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 		if (mType == TYPE_SPLITTER) {
 			if (!currDir.isParallell(ray.direction)) {
 				reqs.add(new RayRequest(ray.color, ray.dst, currDir));
+				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90()));
 				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90()
 						.add90()));
+				reqs.add(new RayRequest(ray.color, ray.dst, currDir.sub90()));
 			}
 		} else {
 			if (currDir.add45().isParallell(ray.direction)) {
@@ -115,6 +145,8 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 	@Override
 	public void dispose() {
 		mTexture.dispose();
+		mLight.remove();
+		mLight.dispose();
 	}
 
 	public String getHumanReadableType() {
@@ -124,9 +156,8 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 		case TYPE_SPLITTER:
 			return MirrorInventory.MIRROR_TYPE_SPLITTER;
 		default:
-			return ""+mType;
+			return "" + mType;
 		}
-		
-		
+
 	}
 }
