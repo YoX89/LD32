@@ -435,6 +435,7 @@ public class TiledLevelScreen extends BaseScreen implements
 			return;
 		}
 		mDidEnd = true;
+		Gajm.maxClearedLevel = Math.max(Gajm.maxClearedLevel, mLevelId);
 		mUiStage.addAction(Actions.delay(1f, Actions.run(new Runnable() {
 
 			@Override

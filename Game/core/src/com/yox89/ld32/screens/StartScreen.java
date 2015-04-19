@@ -28,7 +28,6 @@ public class StartScreen extends BaseScreen {
 	private Gajm gajm;
 
 	public StartScreen(Gajm gajm) {
-		super();
 		this.gajm = gajm;
 	}
 
@@ -67,7 +66,7 @@ public class StartScreen extends BaseScreen {
 		final Label titleLbl = new Label("LD32 Work in progress",
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
 		titleLbl.setPosition(
-				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(), 400);
+				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(), Gdx.graphics.getHeight() * 0.8f);
 		titleLbl.setFontScale(2f);
 
 		final Label copyLbl = new Label(
@@ -76,7 +75,7 @@ public class StartScreen extends BaseScreen {
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
 		copyLbl.setAlignment(Align.center);
 		copyLbl.setFontScale(0.9f);
-		copyLbl.setPosition(300, 50);
+		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth() / copyLbl.getFontScaleX()) / 2 , 50);
 
 		ui.addActor(titleLbl);
 		ui.addActor(copyLbl);
@@ -168,5 +167,5 @@ public class StartScreen extends BaseScreen {
 
 		}
 	}
-
+	
 }

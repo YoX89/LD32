@@ -17,8 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.Fade;
 import com.yox89.ld32.raytracing.RayDispatcher;
@@ -45,8 +45,8 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 	@Override
 	public void show() {
-		mGameStage = manage(new Stage(new ScalingViewport(Scaling.fit,
-				GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT)));
+		mGameStage = manage(new Stage(new StretchViewport(GAME_WORLD_WIDTH,
+				GAME_WORLD_HEIGHT)));
 		mUiStage = manage(new Stage());
 
 		mWorld = manage(new World(new Vector2(0f, 0f), false));
@@ -68,7 +68,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		fade.addAction(Actions.sequence(Actions.fadeOut(.25f),
 				Actions.removeActor()));
 		mUiStage.addActor(fade);
-		
+
 	}
 
 	protected abstract void init(Stage game, Stage ui, Physics physicsWorld);
@@ -89,18 +89,24 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		Gdx.gl.glClearColor(.3f, .3f, .3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		final Viewport vp = mGameStage.getViewport();
+		vp.apply();
 		mGameStage.act(delta);
 		mGameStage.draw();
+		// vp.apply();
 		final Matrix4 gameProj = mGameStage.getCamera().combined;
 		mPhysicsDebugger.render(mWorld, gameProj);
+		mRayHandler.useCustomViewport(vp.getScreenX(), vp.getScreenY(),
+				vp.getScreenWidth(), vp.getScreenHeight());
 		mRayHandler.setCombinedMatrix(gameProj);
 		mRayHandler.setAmbientLight(new Color(.7f, .7f, .7f, .1f));
 		mRayHandler.updateAndRender();
 
+		mUiStage.getViewport().apply();
 		mUiStage.act(delta);
 		mUiStage.draw();
 	}
-	
+
 	protected void switchScreen(Runnable onSwitch) {
 		final Fade fade = new Fade();
 		fade.getColor().a = 0f;
@@ -111,7 +117,23 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		mGameStage.getViewport().setScreenBounds(0, 0, width, height);
+
+		// mGameStage.getViewport().update(width, height);
+		// mGameStage.getViewport().apply(true);
+		// mGameStage.getCamera().update(true);
+
+		final float wr = GAME_WORLD_WIDTH / ((float) width);
+		final float hr = GAME_WORLD_HEIGHT / ((float) height);
+
+		final float r = Math.max(hr, wr);
+
+		final float sw = r * width;
+		final float sh = r * height;
+
+		final Viewport vp = mGameStage.getViewport();
+		vp.setWorldSize(sw, sh);
+		vp.update(width, height);
+		vp.apply();
 	}
 
 	@Override
