@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
@@ -43,7 +44,7 @@ public class StartScreen extends BaseScreen {
 				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
 		game.addActor(startBtn);
 		startBtn.setPosition(GAME_WORLD_WIDTH / 2 - startBtn.getWidth() / 2,
-				GAME_WORLD_HEIGHT / 4);
+				GAME_WORLD_HEIGHT / 2);
 
 		final Vector2 startPos = new Vector2(startBtn.getX()
 				+ startBtn.getWidth() / 2, startBtn.getY());
@@ -65,8 +66,8 @@ public class StartScreen extends BaseScreen {
 
 		final HelpButton howToPlay = new HelpButton();
 		howToPlay.setSize(3 * BTN_SIDE, BTN_SIDE);
-		howToPlay.setPosition(Gdx.graphics.getWidth() / 2,
-				Gdx.graphics.getHeight() / 6.2f, Align.center);
+		howToPlay.setPosition(Gdx.graphics.getWidth() * 7 / 8,
+				Gdx.graphics.getHeight() / 10f, Align.center);
 		ui.addActor(howToPlay);
 
 		PhysicsUtil.createBody(new BodyParams(physics.world) {
@@ -88,11 +89,21 @@ public class StartScreen extends BaseScreen {
 		game.addActor(new Torch(physics, 270));
 		game.addActor(torchUpCorner);
 
+		final float ghostSize = Math.min(Gdx.graphics.getWidth() / 4,
+				Gdx.graphics.getHeight() / 4);
+		final Actor rightGhost = new Ghost(ghostSize, false);
+		rightGhost.setPosition(Gdx.graphics.getWidth() * 9f / 10f - ghostSize,
+				Gdx.graphics.getHeight() / 2f);
+
+		final Actor leftGhost = new Ghost(ghostSize, true);
+		leftGhost.setPosition(Gdx.graphics.getWidth() / 10f,
+				Gdx.graphics.getHeight() / 2f);
+
 		final Label titleLbl = new Label("Ghosts in the pants", new LabelStyle(
 				manage(new BitmapFont()), Color.CYAN));
 		titleLbl.setPosition(
-				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth() - 150f,
-				Gdx.graphics.getHeight() * 0.65f);
+				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(),
+				Gdx.graphics.getHeight() * 0.75f);
 		titleLbl.setFontScale(2f);
 
 		final Label copyLbl = new Label(
@@ -104,26 +115,43 @@ public class StartScreen extends BaseScreen {
 		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth()
 				/ copyLbl.getFontScaleX()) / 2, 30);
 
-		final Texture ghostTexture = manage(new Texture("story_ghost.png"));
-		ghostTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		final Actor ghost = new Actor() {
-			@Override
-			public void draw(Batch batch, float parentAlpha) {
-				batch.setColor(getColor());
-				float size = Math.min(Gdx.graphics.getWidth() / 4,
-						Gdx.graphics.getHeight() / 4);
-				batch.draw(ghostTexture, getX(), getY(), size, size);
-			}
-		};
-		ghost.setPosition(Gdx.graphics.getWidth() / 2,
-				Gdx.graphics.getHeight() / 2);
-
-		ui.addActor(ghost);
+		ui.addActor(rightGhost);
+		ui.addActor(leftGhost);
 
 		ui.addActor(new MuteButton());
 
 		ui.addActor(titleLbl);
 		ui.addActor(copyLbl);
+	}
+
+	private class Ghost extends Actor {
+
+		private final Texture mTexture;
+		private final float mSize;
+		private final boolean mFlipHorizontal;
+
+		public Ghost(float size, boolean flipHorizontal) {
+			mTexture = manage(new Texture("story_ghost.png"));
+			mTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+			mSize = size;
+
+			mFlipHorizontal = flipHorizontal;
+
+			float deltaX = mFlipHorizontal ? mSize / 5f : -mSize / 5f;
+			
+			addAction(Actions.forever(Actions.sequence(Actions.moveBy(
+					deltaX, 0f, 1.0f, Interpolation.swing), Actions
+					.moveBy(-deltaX, 0f, 1.0f, Interpolation.swing))));
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			batch.setColor(getColor());
+			batch.draw(mTexture, getX(), getY(), mSize, mSize, 0, 0,
+					mTexture.getWidth(), mTexture.getHeight(), mFlipHorizontal,
+					false);
+		}
 	}
 
 	private class StartGameButtonActor extends Actor {
