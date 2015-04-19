@@ -11,7 +11,7 @@ import com.yox89.ld32.Physics;
 
 public class Torch extends Actor implements Disposable {
 
-	private static final float LIGHT_BASE_DIST = 10f;
+	private static final float LIGHT_BASE_DIST = 5f;
 
 	private PointLight mLight;
 
