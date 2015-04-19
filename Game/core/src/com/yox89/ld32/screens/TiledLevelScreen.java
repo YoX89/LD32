@@ -408,10 +408,12 @@ public class TiledLevelScreen extends BaseScreen implements
 		ghost.clearActions();
 
 		final Vector2 diff = new Vector2(ghost.getX() - mPlayer.getX(),
-				ghost.getY() - mPlayer.getY());
+				ghost.getY() - 0.5f - mPlayer.getY());
 		final float length = diff.len();
 
 		final float duration = length / 5f;
+		
+		final Vector2 offset = ghost.isNotMoving ? new Vector2(-0.5f, -0.5f) : new Vector2(0.0f, 0.0f);
 
 		Gdx.input.setInputProcessor(null);
 		mPlayer.mBlockInput = true;
@@ -425,7 +427,7 @@ public class TiledLevelScreen extends BaseScreen implements
 										diff.angle() - 180, duration / 4);
 						ghost.addAction(rotateToAction);
 					}
-				}), Actions.moveTo(mPlayer.getX(), mPlayer.getY(), duration));
+				}), Actions.moveTo(mPlayer.getX() + offset.x, mPlayer.getY() + offset.y, duration));
 
 		RunnableAction runnableAction = Actions.run(new Runnable() {
 

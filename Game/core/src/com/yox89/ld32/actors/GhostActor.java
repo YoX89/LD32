@@ -34,9 +34,10 @@ import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class GhostActor extends PhysicsActor implements Disposable, RayTarget, GamePositioned {
 
+	public final boolean isNotMoving;
+
 	private static final float SPEED = 3f;
 	private final Texture mTexture;
-	private final boolean isNotMoving;
 	private float angleDegree;
 
 	private final TiledLevelScreen mOwner;
