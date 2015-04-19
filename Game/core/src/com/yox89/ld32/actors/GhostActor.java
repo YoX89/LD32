@@ -54,7 +54,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 		this.mTexture = img;
 
 		mLightVision = new ConeLight(physicsWorld.rayHandler, 10, new Color(1,
-				0, 1, .75f), 6.5f, 0f, 0f, 0f, 30f);
+				0, 1, .75f), 6.25f, 0f, 0f, 0f, 30f);
 		mLightVision.setXray(true);
 
 		final Vector2[] polygonShape = this.getShapeVertices();
