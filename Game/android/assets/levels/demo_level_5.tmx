@@ -18,6 +18,7 @@
  </layer>
  <objectgroup name="Object Layer">
   <properties>
+   <property name="mirror_normal" value="2"/>
    <property name="tip" value="Ghosts are evil by heart and will attack you as soon as#they lay their eyes upon you."/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>

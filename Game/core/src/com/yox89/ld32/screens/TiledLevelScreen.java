@@ -69,7 +69,6 @@ public class TiledLevelScreen extends BaseScreen implements
 	private Actor mFocus;
 	final Vector2 mLastHoverCoords = new Vector2(-1f, -1f);
 
-
 	private Physics mPhysics;
 
 	private PlayerActor mPlayer;
@@ -84,8 +83,6 @@ public class TiledLevelScreen extends BaseScreen implements
 		mGajm = gajm;
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
-
-		
 
 		final TiledMap levelMap = new TmxMapLoader().load("levels/demo_level_"
 				+ level + ".tmx");
@@ -102,18 +99,16 @@ public class TiledLevelScreen extends BaseScreen implements
 				"Object Layer");
 		this.mObjectLayer = objectLayer;
 
-
 		levelMap.dispose();
 	}
 
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
 
-
 		mirrorInventory = new MirrorInventory(mObjectLayer.getProperties());
-		
-		ui = new Ui(this,game,uiStage, mirrorInventory,mObjectLayer.getProperties());
 
+		ui = new Ui(this, game, uiStage, mirrorInventory,
+				mObjectLayer.getProperties());
 
 		mPhysics = physics;
 
@@ -162,11 +157,15 @@ public class TiledLevelScreen extends BaseScreen implements
 					add(game, playerActor, x, y);
 					mPlayer = playerActor;
 				} else if (type.equals(RED_LASER)) {
-					add(game, new LightSource(this, ui, physics, LightColor.RED,
-							parseLightDirection((int) x, (int) y)), x, y);
+					add(game,
+							new LightSource(this, ui, physics, LightColor.RED,
+									parseLightDirection((int) x, (int) y)), x,
+							y);
 				} else if (type.equals(GREEN_LASER)) {
-					add(game, new LightSource(this, ui, physics, LightColor.GREEN,
-							parseLightDirection((int) x, (int) y)), x, y);
+					add(game,
+							new LightSource(this, ui, physics,
+									LightColor.GREEN, parseLightDirection(
+											(int) x, (int) y)), x, y);
 				} else if (type.equals(GHOST)) {
 					if (mapObject instanceof PolylineMapObject) {
 						PolylineMapObject ghostObject = (PolylineMapObject) mapObject;
@@ -213,7 +212,8 @@ public class TiledLevelScreen extends BaseScreen implements
 			}
 		}
 		if (mFocus == null) {
-			mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y, true);
+			mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y,
+					true);
 			if (mFocus instanceof GamePositioned) {
 				mFocus = null;
 			}
@@ -274,7 +274,8 @@ public class TiledLevelScreen extends BaseScreen implements
 		} else if (keycode == Keys.E) {
 			if (mFocus instanceof Mirror) {
 				mFocus.remove();
-				ui.performMirrorAction(1,((Mirror) mFocus).getHumanReadableType());
+				ui.performMirrorAction(1,
+						((Mirror) mFocus).getHumanReadableType());
 				return true;
 			}
 			return true;
@@ -288,16 +289,15 @@ public class TiledLevelScreen extends BaseScreen implements
 				}
 			});
 			return true;
-		} else if(keycode == Keys.NUM_1){
+		} else if (keycode == Keys.NUM_1) {
 			ui.setActiveMirrorType(MirrorInventory.MIRROR_TYPE_NORMAL);
-		} else if(keycode == Keys.NUM_2){
+		} else if (keycode == Keys.NUM_2) {
 			ui.setActiveMirrorType(MirrorInventory.MIRROR_TYPE_SPLITTER);
-			
+
 		}
-		
+
 		return super.keyDown(keycode);
 	}
-
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -318,14 +318,13 @@ public class TiledLevelScreen extends BaseScreen implements
 		return false;
 	}
 
-
-
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 
 		if (mouseIsInRangeOfPlayer()
-				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mirrorInventory.hasMirrorLeft(MirrorInventory.MIRROR_TYPE_NORMAL))) {
+				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mirrorInventory
+						.hasMirrorLeft(MirrorInventory.MIRROR_TYPE_NORMAL))) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
