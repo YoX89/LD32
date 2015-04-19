@@ -35,7 +35,7 @@
    </properties>
   </object>
   <object id="42" type="Ghost" x="3.5" y="2.5">
-   <polyline points="0,0 0,3"/>
+   <polyline points="0,-1 0,3"/>
   </object>
   <object id="45" type="Wall" x="1" y="7" width="7" height="1"/>
   <object id="49" type="Ghost" x="5.5" y="1.5">
