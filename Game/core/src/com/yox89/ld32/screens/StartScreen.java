@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
@@ -44,6 +44,24 @@ public class StartScreen extends BaseScreen {
 		game.addActor(startBtn);
 		startBtn.setPosition(GAME_WORLD_WIDTH / 2 - startBtn.getWidth() / 2,
 				GAME_WORLD_HEIGHT / 2);
+
+		final Vector2 startPos = new Vector2(startBtn.getX()
+				+ startBtn.getWidth() / 2, startBtn.getY());
+		game.stageToScreenCoordinates(startPos);
+		ui.screenToStageCoordinates(startPos);
+
+		final float BTN_SIDE = 48f;
+		final float PADDING = .2f * BTN_SIDE;
+		for (int i = 0; i < 12; i++) {
+			final Vector2 pos = new Vector2(startPos.x, startPos.y - 1.5f
+					* BTN_SIDE);
+			pos.x += (PADDING + BTN_SIDE) * ((i % 4) - 2);
+			pos.y -= (PADDING + BTN_SIDE) * (i / 4);
+			final LevelJumpButton skip = new LevelJumpButton(i + 1);
+			skip.setPosition(pos.x + PADDING / 2, pos.y + PADDING / 2);
+			skip.setSize(BTN_SIDE, BTN_SIDE);
+			ui.addActor(skip);
+		}
 
 		PhysicsUtil.createBody(new BodyParams(physics.world) {
 
@@ -126,15 +144,6 @@ public class StartScreen extends BaseScreen {
 		}
 
 		@Override
-		public void act(float delta) {
-			super.act(delta);
-
-			if (Gdx.input.isKeyPressed(Keys.A)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 3));
-			}
-		}
-
-		@Override
 		public void draw(Batch batch, float parentAlpha) {
 			batch.setColor(getColor());
 			batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
@@ -189,6 +198,67 @@ public class StartScreen extends BaseScreen {
 					getWidth(), getHeight(), getScaleX(), getScaleY(),
 					getRotation(), 0, 0, tex.getWidth(), tex.getHeight(),
 					false, false);
+
+		}
+	}
+
+	private class LevelJumpButton extends Label {
+
+		public LevelJumpButton(final int levelId) {
+			super(String.valueOf(levelId), new LabelStyle(
+					manage(new BitmapFont()), Color.WHITE));
+			setAlignment(Align.center);
+
+			final boolean enabled = Gajm.maxClearedLevel >= levelId -1;
+			if (!enabled) {
+				setColor(Color.GRAY);
+			} else {
+				addListener(new InputListener() {
+
+					public boolean touchDown(InputEvent event, float x,
+							float y, int pointer, int button) {
+						switchScreen(new Runnable() {
+							@Override
+							public void run() {
+								gajm.setScreen(new TiledLevelScreen(gajm,
+										levelId));
+							}
+						});
+						return true;
+					};
+
+					@Override
+					public void enter(InputEvent event, float x, float y,
+							int pointer, Actor fromActor) {
+						setColor(Color.WHITE);
+						super.enter(event, x, y, pointer, fromActor);
+					}
+
+					@Override
+					public void exit(InputEvent event, float x, float y,
+							int pointer, Actor toActor) {
+						setColor(Color.LIGHT_GRAY);
+						super.exit(event, x, y, pointer, toActor);
+					}
+				});
+				setColor(Color.LIGHT_GRAY);
+			}
+
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			if (Gajm.maxClearedLevel < 0) {
+				return;
+			}
+			batch.enableBlending();
+			batch.setColor(getColor());
+			final Texture tex = Assets.skipLevelButton;
+			batch.draw(tex, getX(), getY(), getOriginX(), getOriginY(),
+					getWidth(), getHeight(), getScaleX(), getScaleY(),
+					getRotation(), 0, 0, tex.getWidth(), tex.getHeight(),
+					false, false);
+			super.draw(batch, parentAlpha);
 
 		}
 	}

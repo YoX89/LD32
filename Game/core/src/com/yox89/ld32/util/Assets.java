@@ -29,7 +29,7 @@ public class Assets {
 	public static SoundRef beaver_death;
 	public static Music bg_music;
 
-	public static Texture sound_on, sound_off;
+	public static Texture sound_on, sound_off, skipLevelButton;
 
 	private static boolean sSoundEnabled = false;
 
@@ -62,7 +62,8 @@ public class Assets {
 
 		sound_on = manage(new Texture(Gdx.files.internal("sound_on.png")));
 		sound_off = manage(new Texture(Gdx.files.internal("sound_off.png")));
-
+		skipLevelButton = manage(new Texture(Gdx.files.internal("skip_level_btn.png")));
+		
 		final XmlReader reader = new XmlReader();
 		FileHandle root = Gdx.files.internal("Spritesheet");
 		for (FileHandle child : root.list()) {

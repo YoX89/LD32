@@ -46,7 +46,7 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 				Gdx.files
 						.internal(type == TYPE_SPLITTER ? "mirror_splitter.png"
 								: "mirror.png"));
-		mTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);;
+		mTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
 			@Override
