@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="1" tileheight="1" nextobjectid="55">
+ <layer name="Tile Layer" width="16" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <properties>
+   <property name="mirror_normal" value="2"/>
+   <property name="tip" value="GLHF"/>
+  </properties>
+  <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
+  <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>
+  <object id="3" type="Wall" x="15" y="1" width="1" height="11"/>
+  <object id="4" type="Wall" x="1" y="11" width="14" height="1"/>
+  <object id="8" type="Player" x="4" y="2" width="1" height="1"/>
+  <object id="19" type="Torch" x="8" y="1" width="1" height="1"/>
+  <object id="31" type="Wall" x="3" y="4" width="2" height="1"/>
+  <object id="39" type="Wall" x="5" y="1" width="1" height="4"/>
+  <object id="42" type="Wall" x="11" y="4" width="4" height="1"/>
+  <object id="47" type="Ghost" x="2" y="6.25">
+   <polyline points="0,-0.25 0,3.75"/>
+  </object>
+  <object id="49" type="Wall" x="7" y="1" width="1" height="2"/>
+  <object id="50" type="Wall" x="7" y="4" width="1" height="1"/>
+  <object id="52" type="Ghost" x="9.5" y="3.25">
+   <polyline points="0,-0.25 0,3.75"/>
+  </object>
+  <object id="53" type="RedLaser" x="14" y="2" width="1" height="1"/>
+  <object id="54" type="Ghost" x="6" y="6.25">
+   <polyline points="-3,3.25 7,3.25"/>
+  </object>
+ </objectgroup>
+</map>
