@@ -72,7 +72,7 @@ public class StartScreen extends BaseScreen {
 		}).setTransform(startBtn.getX() + startBtn.getWidth() / 2,
 				startBtn.getY() + startBtn.getHeight() / 2, 0f);
 
-		Torch startBtnTorch = new Torch(physics, Color.MAGENTA, 0);
+		Torch startBtnTorch = new Torch(physics, Color.MAGENTA, 0, false);
 		startBtnTorch.setPosition(startBtn.getX() + startBtn.getWidth() / 2f,
 				startBtn.getY() + startBtn.getHeight() / 2);
 		game.addActor(startBtnTorch);

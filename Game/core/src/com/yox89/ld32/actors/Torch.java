@@ -23,21 +23,26 @@ public class Torch extends Actor implements Disposable {
 	float flickerTime;
 
 	public Torch(Physics physics, float angleDegrees) {
-		this(physics, new Color(1f, .7f, .2f, 1f), angleDegrees);
+		this(physics, new Color(1f, .7f, .2f, 1f), angleDegrees, true);
 	}
 
-	public Torch(Physics physics, Color color, float angleDegrees) {
+	public Torch(Physics physics, Color color, float angleDegrees,
+			boolean drawTorchTexture) {
 		mLight = new PointLight(physics.rayHandler, 500, color, 12f, 2f, 2f);
 		mLight.setSoftnessLength(.5f);
 		setTouchable(Touchable.disabled);
 
-		mTexture = new Texture(Gdx.files.internal("torch.png"));
-		mTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		if (drawTorchTexture) {
+			mTexture = new Texture(Gdx.files.internal("torch.png"));
+			mTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		} else {
+			mTexture = null;
+		}
 
 		setSize(1f, 1f);
 
 		setOrigin(.5f, .5f);
-		
+
 		setRotation(angleDegrees);
 	}
 
@@ -56,13 +61,20 @@ public class Torch extends Actor implements Disposable {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(), getWidth(),
-				getHeight(), 1f, 1f, getRotation(), 0, 0,
+		if (mTexture == null) {
+			return;
+		}
+		batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
+				getWidth(), getHeight(), 1f, 1f, getRotation(), 0, 0,
 				mTexture.getWidth(), mTexture.getHeight(), false, false);
 	}
 
 	@Override
 	public void dispose() {
 		mLight.dispose();
+		if (mTexture != null) {
+			mTexture.dispose();
+			;
+		}
 	}
 }

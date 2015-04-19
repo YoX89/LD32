@@ -15,6 +15,7 @@
  </layer>
  <objectgroup name="Object Layer">
   <properties>
+   <property name="mirror_normal" value="3"/>
    <property name="tip" value="The ghosts perish in the light of the ancient lanterns.#Press the colored lantern with the mouse when you are near it."/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="12" height="1"/>
