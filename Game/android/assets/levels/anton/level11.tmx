@@ -20,7 +20,7 @@
   <properties>
    <property name="mirror_normal" value="1"/>
    <property name="mirror_splitter" value="1"/>
-   <property name="tip" value="Press '2' to place the &quot;light splitter&quot;"/>
+   <property name="tip" value="Press '2' to choose the light splitter"/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
   <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>

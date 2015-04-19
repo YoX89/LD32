@@ -16,8 +16,8 @@
  </layer>
  <objectgroup name="Object Layer">
   <properties>
-   <property name="mirror_normal" value="3"/>
-   <property name="tip" value="The ghosts perish in the light of the ancient lanterns.#Press the colored lantern with the mouse when you are near it."/>
+   <property name="mirror_normal" value="2"/>
+   <property name="tip" value=""/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="10" height="1"/>
   <object id="2" type="Wall" x="0" y="1" width="1" height="9"/>
@@ -26,7 +26,7 @@
   <object id="5" type="GreenLaser" x="5" y="1" width="1" height="1"/>
   <object id="6" type="Player" x="1" y="1" width="1" height="1"/>
   <object id="9" type="Torch" x="5" y="5" width="1" height="1"/>
-  <object id="16" type="Ghost" x="5" y="7" width="1" height="1">
+  <object id="16" type="Ghost" x="5" y="8" width="1" height="1">
    <properties>
     <property name="AngleDegrees" value="270"/>
    </properties>
@@ -40,10 +40,10 @@
     <property name="AngleDegrees" value="270"/>
    </properties>
   </object>
-  <object id="22" type="Ghost" x="6.5" y="7.5">
+  <object id="22" type="Ghost" x="6.5" y="7.25">
    <polyline points="0,0 0,1.25 2,1.25 2,0"/>
   </object>
-  <object id="24" type="Ghost" x="4.5" y="7.5">
+  <object id="24" type="Ghost" x="4.5" y="7.25">
    <polyline points="0,0 0,1.25 -2,1.25 -2,0"/>
   </object>
  </objectgroup>

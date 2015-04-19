@@ -142,7 +142,7 @@ public class Ui {
 
 		setActiveMirrorType(MirrorInventory.MIRROR_TYPE_NORMAL);
 
-		if (currentLevelId == 1) {
+		if (currentLevelId == 5) {
 			final UiImageActor arrow = new UiImageActor(
 					tiledLevelScreen.manage(new Texture("arrow.png")), 32f, 64f);
 			arrow.setPosition(leftUiImage.getX() + leftUiImage.getWidth() / 3,
@@ -166,7 +166,7 @@ public class Ui {
 		if (fluffVisible) {
 			fluffVisible = false;
 			tipText.addAction(Actions.delay(1f, Actions.parallel(
-					Actions.fadeOut(1f, Interpolation.sine),
+					Actions.fadeOut(2f, Interpolation.sine),
 					Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 1f))));
 		}
 	}

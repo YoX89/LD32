@@ -21,7 +21,7 @@
    <property name="fluff" value="My shoes are undone! Hold on a second..."/>
    <property name="mirror_normal" value="2"/>
    <property name="mirror_splitter" value="1"/>
-   <property name="tip" value="So much darkness"/>
+   <property name="tip" value="Don't be sad, half of the developers couldn't complete this level either"/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
   <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>

@@ -14,7 +14,7 @@
  <objectgroup name="Object Layer">
   <properties>
    <property name="mirror_normal" value="0"/>
-   <property name="tip" value="GLHF"/>
+   <property name="tip" value="Timing is crucial"/>
   </properties>
   <object id="4" type="Wall" x="0" y="6" width="11" height="1"/>
   <object id="8" type="Player" x="2" y="2" width="1" height="1"/>

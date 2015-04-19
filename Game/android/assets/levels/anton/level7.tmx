@@ -17,7 +17,7 @@
  <objectgroup name="Object Layer">
   <properties>
    <property name="mirror_normal" value="1"/>
-   <property name="tip" value="Timing is important"/>
+   <property name="tip" value=""/>
   </properties>
   <object id="4" type="Wall" x="0" y="9" width="13" height="1"/>
   <object id="8" type="Player" x="10" y="8" width="1" height="1"/>
