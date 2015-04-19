@@ -36,12 +36,16 @@ public class EndScreen extends BaseScreen {
 		game.addActor(new Torch(physics, 180));
 		game.addActor(torchUpCorner);
 
-		final Label titleLbl = new Label("Thanks for playing!", new LabelStyle(
+		final String msg = "Done! All the ghosts have been wiped out and order has been restored to the land.\n"
+				+ "\n"
+				+ "Thank you for playing.";
+		final Label titleLbl = new Label(msg, new LabelStyle(
 				manage(new BitmapFont()), Color.WHITE));
+		titleLbl.setAlignment(Align.center);
 		titleLbl.setPosition(
-				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(),
-				Gdx.graphics.getHeight() * 0.7f);
-		titleLbl.setFontScale(2f);
+				Gdx.graphics.getWidth() / 2 ,
+				Gdx.graphics.getHeight() * 0.7f, Align.center);
+		titleLbl.setFontScale(1.2f);
 
 		final Label copyLbl = new Label(
 				"Press anywhere to go back to the menu", new LabelStyle(
