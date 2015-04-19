@@ -18,7 +18,6 @@ import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -58,6 +57,7 @@ CollisionManagerListener {
 	private static final String MIRROR = "Mirror";
 	private static final String GHOST = "Ghost";
 	private static final String TORCH = "Torch";
+	private static final String PLAYER = "Player";
 
 	private final MapLayer mObjectLayer;
 	private boolean[][] mLightNotAllowed;
@@ -87,7 +87,7 @@ CollisionManagerListener {
 		mNumberRemainingMirrors = 5;
 		mNumberTotalMirrors = 5;
 
-		final TiledMap levelMap = new TmxMapLoader().load("levels/level"
+		final TiledMap levelMap = new TmxMapLoader().load("levels/demo_level_"
 				+ level + ".tmx");
 
 		TiledMapTileLayer levelMapLayer = (TiledMapTileLayer) levelMap
@@ -115,12 +115,6 @@ CollisionManagerListener {
 
 		mCollisionManager = new CollisionManager(physics.world);
 		mCollisionManager.mCollisionManagerListener = this;
-		
-		mPlayer = new PlayerActor(physics,ui,mObjectLayer.getProperties());
-
-		game.addActor(mPlayer);
-		mPlayer.setPosition(GAME_WORLD_WIDTH / 2 - mPlayer.getWidth() / 2,
-				GAME_WORLD_HEIGHT / 2);
 
 		parseMap(game, physics, true);
 		parseMap(game, physics, false);
@@ -158,6 +152,10 @@ CollisionManagerListener {
 			} else {
 				if (type.equalsIgnoreCase(TORCH)) {
 					add(game, new Torch(physics), x, y);
+				} else if (type.equals(PLAYER)) {
+					PlayerActor playerActor = new PlayerActor(physics, ui, mapProperties);
+					add(game, playerActor, x, y);
+					mPlayer = playerActor;
 				} else if (type.equals(RED_LASER)) {
 					add(game, new LightSource(this, physics, LightColor.RED,
 							parseLightDirection((int) x, (int) y)), x, y);
