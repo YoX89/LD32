@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
@@ -17,6 +19,8 @@ public class EndScreen extends BaseScreen {
 	private Stage game;
 	private Gajm gajm;
 
+	private boolean mAcceptTouches;
+
 	public EndScreen(Gajm gajm) {
 		this.gajm = gajm;
 	}
@@ -26,7 +30,6 @@ public class EndScreen extends BaseScreen {
 		this.game = game;
 		final Texture img = manage(new Texture("StartButtonEng.png"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
 
 		Torch torchUpCorner = new Torch(physics, 0);
 		torchUpCorner.setPosition(GAME_WORLD_WIDTH - 1, GAME_WORLD_HEIGHT - 1);
@@ -41,8 +44,8 @@ public class EndScreen extends BaseScreen {
 		titleLbl.setFontScale(2f);
 
 		final Label copyLbl = new Label(
-				"Check back at the end of LD32 for the full version",
-				new LabelStyle(manage(new BitmapFont()), Color.WHITE));
+				"Press anywhere to go back to the menu", new LabelStyle(
+						manage(new BitmapFont()), Color.WHITE));
 		copyLbl.setAlignment(Align.center);
 		copyLbl.setFontScale(0.9f);
 		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth()
@@ -50,5 +53,34 @@ public class EndScreen extends BaseScreen {
 
 		ui.addActor(titleLbl);
 		ui.addActor(copyLbl);
+
+		copyLbl.setVisible(false);
+		Action blink = Actions.forever(Actions.sequence(
+				Actions.delay(.5f, Actions.visible(true)),
+				Actions.delay(.5f, Actions.visible(false))));
+		copyLbl.addAction(Actions.sequence(Actions.delay(3f),
+				Actions.run(new Runnable() {
+
+					@Override
+					public void run() {
+						mAcceptTouches = true;
+					}
+				}), blink));
+
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (mAcceptTouches) {
+			mAcceptTouches = false;
+			switchScreen(new Runnable() {
+
+				@Override
+				public void run() {
+					gajm.setScreen(new StartScreen(gajm));
+				}
+			});
+		}
+		return super.touchDown(screenX, screenY, pointer, button);
 	}
 }
