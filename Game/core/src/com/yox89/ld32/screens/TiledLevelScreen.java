@@ -304,12 +304,13 @@ public class TiledLevelScreen extends BaseScreen implements
 			return true;
 		} else if (keycode == Keys.E) {
 			if (mFocus instanceof Mirror) {
-				final String type = ((Mirror) mFocus).getHumanReadableType();
-				if (ui.canPickupMirror(type)) {
-					mFocus.remove();
-					ui.performMirrorAction(1, type);
-					mFocus = null;
-				}
+				// This code lets you pick up mirrors... Levels aren't designed with this in mind, so lets disable it.
+//				final String type = ((Mirror) mFocus).getHumanReadableType();
+//				if (ui.canPickupMirror(type)) {
+//					mFocus.remove();
+//					ui.performMirrorAction(1, type);
+//					mFocus = null;
+//				}
 				return true;
 			}
 			return true;

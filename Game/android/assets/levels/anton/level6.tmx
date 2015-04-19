@@ -17,7 +17,7 @@
  <objectgroup name="Object Layer">
   <properties>
    <property name="mirror_normal" value="1"/>
-   <property name="tip" value="Press 'E' to pick up mirrors you have placed"/>
+   <property name="tip" value="A laser is usable even after passing through a Ghost"/>
   </properties>
   <object id="4" type="Wall" x="0" y="9" width="13" height="1"/>
   <object id="8" type="Player" x="3" y="2" width="1" height="1"/>
