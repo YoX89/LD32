@@ -188,7 +188,7 @@ public class TiledLevelScreen extends BaseScreen implements
 						add(game, ghostActor, startPosition.x, startPosition.y);
 					}
 				} else if (type.equals(MIRROR)) {
-					add(game, new Mirror(physics), x, y);
+					add(game, new Mirror(physics, Mirror.TYPE_90_DEG), x, y);
 				}
 			}
 		}
@@ -282,7 +282,7 @@ public class TiledLevelScreen extends BaseScreen implements
 			if (mFocus == null && mNumberRemainingMirrors > 0) {
 				mNumberRemainingMirrors--;
 				updateMirrorsLabel();
-				final Mirror mirror = new Mirror(mPhysics);
+				final Mirror mirror = new Mirror(mPhysics, Mirror.TYPE_90_DEG);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
 						(int) mLastHoverCoords.y);
 				mFocus = mirror;

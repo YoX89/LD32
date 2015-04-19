@@ -22,12 +22,18 @@ import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 
+	public static int TYPE_90_DEG = 0, TYPE_SPLITTER = 1;
+
 	private Texture mTexture;
 
 	public Vector2 gamePosition = new Vector2(-1, -1);
 
-	public Mirror(Physics physics) {
+	private final int mType;
+
+	public Mirror(Physics physics, int type) {
 		setTouchable(Touchable.enabled);
+
+		mType = type;
 
 		mTexture = new Texture(Gdx.files.internal("mirror.png"));
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
@@ -71,10 +77,18 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 		Array<RayRequest> reqs = new Array<RayRequest>();
 
 		final Direction currDir = Direction.fromAngle(getRotation());
-		if (currDir.add45().isParallell(ray.direction)) {
-			reqs.add(new RayRequest(ray.color, ray.dst, ray.direction.sub90()));
-		} else if (currDir.sub45().isParallell(ray.direction)) {
-			reqs.add(new RayRequest(ray.color, ray.dst, ray.direction.add90()));
+		
+		if (mType == TYPE_SPLITTER) {
+			if (!currDir.isParallell(ray.direction)) {
+				reqs.add(new RayRequest(ray.color, ray.dst, currDir));
+				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90().add90()));
+			}
+		} else {
+			if (currDir.add45().isParallell(ray.direction)) {
+				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction.sub90()));
+			} else if (currDir.sub45().isParallell(ray.direction)) {
+				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction.add90()));
+			}
 		}
 		if (reqs.size > 0) {
 			dispatcher.dispatch(reqs);

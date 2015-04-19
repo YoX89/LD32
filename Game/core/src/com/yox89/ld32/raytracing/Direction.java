@@ -16,7 +16,7 @@ public class Direction {
 	private static Direction[] VALUES;
 	static {
 		VALUES = new Direction[] { WEST, EAST, NORTH, SOUTH, NORTHEAST,
-				NORTHWEST, SOUTHEAST };
+				NORTHWEST, SOUTHEAST, SOUTHWEST };
 	}
 
 	public Direction() {
