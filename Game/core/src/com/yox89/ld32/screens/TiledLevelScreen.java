@@ -304,10 +304,12 @@ public class TiledLevelScreen extends BaseScreen implements
 			return true;
 		} else if (keycode == Keys.E) {
 			if (mFocus instanceof Mirror) {
-				mFocus.remove();
-				ui.performMirrorAction(1,
-						((Mirror) mFocus).getHumanReadableType());
-				mFocus = null;
+				final String type = ((Mirror) mFocus).getHumanReadableType();
+				if (ui.canPickupMirror(type)) {
+					mFocus.remove();
+					ui.performMirrorAction(1, type);
+					mFocus = null;
+				}
 				return true;
 			}
 			return true;

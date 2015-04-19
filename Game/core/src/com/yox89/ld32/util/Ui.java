@@ -256,6 +256,10 @@ public class Ui {
 		return mirrorInventory.hasMirrorLeft(activeMirrorType);
 
 	}
+	public boolean canPickupMirror(String type) {
+		return mirrorInventory.canPickupMirror(type);
+
+	}
 
 	public String getActiveMirrorType() {
 		return activeMirrorType;

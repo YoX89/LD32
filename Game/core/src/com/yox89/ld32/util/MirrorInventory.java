@@ -39,6 +39,11 @@ public class MirrorInventory {
 				.get(mirrorType)[0] > 0 : false;
 	}
 
+	public boolean canPickupMirror(String mirrorType) {
+		return mirrorTypes.containsKey(mirrorType) ? mirrorTypes
+				.get(mirrorType)[0] < getMirrorsTotal(mirrorType) : false;
+	}
+
 	public int getMirrorsTotal(String mirrorType) {
 		return mirrorTypes.containsKey(mirrorType) ? mirrorTypes
 				.get(mirrorType)[1] : 0;
