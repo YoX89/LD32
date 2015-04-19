@@ -10,4 +10,5 @@
 	<source path="com/yox89/ld32/raytracing" />
 	<source path="com/yox89/ld32/screens" />
 	<source path="com/yox89/ld32/util" />
+	<source path="com/yox89/ld32/particles" />
 </module>

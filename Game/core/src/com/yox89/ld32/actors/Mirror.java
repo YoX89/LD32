@@ -114,13 +114,10 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 		final Direction currDir = Direction.fromAngle(getRotation());
 
 		if (mType == TYPE_SPLITTER) {
-			if (!currDir.isParallell(ray.direction)) {
-				reqs.add(new RayRequest(ray.color, ray.dst, currDir));
-				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90()));
-				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90()
-						.add90()));
-				reqs.add(new RayRequest(ray.color, ray.dst, currDir.sub90()));
-			}
+			reqs.add(new RayRequest(ray.color, ray.dst, currDir));
+			reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90()));
+			reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90().add90()));
+			reqs.add(new RayRequest(ray.color, ray.dst, currDir.sub90()));
 		} else {
 			if (currDir.add45().isParallell(ray.direction)) {
 				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction
