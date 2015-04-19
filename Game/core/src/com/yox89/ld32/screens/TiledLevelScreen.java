@@ -38,6 +38,7 @@ import com.yox89.ld32.CollisionManager;
 import com.yox89.ld32.CollisionManager.CollisionManagerListener;
 import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.actors.GamePositioned;
 import com.yox89.ld32.actors.GhostActor;
 import com.yox89.ld32.actors.LightSource;
 import com.yox89.ld32.actors.Mirror;
@@ -201,15 +202,20 @@ public class TiledLevelScreen extends BaseScreen implements
 	public boolean mouseMoved(int screenX, int screenY) {
 		mGameStage.screenToStageCoordinates(mLastHoverCoords.set(screenX,
 				screenY));
-		mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y, true);
+		mFocus = null;
 		for (Actor a : mGameStage.getActors()) {
-			if (a instanceof Mirror
-					&& new Vector2(((Mirror) a).gamePosition).sub(
+			if (a instanceof GamePositioned
+					&& new Vector2(((GamePositioned) a).getGamePosition()).sub(
 							new Vector2((int) mLastHoverCoords.x,
 									(int) mLastHoverCoords.y)).len() < .05f) {
-				// Don't know why mFocus isn't this mirror.. but let's force it
-				// in.
-				mFocus = (Mirror) a;
+				mFocus = a;
+				break;
+			}
+		}
+		if (mFocus == null) {
+			mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y, true);
+			if (mFocus instanceof GamePositioned) {
+				mFocus = null;
 			}
 		}
 		return false;

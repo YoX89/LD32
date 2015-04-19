@@ -55,7 +55,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mPhysicsDebugger = new Box2DDebugRenderer();
 		mRayDispatcher = new RayDispatcher(mWorld);
 
-		Light.setContactFilter((short) ~0, (short) 0, (short) ~Collision.GHOST);
+		Light.setContactFilter((short) ~0, (short) 0, (short) ~Collision.GHOST_VISION);
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this, mUiStage,
 				mGameStage));

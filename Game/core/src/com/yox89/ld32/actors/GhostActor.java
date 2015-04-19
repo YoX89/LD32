@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,7 +32,7 @@ import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
-public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
+public class GhostActor extends PhysicsActor implements Disposable, RayTarget, GamePositioned {
 
 	private static final float SPEED = 3f;
 	private final Texture mTexture;
@@ -65,7 +67,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 			@Override
 			public short getCollisionType() {
-				return Collision.GHOST;
+				return Collision.GHOST_VISION;
 			}
 
 			@Override
@@ -92,6 +94,33 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		this.setPosition(initialPosition.x, initialPosition.y);
 
 		this.setupActions(positions);
+
+		final FixtureDef ghostBody = new FixtureDef();
+		ghostBody.filter.categoryBits = Collision.GHOST_BODY;
+		ghostBody.filter.maskBits = Collision.NONE;
+		ghostBody.isSensor = true;
+
+		final CircleShape cs = new CircleShape();
+		if (isNotMoving) {
+			final Vector2 off = new Vector2(0.5f, 0.5f);
+			if (angleDegree < 90) {
+				off.set(.5f, .5f);
+			} else if (angleDegree < 180) {
+				off.set(.5f, -.5f);
+			} else if (angleDegree < 270) {
+				off.set(-.5f, -.5f);
+			} else {
+				off.set(-.5f, .5f);
+			}
+			cs.setPosition(off);
+		}
+
+		cs.setRadius(.45f);
+		ghostBody.shape = cs;
+
+		cs.dispose();
+
+		getPhysicsBody().createFixture(ghostBody).setUserData(this);
 	}
 
 	@Override
@@ -104,6 +133,19 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		} else {
 			mLightVision.setPosition(getX(), getY());
 		}
+	}
+
+	private final Vector2 gamePosition = new Vector2(-1, -1);
+
+	@Override
+	public Vector2 getGamePosition() {
+		return gamePosition;
+	}
+
+	@Override
+	public void setPosition(float x, float y) {
+		gamePosition.set(x, y);
+		super.setPosition(x, y);
 	}
 
 	private Vector2[] getShapeVertices() {
@@ -215,26 +257,26 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 	public void onHitWithRay(Ray ray, Dispatcher dispatcher) {
 		mIsHit = true;
 		addAction(Actions.removeActor());
-		
 
 		ParticleEffect pe = ParticlePool.get();
 		float ang = getRotation();
-		
-		Vector2 sides = new Vector2( getWidth(), getHeight());
+
+		Vector2 sides = new Vector2(getWidth(), getHeight());
 		sides.rotate(ang);
 		if (isNotMoving) {
 			pe.setPosition(getX(), getY());
 		} else {
-			pe.setPosition(getX() -getWidth()/2, getY() -getHeight()/2);
+			pe.setPosition(getX() - getWidth() / 2, getY() - getHeight() / 2);
 		}
 		pe.setSize(getWidth(), getHeight());
 		pe.init(Assets.blood, 200.0f, 25, .5f);
 		getParent().addActor(pe);
 		Assets.beaver_death.play();
-		
 
-
-		mLightVision.remove();
+		if (mLightVision.isActive()) {
+			mLightVision.setActive(false);
+			mLightVision.remove();
+		}
 
 		Array<RayRequest> reqs = new Array<RayRequest>();
 		reqs.add(new RayRequest(ray.color, ray.dst, ray.direction));

@@ -21,13 +21,14 @@ import com.yox89.ld32.util.MirrorInventory;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
-public class Mirror extends PhysicsActor implements RayTarget, Disposable {
+public class Mirror extends PhysicsActor implements RayTarget, Disposable,
+		GamePositioned {
 
 	public static final int TYPE_90_DEG = 0, TYPE_SPLITTER = 1;
 
 	private Texture mTexture;
 
-	public Vector2 gamePosition = new Vector2(-1, -1);
+	private Vector2 gamePosition = new Vector2(-1, -1);
 
 	private final int mType;
 
@@ -68,6 +69,11 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 	}
 
 	@Override
+	public Vector2 getGamePosition() {
+		return gamePosition;
+	}
+
+	@Override
 	public void setPosition(float x, float y) {
 		gamePosition.set(x, y);
 		super.setPosition(x + .5f, y + .5f);
@@ -78,17 +84,20 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 		Array<RayRequest> reqs = new Array<RayRequest>();
 
 		final Direction currDir = Direction.fromAngle(getRotation());
-		
+
 		if (mType == TYPE_SPLITTER) {
 			if (!currDir.isParallell(ray.direction)) {
 				reqs.add(new RayRequest(ray.color, ray.dst, currDir));
-				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90().add90()));
+				reqs.add(new RayRequest(ray.color, ray.dst, currDir.add90()
+						.add90()));
 			}
 		} else {
 			if (currDir.add45().isParallell(ray.direction)) {
-				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction.sub90()));
+				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction
+						.sub90()));
 			} else if (currDir.sub45().isParallell(ray.direction)) {
-				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction.add90()));
+				reqs.add(new RayRequest(ray.color, ray.dst, ray.direction
+						.add90()));
 			}
 		}
 		if (reqs.size > 0) {

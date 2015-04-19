@@ -39,7 +39,7 @@ public class RayDispatcher {
 				public float reportRayFixture(Fixture fixture, Vector2 point,
 						Vector2 normal, float fraction) {
 					final short cat = fixture.getFilterData().categoryBits;
-					if ((cat & (Collision.GHOST | Collision.MIRROR | Collision.WORLD)) == 0) {
+					if ((cat & (Collision.GHOST_BODY | Collision.MIRROR | Collision.WORLD)) == 0) {
 						return 1;
 					}
 

@@ -71,7 +71,7 @@ public class PlayerActor extends PhysicsActor {
 		this.angularSpeed = 10f;
 		setSize(2.3f, 2.3f);
 		initPhysicsBody(createBody(physics, BodyType.DynamicBody,
-				Collision.PLAYER, (short) (Collision.WORLD | Collision.GHOST)));
+				Collision.PLAYER, (short) (Collision.WORLD | Collision.GHOST_VISION)));
 
 		mLight = new PointLight(physics.rayHandler, 10, new Color(1f, 1f, 1f,
 				0.5f), 1.5f, 0f, 0f);

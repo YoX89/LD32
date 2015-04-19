@@ -21,9 +21,9 @@ public class CollisionManager implements ContactListener {
 		short ca = contact.getFixtureA().getFilterData().categoryBits;
 		short cb = contact.getFixtureB().getFilterData().categoryBits;
 		
-		if (ca == Collision.PLAYER && cb == Collision.GHOST || ca == Collision.GHOST && cb == Collision.PLAYER) {
+		if (ca == Collision.PLAYER && cb == Collision.GHOST_VISION || ca == Collision.GHOST_VISION && cb == Collision.PLAYER) {
 			if (mCollisionManagerListener != null) {
-				GhostActor ghost = (GhostActor) (ca == Collision.GHOST ? contact.getFixtureA().getUserData() : contact.getFixtureB().getUserData()); 
+				GhostActor ghost = (GhostActor) (ca == Collision.GHOST_VISION ? contact.getFixtureA().getUserData() : contact.getFixtureB().getUserData()); 
 				mCollisionManagerListener.playerDiscoveredByGhost(ghost);
 			}
 		}
