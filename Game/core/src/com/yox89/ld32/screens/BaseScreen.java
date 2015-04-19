@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.Fade;
+import com.yox89.ld32.actors.FloorActor;
+import com.yox89.ld32.actors.ShadyActor;
 import com.yox89.ld32.raytracing.RayDispatcher;
 import com.yox89.ld32.util.Collision;
 
@@ -48,7 +50,11 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mGameStage = manage(new Stage(new StretchViewport(GAME_WORLD_WIDTH,
 				GAME_WORLD_HEIGHT)));
 		mUiStage = manage(new Stage());
-
+		
+		final FloorActor shady = manage(new FloorActor());
+		shady.setBounds(0, 0, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
+		mGameStage.addActor(shady);
+		
 		mWorld = manage(new World(new Vector2(0f, 0f), false));
 		mRayHandler = manage(new RayHandler(mWorld));
 
