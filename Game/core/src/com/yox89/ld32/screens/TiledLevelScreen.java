@@ -223,8 +223,12 @@ public class TiledLevelScreen extends BaseScreen implements
 		final boolean[] foundWall = new boolean[1];
 		final Vector2 dst;
 		if (mFocus != null) {
-			dst = new Vector2(mFocus.getX() + mFocus.getWidth() / 2,
-					mFocus.getY() + mFocus.getHeight() / 2);
+			if (mFocus instanceof GamePositioned) {
+				dst = new Vector2(((GamePositioned) mFocus).getGamePosition()).add(.5f, .5f);
+			} else {
+				dst = new Vector2(mFocus.getX() + mFocus.getWidth() / 2,
+						mFocus.getY() + mFocus.getHeight() / 2);
+			}
 		} else {
 			dst = mLastHoverCoords;
 		}
@@ -257,7 +261,7 @@ public class TiledLevelScreen extends BaseScreen implements
 			return false;
 		}
 		return new Vector2(mPlayer.getX(), mPlayer.getY())
-				.sub(mLastHoverCoords).len() < 5;
+				.sub(mLastHoverCoords).len() < 4;
 	}
 
 	@Override
@@ -336,14 +340,15 @@ public class TiledLevelScreen extends BaseScreen implements
 						.hasMirrorLeft())) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
+			
 			mFocusRenderer.setProjectionMatrix(mGameStage.getCamera().combined);
 			mFocusRenderer.begin(ShapeType.Filled);
 			mFocusRenderer.setColor(1f, 1f, 1f, .15f);
 			mFocusRenderer.rect((int) mLastHoverCoords.x,
 					(int) mLastHoverCoords.y, 1f, 1f);
+			
 			mFocusRenderer.end();
-
+			
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
 	}

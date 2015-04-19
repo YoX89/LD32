@@ -122,13 +122,15 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 				}
 				ui.removeFluffText();
 
+				final Color blockColor = mColor.toColor();
 				addAction(Actions.sequence(Actions.fadeIn(.2f),
-						Actions.fadeOut(.3f), Actions.run(new Runnable() {
+						Actions.color(new Color(blockColor.r/2, blockColor.g/2, blockColor.b/2, 0f), .3f), Actions.run(new Runnable() {
 
 							@Override
 							public void run() {
 								disposeRays();
 								mLight.setActive(false);
+								
 
 								for (Actor a : getStage().getActors()) {
 									if (a instanceof LightSource
@@ -184,7 +186,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.setColor(getColor());
+		final Color c = getColor();
+		batch.setColor(new Color(c.r, c.g, c.b, 1f));
 		super.draw(batch, parentAlpha);
 		batch.setColor(Color.WHITE);
 
