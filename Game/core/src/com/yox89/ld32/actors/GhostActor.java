@@ -122,7 +122,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 			cs.setPosition(off);
 		}
 
-		cs.setRadius(.45f);
+		cs.setRadius(.55f);
 		ghostBody.shape = cs;
 
 
