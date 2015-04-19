@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -29,6 +28,7 @@ public class Ui {
 
 	private Stage uiStage;
 	private HashMap<String, Label> inventoryLabels = new HashMap<String, Label>();
+	private HashMap<String, UiImageActor> inventoryImages = new HashMap<String, UiImageActor>();
 	private MirrorInventory mirrorInventory;
 	private Label tipText;
 	private boolean fluffVisible;
@@ -52,7 +52,7 @@ public class Ui {
 
 		final Texture normalMirrorIconTexture = tiledLevelScreen
 				.manage(new Texture("mirror.png"));
-		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		normalMirrorIconTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		UiImageActor normalMirrorIcon = new UiImageActor(
 				normalMirrorIconTexture, 16f, 16f);
 		uiStage.addActor(normalMirrorIcon);
@@ -64,6 +64,7 @@ public class Ui {
 						+ mirrorInventory
 								.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_NORMAL),
 				new LabelStyle(new BitmapFont(), Color.WHITE));
+		inventoryImages.put(MirrorInventory.MIRROR_TYPE_NORMAL, normalMirrorIcon);
 		inventoryLabels.put(MirrorInventory.MIRROR_TYPE_NORMAL,
 				normalMirrorsLabel);
 		uiStage.addActor(normalMirrorsLabel);
@@ -72,7 +73,7 @@ public class Ui {
 
 		final Texture splitterMirrorIconTexture = tiledLevelScreen
 				.manage(new Texture("mirror_splitter.png"));
-		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		normalMirrorIconTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		UiImageActor splitterMirrorIcon = new UiImageActor(
 				splitterMirrorIconTexture, 16f, 16f);
 		uiStage.addActor(splitterMirrorIcon);
@@ -84,6 +85,8 @@ public class Ui {
 						+ mirrorInventory
 								.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_SPLITTER),
 				new LabelStyle(new BitmapFont(), Color.WHITE));
+		inventoryImages.put(MirrorInventory.MIRROR_TYPE_SPLITTER,
+				splitterMirrorIcon);
 		inventoryLabels.put(MirrorInventory.MIRROR_TYPE_SPLITTER,
 				splitterMirrorsLabel);
 		uiStage.addActor(splitterMirrorsLabel);
@@ -125,12 +128,14 @@ public class Ui {
 
 		uiStage.addActor(tipText);
 		fluffVisible = true;
-		tipText.setPosition(uiStage.getWidth() / 2 - tipText.getMinWidth() / (2*tipText.getFontScaleX()),
-				75);
+		tipText.setPosition(uiStage.getWidth() / 2 - tipText.getMinWidth()
+				/ (2 * tipText.getFontScaleX()), 75);
 
 		tipText.addAction(Actions.sequence(Actions.delay(10f), Actions
 				.parallel(Actions.fadeOut(1f, Interpolation.sine),
 						Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 1f))));
+		
+		setActiveMirrorType(MirrorInventory.MIRROR_TYPE_NORMAL);
 	}
 
 	public void removeFluffText() {
@@ -162,6 +167,7 @@ public class Ui {
 
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
+			batch.setColor(getColor());
 			batch.draw(mTexture, getX(), getY(), getOriginX(), getOriginY(),
 					getWidth(), getHeight(), getScaleX(), getScaleY(),
 					getRotation(), 0, 0, mTexture.getWidth(),
@@ -187,11 +193,13 @@ public class Ui {
 
 	public void setActiveMirrorType(final String mirrorType) {
 		this.activeMirrorType = mirrorType;
-		for(String type : inventoryLabels.keySet()){
-			if(type.equals(mirrorType)){
+		for (String type : inventoryLabels.keySet()) {
+			if (type.equals(mirrorType)) {
 				inventoryLabels.get(type).setColor(1f, 1f, 1f, 1f);
+				inventoryImages.get(type).setColor(1f, 1f, 1f, 1f);
 			} else {
 				inventoryLabels.get(type).setColor(1f, 1f, 1f, 0.5f);
+				inventoryImages.get(type).setColor(1f, 1f, 1f, .5f);
 			}
 		}
 
