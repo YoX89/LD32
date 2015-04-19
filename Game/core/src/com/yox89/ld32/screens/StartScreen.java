@@ -125,40 +125,9 @@ public class StartScreen extends BaseScreen {
 		public void act(float delta) {
 			super.act(delta);
 
-			if (Gdx.input.isKeyPressed(Keys.J)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 5));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.K)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 6));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.M)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 7));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.L)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 8));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.O)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 0));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.U)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 2));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.T)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 3));
-			}
-
-			if (Gdx.input.isKeyPressed(Keys.N)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 4));
-			}
 			
-			if (Gdx.input.isKeyPressed(Keys.B)) {
-				gajm.setScreen(new TiledLevelScreen(gajm, 9));
+			if (Gdx.input.isKeyPressed(Keys.A)) {
+				gajm.setScreen(new TiledLevelScreen(gajm, 4));
 			}
 		}
 
