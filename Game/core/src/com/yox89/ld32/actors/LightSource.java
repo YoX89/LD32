@@ -7,6 +7,7 @@ import box2dLight.PointLight;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -32,7 +33,7 @@ import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 import com.yox89.ld32.util.Ui;
 
-public class LightSource extends TexturedPhysicsActor implements Disposable {
+public class LightSource extends PhysicsActor implements Disposable {
 
 	private static final boolean DEBUG_LASERS = false;
 
@@ -51,6 +52,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	private boolean mCanBeActivated;
 
+	private Texture mTexture;
+
 	public LightSource(final TiledLevelScreen levelScreen, final Ui ui,
 			Physics physics, LightColor color, Direction... lightDirections) {
 		setTouchable(Touchable.enabled);
@@ -61,7 +64,16 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 		setTouchable(Touchable.enabled);
 
 		mCanBeActivated = true;
+		Texture img;
+		if(mColor == LightColor.GREEN){
+			img = new Texture("green_lantern.png");
+		} else {
+			img = new Texture("red_lantern.png");
+		}
+		this.mTexture = img;
 
+		
+		
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
 			@Override
@@ -177,22 +189,15 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 		}
 	}
 
-	@Override
-	protected String getTextureName() {
-		switch (mColor) {
-		case GREEN:
-			return "tileGreen_01";
-		case RED:
-		default:
-			return "tileRed_01";
-		}
-	}
+
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		final Color c = getColor();
 		batch.setColor(new Color(c.r, c.g, c.b, 1f));
-		super.draw(batch, parentAlpha);
+		batch.draw(mTexture, getX(), getY(), getOriginX()-getWidth()/2, getOriginY()-getHeight()/2, getWidth(), getHeight(),
+				getScaleX(), getScaleY(), getRotation(), 0, 0,
+				mTexture.getWidth(), mTexture.getHeight(), false, false);
 		batch.setColor(Color.WHITE);
 
 		// if (DEBUG_LASERS) {
