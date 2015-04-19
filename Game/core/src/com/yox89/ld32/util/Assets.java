@@ -3,6 +3,7 @@ package com.yox89.ld32.util;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +26,7 @@ public class Assets {
 	public static TextureRegion alphabet, smiley, earthCore, island, pole,
 			silo, cloud, beaver, blood, pool, tower, top_fin_rocket;
 	public static SoundRef beaver_death;
+	public static Music bg_music;
 
 	public static void init() throws IOException {
 		atlas = new TextureAtlas(Gdx.files.internal("pack.atlas"));
@@ -45,6 +47,8 @@ public class Assets {
 		top_fin_rocket = find("rocket");
 		beaver_death = new SoundRef(Gdx.audio.newSound(Gdx.files
 				.internal("aaaah.ogg")));
+		bg_music = Gdx.audio.newMusic(Gdx.files
+				.internal("background_music.mp3"));
 
 		final XmlReader reader = new XmlReader();
 		FileHandle root = Gdx.files.internal("Spritesheet");
@@ -107,6 +111,7 @@ public class Assets {
 
 		atlas.dispose();
 		beaver_death.dispose();
+		bg_music.dispose();
 
 	}
 }

@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Align;
 import com.yox89.ld32.Gajm;
 import com.yox89.ld32.Physics;
 import com.yox89.ld32.actors.Torch;
+import com.yox89.ld32.util.Assets;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
