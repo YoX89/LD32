@@ -89,6 +89,7 @@ public class Ui {
 		uiStage.addActor(splitterMirrorsLabel);
 		splitterMirrorsLabel.setFontScale(1f);
 		splitterMirrorsLabel.setPosition(UI_HORIZONTAL_MARGIN * 5, 5);
+		splitterMirrorsLabel.setColor(1f, 1f, 1f, 0.5f);
 
 		UiImageActor rightUiImage = new UiImageActor(img, 140f, 56f, true);
 		uiStage.addActor(rightUiImage);
@@ -183,8 +184,15 @@ public class Ui {
 
 	}
 
-	public void setActiveMirrorType(String mirrorType) {
+	public void setActiveMirrorType(final String mirrorType) {
 		this.activeMirrorType = mirrorType;
+		for(String type : inventoryLabels.keySet()){
+			if(type.equals(mirrorType)){
+				inventoryLabels.get(type).setColor(1f, 1f, 1f, 1f);
+			} else {
+				inventoryLabels.get(type).setColor(1f, 1f, 1f, 0.5f);
+			}
+		}
 
 	}
 
