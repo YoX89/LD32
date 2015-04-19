@@ -96,7 +96,7 @@ public class StartScreen extends BaseScreen {
 					switchScreen(new Runnable() {
 						@Override
 						public void run() {
-							gajm.setScreen(new TiledLevelScreen(gajm, 0));
+							gajm.setScreen(new TiledLevelScreen(gajm, 1));
 						}
 					});
 					return true;
