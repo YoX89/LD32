@@ -48,7 +48,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 		isNotMoving = positions.size() <= 1;
 		this.angleDegree = angleDegree;
 		mOwner = owner;
-		final Texture img = new Texture("ghost_pixelart.png");
+		final Texture img = new Texture("ghost_sprite.png");
 		this.mTexture = img;
 
 		mLightVision = new ConeLight(physicsWorld.rayHandler, 10, new Color(1,
