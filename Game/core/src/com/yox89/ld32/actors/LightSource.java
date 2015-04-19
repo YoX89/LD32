@@ -29,6 +29,7 @@ import com.yox89.ld32.screens.TiledLevelScreen;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
+import com.yox89.ld32.util.Ui;
 
 public class LightSource extends TexturedPhysicsActor implements Disposable {
 
@@ -49,8 +50,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 
 	private boolean mCanBeActivated;
 
-	public LightSource(final TiledLevelScreen levelScreen, Physics physics,
-			LightColor color, Direction... lightDirections) {
+	public LightSource(final TiledLevelScreen levelScreen, final Ui ui,
+			Physics physics, LightColor color, Direction... lightDirections) {
 		setTouchable(Touchable.enabled);
 
 		mPhysics = physics;
@@ -119,6 +120,7 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 					cone.setPosition(ray.src);
 					mRayCones.add(cone);
 				}
+				ui.removeFluffText();
 
 				addAction(Actions.sequence(Actions.fadeIn(.2f),
 						Actions.fadeOut(.3f), Actions.run(new Runnable() {

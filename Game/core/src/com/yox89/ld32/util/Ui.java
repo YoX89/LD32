@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Align;
 import com.yox89.ld32.screens.TiledLevelScreen;
 
 public class Ui {
@@ -23,7 +24,7 @@ public class Ui {
 
 	private static final float UI_HORIZONTAL_MARGIN = 20f;
 	public static final float UI_TEXT_GHOSTLY_FALL_DISTANCE = 15f;
-	
+
 	private Stage uiStage;
 	private Label inventoryLabel;
 	private int numberTotalMirrors;
@@ -31,8 +32,8 @@ public class Ui {
 	private boolean fluffVisible;
 	private Stage gameStage;
 
-	public Ui(TiledLevelScreen tiledLevelScreen,
-			Stage gameStage, Stage uiStage, int numberTotalMirrors, MapProperties properties) {
+	public Ui(TiledLevelScreen tiledLevelScreen, Stage gameStage,
+			Stage uiStage, int numberTotalMirrors, MapProperties properties) {
 		this.numberTotalMirrors = numberTotalMirrors;
 		this.uiStage = uiStage;
 		this.gameStage = gameStage;
@@ -57,8 +58,8 @@ public class Ui {
 		Label restartInfo = new Label("'R' to restart", new LabelStyle(
 				new BitmapFont(), Color.WHITE));
 		uiStage.addActor(restartInfo);
-		restartInfo.setPosition(
-				uiStage.getWidth() - (UI_HORIZONTAL_MARGIN + restartInfo.getWidth()), 5);
+		restartInfo.setPosition(uiStage.getWidth()
+				- (UI_HORIZONTAL_MARGIN + restartInfo.getWidth()), 5);
 		restartInfo.addAction(Actions.forever(Actions.sequence(
 				Actions.fadeOut(3f, Interpolation.pow5In), Actions.delay(3f),
 				Actions.fadeIn(3f, Interpolation.pow5In))));
@@ -66,8 +67,8 @@ public class Ui {
 		Label menuInfo = new Label("'Q' for menu", new LabelStyle(
 				new BitmapFont(), Color.WHITE));
 		uiStage.addActor(menuInfo);
-		menuInfo.setPosition(
-				uiStage.getWidth() - (UI_HORIZONTAL_MARGIN + restartInfo.getWidth()), 5);
+		menuInfo.setPosition(uiStage.getWidth()
+				- (UI_HORIZONTAL_MARGIN + restartInfo.getWidth()), 5);
 		menuInfo.addAction(Actions.fadeOut(0f));
 		menuInfo.addAction(Actions.forever(Actions.sequence(
 				Actions.fadeIn(3f, Interpolation.pow5In), Actions.delay(3f),
@@ -75,22 +76,25 @@ public class Ui {
 
 		String tip = (properties.containsKey(MAP_PROPERTIES_TIP)) ? ""
 				+ properties.get(MAP_PROPERTIES_TIP) : "";
-		tipText = new Label(tip.replace("#", "\n"), new LabelStyle(new BitmapFont(),
-				Color.WHITE));
+		tipText = new Label(tip.replace("#", "\n"), new LabelStyle(
+				new BitmapFont(), Color.WHITE));
+		tipText.setAlignment(Align.center);
 		uiStage.addActor(tipText);
 		fluffVisible = true;
-		tipText.setPosition(UI_HORIZONTAL_MARGIN, uiStage.getHeight() - 50);
+		tipText.setPosition(uiStage.getWidth() / 2 - tipText.getMinWidth() / 2,
+				75);
+
 		tipText.addAction(Actions.sequence(Actions.delay(10f), Actions
 				.parallel(Actions.fadeOut(1f, Interpolation.sine),
 						Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 1f))));
 	}
 
 	public void removeFluffText() {
-		if(fluffVisible){
+		if (fluffVisible) {
 			fluffVisible = false;
-			tipText.addAction(Actions.parallel(
+			tipText.addAction(Actions.delay(1f, Actions.parallel(
 					Actions.fadeOut(1f, Interpolation.sine),
-					Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 1f)));
+					Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 1f))));
 		}
 	}
 
@@ -127,16 +131,19 @@ public class Ui {
 		}
 	}
 
-	public void showMutter(String muttering,Vector2 pos) {
-		Label innerThoughts = new Label(muttering, new LabelStyle(new BitmapFont(),
-				Color.WHITE));
+	public void showMutter(String muttering, Vector2 pos) {
+		Label innerThoughts = new Label(muttering, new LabelStyle(
+				new BitmapFont(), Color.WHITE));
 		uiStage.addActor(innerThoughts);
 		pos = gameStage.stageToScreenCoordinates(pos);
 		pos = uiStage.screenToStageCoordinates(pos);
-		innerThoughts.setPosition(pos.x-innerThoughts.getWidth()/2, pos.y +5);
-		innerThoughts.addAction(Actions.sequence(Actions.delay(0.5f),Actions
-				.parallel(Actions.fadeOut(2f, Interpolation.sine),
-						Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 4f))));
-		
+		innerThoughts.setPosition(pos.x - innerThoughts.getWidth() / 2,
+				pos.y + 5);
+		innerThoughts
+				.addAction(Actions.sequence(Actions.delay(0.5f), Actions
+						.parallel(Actions.fadeOut(2f, Interpolation.sine),
+								Actions.moveBy(0,
+										-UI_TEXT_GHOSTLY_FALL_DISTANCE, 4f))));
+
 	}
 }

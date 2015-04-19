@@ -158,10 +158,10 @@ public class TiledLevelScreen extends BaseScreen implements
 					add(game, playerActor, x, y);
 					mPlayer = playerActor;
 				} else if (type.equals(RED_LASER)) {
-					add(game, new LightSource(this, physics, LightColor.RED,
+					add(game, new LightSource(this, ui, physics, LightColor.RED,
 							parseLightDirection((int) x, (int) y)), x, y);
 				} else if (type.equals(GREEN_LASER)) {
-					add(game, new LightSource(this, physics, LightColor.GREEN,
+					add(game, new LightSource(this, ui, physics, LightColor.GREEN,
 							parseLightDirection((int) x, (int) y)), x, y);
 				} else if (type.equals(GHOST)) {
 					if (mapObject instanceof PolylineMapObject) {

@@ -218,7 +218,6 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		
 
 		ParticleEffect pe = ParticlePool.get();
-//		pe.setColor(Color.CYAN);
 		float ang = getRotation();
 		
 		Vector2 sides = new Vector2( getWidth(), getHeight());
