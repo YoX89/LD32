@@ -49,7 +49,7 @@ import com.yox89.ld32.raytracing.LightColor;
 import com.yox89.ld32.util.Ui;
 
 public class TiledLevelScreen extends BaseScreen implements
-CollisionManagerListener {
+		CollisionManagerListener {
 
 	private static final String WALL = "Wall";
 	private static final String RED_LASER = "RedLaser";
@@ -108,8 +108,8 @@ CollisionManagerListener {
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
 
-
-		ui = new Ui(this,game,uiStage, mNumberTotalMirrors,mObjectLayer.getProperties());
+		ui = new Ui(this, game, uiStage, mNumberTotalMirrors,
+				mObjectLayer.getProperties());
 
 		mPhysics = physics;
 
@@ -153,7 +153,8 @@ CollisionManagerListener {
 				if (type.equalsIgnoreCase(TORCH)) {
 					add(game, new Torch(physics), x, y);
 				} else if (type.equals(PLAYER)) {
-					PlayerActor playerActor = new PlayerActor(physics, ui, mapProperties);
+					PlayerActor playerActor = new PlayerActor(physics, ui,
+							mapProperties);
 					add(game, playerActor, x, y);
 					mPlayer = playerActor;
 				} else if (type.equals(RED_LASER)) {
@@ -169,21 +170,22 @@ CollisionManagerListener {
 						ArrayList<Vector2> path = getPathForGhost(ghostObject);
 						Vector2 startPosition = path.get(0);
 
-						GhostActor ghostActor = new GhostActor(this, physics,path,0);
+						GhostActor ghostActor = new GhostActor(this, physics,
+								path, 0);
 
 						add(game, ghostActor, startPosition.x, startPosition.y);
 					} else {
-						Vector2 startPosition = new Vector2(x,y);
+						Vector2 startPosition = new Vector2(x, y);
 						ArrayList<Vector2> path = new ArrayList<Vector2>();
 						path.add(startPosition);
-						float angleDegree = Float.parseFloat(mapProperties.get("AngleDegrees").toString());
-						GhostActor ghostActor = new GhostActor(this,physics, path,angleDegree);
+						float angleDegree = Float.parseFloat(mapProperties.get(
+								"AngleDegrees").toString());
+						GhostActor ghostActor = new GhostActor(this, physics,
+								path, angleDegree);
 
 						ghostActor.setRotation(angleDegree);
 
-
-						add(game, ghostActor, startPosition.x,
-								startPosition.y);
+						add(game, ghostActor, startPosition.x, startPosition.y);
 					}
 				} else if (type.equals(MIRROR)) {
 					add(game, new Mirror(physics), x, y);
@@ -198,17 +200,20 @@ CollisionManagerListener {
 				screenY));
 		mFocus = mGameStage.hit(mLastHoverCoords.x, mLastHoverCoords.y, true);
 		for (Actor a : mGameStage.getActors()) {
-			if (a instanceof Mirror && new Vector2(((Mirror) a).gamePosition).sub(new Vector2((int) mLastHoverCoords.x,
-					(int) mLastHoverCoords.y)).len() < .05f) {
-				// Don't know why mFocus isn't this mirror.. but let's force it in.
-				mFocus = (Mirror)a;
+			if (a instanceof Mirror
+					&& new Vector2(((Mirror) a).gamePosition).sub(
+							new Vector2((int) mLastHoverCoords.x,
+									(int) mLastHoverCoords.y)).len() < .05f) {
+				// Don't know why mFocus isn't this mirror.. but let's force it
+				// in.
+				mFocus = (Mirror) a;
 			}
 		}
 		return false;
 	}
 
 	public boolean mouseIsInRangeOfPlayer() {
-		final AtomicBoolean foundWall = new AtomicBoolean(false);
+		final boolean[] foundWall = new boolean[1];
 		final Vector2 dst;
 		if (mFocus != null) {
 			dst = new Vector2(mFocus.getX() + mFocus.getWidth() / 2,
@@ -222,17 +227,17 @@ CollisionManagerListener {
 			public float reportRayFixture(Fixture fixture, Vector2 point,
 					Vector2 normal, float fraction) {
 				if (fixture.getUserData() instanceof Wall) {
-					foundWall.set(true);
+					foundWall[0] = true;
 					return 0;
 				}
 				return 1;
 			}
 		}, new Vector2(mPlayer.getX(), mPlayer.getY()), dst);
-		if (foundWall.get()) {
+		if (foundWall[0]) {
 			return false;
 		}
 		return new Vector2(mPlayer.getX(), mPlayer.getY())
-		.sub(mLastHoverCoords).len() < 5;
+				.sub(mLastHoverCoords).len() < 5;
 	}
 
 	@Override
@@ -441,12 +446,12 @@ CollisionManagerListener {
 					@Override
 					public void run() {
 						if (mLevelId == 3) {
-							mGajm.setScreen(new EndScreen(mGajm));	
+							mGajm.setScreen(new EndScreen(mGajm));
 						} else {
 							mGajm.setScreen(new TiledLevelScreen(mGajm,
 									mLevelId + 1));
 						}
-						
+
 					}
 				});
 
@@ -454,5 +459,4 @@ CollisionManagerListener {
 		})));
 	}
 
-	
 }
