@@ -28,9 +28,9 @@ public class EndScreen extends BaseScreen {
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 
-		Torch torchUpCorner = new Torch(physics);
+		Torch torchUpCorner = new Torch(physics, 0);
 		torchUpCorner.setPosition(GAME_WORLD_WIDTH - 1, GAME_WORLD_HEIGHT - 1);
-		game.addActor(new Torch(physics));
+		game.addActor(new Torch(physics, 180));
 		game.addActor(torchUpCorner);
 
 		final Label titleLbl = new Label("Thanks for playing!", new LabelStyle(

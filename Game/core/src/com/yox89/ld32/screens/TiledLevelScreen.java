@@ -1,6 +1,8 @@
 package com.yox89.ld32.screens;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -148,7 +150,26 @@ public class TiledLevelScreen extends BaseScreen implements
 				}
 			} else {
 				if (type.equalsIgnoreCase(TORCH)) {
-					add(game, new Torch(physics), x, y);
+					float angleDegree = 0;
+					if (mapProperties.containsKey("AngleDegrees")) {
+						angleDegree = Float.parseFloat(mapProperties.get(
+								"AngleDegrees").toString());						
+					} else {
+						Direction[] dirs = parseLightDirection((int)x, (int)y);
+						
+						List<Direction> dirsList = Arrays.asList(dirs);
+						
+						if (!dirsList.contains(Direction.EAST)) {
+							angleDegree = 0;
+						} else if (!dirsList.contains(Direction.WEST)) {
+							angleDegree = 180;
+						} else if (!dirsList.contains(Direction.NORTH)) {
+							angleDegree = 90;
+						} else if (!dirsList.contains(Direction.SOUTH)) {
+							angleDegree = 270;
+						}
+					}
+					add(game, new Torch(physics, angleDegree), x, y);
 				} else if (type.equals(PLAYER)) {
 					PlayerActor playerActor = new PlayerActor(physics, ui,
 							mapProperties);

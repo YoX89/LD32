@@ -72,14 +72,14 @@ public class StartScreen extends BaseScreen {
 		}).setTransform(startBtn.getX() + startBtn.getWidth() / 2,
 				startBtn.getY() + startBtn.getHeight() / 2, 0f);
 
-		Torch startBtnTorch = new Torch(physics, Color.MAGENTA);
+		Torch startBtnTorch = new Torch(physics, Color.MAGENTA, 0);
 		startBtnTorch.setPosition(startBtn.getX() + startBtn.getWidth() / 2f,
 				startBtn.getY() + startBtn.getHeight() / 2);
 		game.addActor(startBtnTorch);
 
-		Torch torchUpCorner = new Torch(physics);
+		Torch torchUpCorner = new Torch(physics, 0);
 		torchUpCorner.setPosition(GAME_WORLD_WIDTH - 1, GAME_WORLD_HEIGHT - 1);
-		game.addActor(new Torch(physics));
+		game.addActor(new Torch(physics, 270));
 		game.addActor(torchUpCorner);
 
 		final Label titleLbl = new Label("LD32 Work in progress",
