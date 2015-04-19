@@ -29,7 +29,7 @@ public class Assets {
 	public static SoundRef beaver_death, laser;
 	public static Music bg_music;
 
-	public static Texture sound_on, sound_off, skipLevelButton;
+	public static Texture sound_on, sound_off, skipLevelButton, ectoplasm;
 
 	private static boolean sSoundEnabled = false;
 
@@ -50,6 +50,7 @@ public class Assets {
 		pool = find("pool");
 		tower = find("tower");
 		top_fin_rocket = find("rocket");
+		ectoplasm = manage(new Texture(Gdx.files.internal("ectoplasm.png")));
 		beaver_death = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
 				.internal("aaaah.ogg"))));
 		laser = manage(new SoundRef(Gdx.audio.newSound(Gdx.files

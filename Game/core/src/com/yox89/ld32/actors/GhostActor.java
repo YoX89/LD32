@@ -7,6 +7,7 @@ import box2dLight.ConeLight;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -270,7 +271,10 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 			pe.setPosition(getX() - getWidth() / 2, getY() - getHeight() / 2);
 		}
 		pe.setSize(getWidth(), getHeight());
-		pe.init(Assets.blood, 200.0f, 25, .5f);
+
+		TextureRegion ectoplasmRegion = new TextureRegion(Assets.ectoplasm);
+		
+		pe.init(ectoplasmRegion, 200.0f, 25, .5f);
 		getParent().addActor(pe);
 		Assets.beaver_death.play();
 
