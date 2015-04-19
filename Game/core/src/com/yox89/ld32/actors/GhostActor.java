@@ -23,8 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
-import com.yox89.ld32.particles.ParticleEffect;
-import com.yox89.ld32.particles.ParticlePool;
 import com.yox89.ld32.raytracing.RayDispatcher.Dispatcher;
 import com.yox89.ld32.raytracing.RayDispatcher.Ray;
 import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
@@ -32,6 +30,8 @@ import com.yox89.ld32.raytracing.RayDispatcher.RayTarget;
 import com.yox89.ld32.screens.TiledLevelScreen;
 import com.yox89.ld32.util.Assets;
 import com.yox89.ld32.util.Collision;
+import com.yox89.ld32.util.ParticleEffect;
+import com.yox89.ld32.util.ParticlePool;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
@@ -271,7 +271,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 		mIsHit = true;
 		addAction(Actions.removeActor());
 
-		ParticleEffect pe = ParticlePool.get();
+		ParticleEffect pe = new ParticleEffect();
 		float ang = getRotation();
 
 		Vector2 sides = new Vector2(getWidth(), getHeight());

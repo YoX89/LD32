@@ -33,9 +33,12 @@ public class Assets {
 
 	private static boolean sSoundEnabled = false;
 
+	public static ParticlePool particlePool;
+
 	public static void init() throws IOException {
 		atlas = manage(new TextureAtlas(Gdx.files.internal("pack.atlas")));
 
+		particlePool = new ParticlePool();
 		background = find("background");
 
 		alphabet = find("alphabet");
@@ -55,8 +58,7 @@ public class Assets {
 				.internal("aaaah.ogg"))));
 		laser = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
 				.internal("sfx/laser.wav"))));
-		bg_music = manage(Gdx.audio.newMusic(Gdx.files
-				.internal("LD32.ogg")));
+		bg_music = manage(Gdx.audio.newMusic(Gdx.files.internal("LD32.ogg")));
 		bg_music.setLooping(true);
 		if (sSoundEnabled) {
 			bg_music.play();

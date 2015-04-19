@@ -3,12 +3,14 @@
 <module>
 	<extend-configuration-property name="gdx.reflect.include"
 		value="com.yox89.ld32.raytracing.Direction" />
-
+	<extend-configuration-property name="gdx.reflect.include"
+		value="com.yox89.ld32.particles.ParticleEffect" />
+	
 	<inherits name='Box2DLights' />
 	<source path="com/yox89/ld32" />
 	<source path="com/yox89/ld32/actors" />
 	<source path="com/yox89/ld32/raytracing" />
 	<source path="com/yox89/ld32/screens" />
-	<source path="com/yox89/ld32/util" />
 	<source path="com/yox89/ld32/particles" />
+	<source path="com/yox89/ld32/util" />
 </module>

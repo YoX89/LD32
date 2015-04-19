@@ -1,23 +1,21 @@
-package com.yox89.ld32.particles;
+package com.yox89.ld32.util;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.yox89.ld32.util.Assets;
 
 public class Particle extends Actor implements Poolable {
 
 	private TextureRegion sprite;
-	private Pool<Particle> pool;
+	private ParticlePool pool;
 
 	public Particle() {
 
 	}
 
-	public void init(TextureRegion sprite, Pool<Particle> pool) {
+	public void init(TextureRegion sprite, ParticlePool pool) {
 		this.sprite = sprite;
 		this.pool = pool;
 	}

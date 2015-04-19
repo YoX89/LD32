@@ -1,4 +1,4 @@
-package com.yox89.ld32.particles;
+package com.yox89.ld32.util;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,9 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.yox89.ld32.util.Assets;
 
-public class ParticleEffect extends Group implements Poolable {
+public class ParticleEffect extends Group {
 
 	private float timePerParticle;
 	private float buffer;
@@ -24,7 +23,10 @@ public class ParticleEffect extends Group implements Poolable {
 
 	private static final float PTM_RATIO = 1f;
 
-	@Override
+	public ParticleEffect() {
+		
+	}
+	
 	public void reset() {
 		clearActions();
 		setColor(Color.WHITE);
@@ -37,7 +39,7 @@ public class ParticleEffect extends Group implements Poolable {
 				pool.free(this);
 				pool = null;
 
-				Pool<Particle> pool = Pools.get(Particle.class);
+				ParticlePool pool = Assets.particlePool;
 				for (Actor a : getChildren()) {
 					pool.free((Particle) a);
 				}
@@ -61,7 +63,7 @@ public class ParticleEffect extends Group implements Poolable {
 	}
 
 	private void spawn() {
-		Pool<Particle> pool = Pools.get(Particle.class);
+		ParticlePool pool = Assets.particlePool;
 		Particle p = pool.obtain();
 		p.init(sprite, pool);
 		p.setColor(getColor());
