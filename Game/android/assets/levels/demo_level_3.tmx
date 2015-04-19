@@ -6,6 +6,9 @@
   </data>
  </layer>
  <objectgroup name="Object Layer">
+  <properties>
+   <property name="tip" value="Ghosts are evil by heart and will attack you as soon as#they lay their eyes upon you."/>
+  </properties>
   <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
   <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>
   <object id="3" type="Wall" x="15" y="1" width="1" height="11"/>
