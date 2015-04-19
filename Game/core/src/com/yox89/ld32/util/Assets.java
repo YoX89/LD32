@@ -55,8 +55,8 @@ public class Assets {
 		bg_music = manage(Gdx.audio.newMusic(Gdx.files
 				.internal("background_music.mp3")));
 		
+		bg_music.setLooping(true);
 		if (sSoundEnabled) {
-			bg_music.setLooping(true);
 			bg_music.play();
 		};
 
