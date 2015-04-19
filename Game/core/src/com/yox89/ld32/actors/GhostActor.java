@@ -2,6 +2,9 @@ package com.yox89.ld32.actors;
 
 import java.util.ArrayList;
 
+import box2dLight.ConeLight;
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -33,12 +36,19 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 	private final TiledLevelScreen mOwner;
 
-	public GhostActor(TiledLevelScreen owner,Physics physicsWorld, ArrayList<Vector2> positions, float angleDegree) {
-		isNotMoving = positions.size() <=1;
+	private ConeLight mLightVision;
+
+	public GhostActor(TiledLevelScreen owner, Physics physicsWorld,
+			ArrayList<Vector2> positions, float angleDegree) {
+		isNotMoving = positions.size() <= 1;
 		this.angleDegree = angleDegree;
 		mOwner = owner;
 		final Texture img = new Texture("ghost_pixelart.png");
 		this.mTexture = img;
+
+		mLightVision = new ConeLight(physicsWorld.rayHandler, 10, new Color(1,
+				0, 1, .75f), 4f, 0f, 0f, 0f, 30f);
+		mLightVision.setXray(true);
 
 		final Vector2[] polygonShape = this.getShapeVertices();
 
@@ -81,28 +91,40 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		this.setupActions(positions);
 	}
 
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		mLightVision.setDirection(getRotation());
+		if (isNotMoving) {
+			mLightVision.setPosition(getX() + getWidth() / 2, getY()
+					+ getHeight() / 2);
+		} else {
+			mLightVision.setPosition(getX(), getY());
+		}
+	}
+
 	private Vector2[] getShapeVertices() {
 		Vector2[] vertices = new Vector2[3];
 		float offset = 0f;
-		if(isNotMoving){
+		if (isNotMoving) {
 			offset = 0.5f;
 		}
-		if(angleDegree<90){
-			vertices[0] = new Vector2(0f+offset, 0f+offset);
-			vertices[1] = new Vector2(4f+offset, -2f+offset);
-			vertices[2] = new Vector2(4f+offset, 2f+offset);
-		}else if(angleDegree<180){
-			vertices[0] = new Vector2(0f+offset, 0f-offset);
-			vertices[1] = new Vector2(4f+offset, -2f-offset);
-			vertices[2] = new Vector2(4f+offset, 2f-offset);
-		}else if(angleDegree<270){
-			vertices[0] = new Vector2(0f-offset, 0f-offset);
-			vertices[1] = new Vector2(4f-offset, -2f-offset);
-			vertices[2] = new Vector2(4f-offset, 2f-offset);
-		}else{
-			vertices[0] = new Vector2(0f-offset, 0f+offset);
-			vertices[1] = new Vector2(4f-offset, -2f+offset);
-			vertices[2] = new Vector2(4f-offset, 2f+offset);
+		if (angleDegree < 90) {
+			vertices[0] = new Vector2(0f + offset, 0f + offset);
+			vertices[1] = new Vector2(4f + offset, -2f + offset);
+			vertices[2] = new Vector2(4f + offset, 2f + offset);
+		} else if (angleDegree < 180) {
+			vertices[0] = new Vector2(0f + offset, 0f - offset);
+			vertices[1] = new Vector2(4f + offset, -2f - offset);
+			vertices[2] = new Vector2(4f + offset, 2f - offset);
+		} else if (angleDegree < 270) {
+			vertices[0] = new Vector2(0f - offset, 0f - offset);
+			vertices[1] = new Vector2(4f - offset, -2f - offset);
+			vertices[2] = new Vector2(4f - offset, 2f - offset);
+		} else {
+			vertices[0] = new Vector2(0f - offset, 0f + offset);
+			vertices[1] = new Vector2(4f - offset, -2f + offset);
+			vertices[2] = new Vector2(4f - offset, 2f + offset);
 		}
 		return vertices;
 	}
@@ -191,15 +213,15 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		mIsHit = true;
 		addAction(Actions.removeActor());
 
+		mLightVision.remove();
 
 		Array<RayRequest> reqs = new Array<RayRequest>();
 		reqs.add(new RayRequest(ray.color, ray.dst, ray.direction));
 		dispatcher.dispatch(reqs);
 
-
 		for (Actor a : getStage().getActors()) {
 			if (a instanceof GhostActor && !((GhostActor) a).mIsHit) {
-				return;		
+				return;
 			}
 		}
 		mOwner.onAllGhostsDead();
@@ -207,28 +229,27 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		float x,y,originX, originY;
+		float x, y, originX, originY;
 
-		if(isNotMoving){
-			x= getX();
-			y=getY();
-			originX=getOriginX()+ getWidth() / 2;
+		if (isNotMoving) {
+			x = getX();
+			y = getY();
+			originX = getOriginX() + getWidth() / 2;
 			originY = getOriginY() + getHeight() / 2;
-		}else{
-			x =getX() - getWidth() / 2;
+		} else {
+			x = getX() - getWidth() / 2;
 			y = getY() - getHeight() / 2;
 			originX = getOriginX() + getWidth() / 2;
 			originY = getOriginY() + getHeight() / 2;
 		}
-		batch.draw(mTexture, x, y,
-				originX, originY,
-				getWidth(), getHeight(), getScaleX(), getScaleY(),
-				getRotation() + 180f, 0, 0, mTexture.getWidth(),
-				mTexture.getHeight(), false, false);
+		batch.draw(mTexture, x, y, originX, originY, getWidth(), getHeight(),
+				getScaleX(), getScaleY(), getRotation() + 180f, 0, 0,
+				mTexture.getWidth(), mTexture.getHeight(), false, false);
 	}
 
 	@Override
 	public void dispose() {
 		mTexture.dispose();
+		mLightVision.dispose();
 	}
 }

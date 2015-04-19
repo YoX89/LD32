@@ -113,30 +113,32 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 				for (Ray ray : res) {
 					final float dist = new Vector2(ray.src).sub(ray.dst).len() * 2;
 					final ConeLight cone = new ConeLight(mPhysics.rayHandler,
-							10, ray.color.toColor(), dist, x, y,
+							10, new Color(ray.color.toColor()), dist, x, y,
 							ray.direction.getAngleDegrees(), 50 / dist);
 
 					cone.setPosition(ray.src);
 					mRayCones.add(cone);
 				}
 
-				addAction(Actions.delay(1f, Actions.run(new Runnable() {
+				addAction(Actions.sequence(Actions.fadeIn(.2f),
+						Actions.fadeOut(.3f), Actions.run(new Runnable() {
 
-					@Override
-					public void run() {
-						disposeRays();
-						mLight.setActive(false);
-						
-						for (Actor a : getStage().getActors()) {
-							if (a instanceof LightSource && ((LightSource) a).mCanBeActivated) {
-								return;
+							@Override
+							public void run() {
+								disposeRays();
+								mLight.setActive(false);
+
+								for (Actor a : getStage().getActors()) {
+									if (a instanceof LightSource
+											&& ((LightSource) a).mCanBeActivated) {
+										return;
+									}
+								}
+
+								levelScreen.onNoMoreLights();
 							}
-						}
-						
-						levelScreen.onNoMoreLights();
-					}
 
-				})));
+						})));
 				return true;
 			};
 		});
@@ -145,6 +147,14 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 	@Override
 	public void act(float delta) {
 		mLight.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+		if (mRayCones.size > 0) {
+			final float targetAlpha = getColor().a;
+			for (ConeLight cl : mRayCones) {
+				Color c = cl.getColor();
+				c.a = targetAlpha;
+				cl.setColor(c);
+			}
+		}
 		super.act(delta);
 	}
 
@@ -176,55 +186,55 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 		super.draw(batch, parentAlpha);
 		batch.setColor(Color.WHITE);
 
-//		if (DEBUG_LASERS) {
-//			if (mDirections != null && mDirections.length != 0) {
-//				batch.end();
-//				mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-//				mShapeRenderer.begin();
-//
-//				final float LIGHT_LEN = 10f;
-//				mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f,
-//						0f, .25f));
-//
-//				for (Direction d : mDirections) {
-//					switch (d) {
-//					case EAST:
-//						mShapeRenderer.rect(getX() + getWidth(), getY(),
-//								LIGHT_LEN, getHeight());
-//						break;
-//					case SOUTH:
-//						mShapeRenderer.rect(getX(), getY() - LIGHT_LEN,
-//								getWidth(), LIGHT_LEN);
-//						break;
-//					case WEST:
-//						mShapeRenderer.rect(getX() - LIGHT_LEN, getY(),
-//								LIGHT_LEN, getHeight());
-//						break;
-//					case NORTH:
-//						mShapeRenderer.rect(getX(), getY() + getHeight(),
-//								getWidth(), LIGHT_LEN);
-//						break;
-//					default:
-//						System.err
-//								.println("Illegal direction for light source "
-//										+ d);
-//						break;
-//					}
-//				}
-//				if (res != null) {
-//					mShapeRenderer.setColor(Color.MAGENTA);
-//					Gdx.gl.glLineWidth(.1f);
-//					mShapeRenderer.set(ShapeType.Line);
-//
-//					for (Ray ray : res) {
-//						mShapeRenderer.line(ray.src, ray.dst);
-//					}
-//				}
-//
-//				mShapeRenderer.end();
-//				batch.begin();
-//			}
-//		}
+		// if (DEBUG_LASERS) {
+		// if (mDirections != null && mDirections.length != 0) {
+		// batch.end();
+		// mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+		// mShapeRenderer.begin();
+		//
+		// final float LIGHT_LEN = 10f;
+		// mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f,
+		// 0f, .25f));
+		//
+		// for (Direction d : mDirections) {
+		// switch (d) {
+		// case EAST:
+		// mShapeRenderer.rect(getX() + getWidth(), getY(),
+		// LIGHT_LEN, getHeight());
+		// break;
+		// case SOUTH:
+		// mShapeRenderer.rect(getX(), getY() - LIGHT_LEN,
+		// getWidth(), LIGHT_LEN);
+		// break;
+		// case WEST:
+		// mShapeRenderer.rect(getX() - LIGHT_LEN, getY(),
+		// LIGHT_LEN, getHeight());
+		// break;
+		// case NORTH:
+		// mShapeRenderer.rect(getX(), getY() + getHeight(),
+		// getWidth(), LIGHT_LEN);
+		// break;
+		// default:
+		// System.err
+		// .println("Illegal direction for light source "
+		// + d);
+		// break;
+		// }
+		// }
+		// if (res != null) {
+		// mShapeRenderer.setColor(Color.MAGENTA);
+		// Gdx.gl.glLineWidth(.1f);
+		// mShapeRenderer.set(ShapeType.Line);
+		//
+		// for (Ray ray : res) {
+		// mShapeRenderer.line(ray.src, ray.dst);
+		// }
+		// }
+		//
+		// mShapeRenderer.end();
+		// batch.begin();
+		// }
+		// }
 
 	}
 
