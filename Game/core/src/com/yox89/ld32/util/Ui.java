@@ -1,5 +1,7 @@
 package com.yox89.ld32.util;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -20,21 +22,23 @@ import com.yox89.ld32.screens.TiledLevelScreen;
 public class Ui {
 
 	private static final String MAP_PROPERTIES_TIP = "tip";
-	private static final String UI_INVENTORY_STRING = "Mirrors left: ";
+	private static final String UI_INVENTORY_STRING = "x ";
 
 	private static final float UI_HORIZONTAL_MARGIN = 20f;
 	public static final float UI_TEXT_GHOSTLY_FALL_DISTANCE = 15f;
 
 	private Stage uiStage;
-	private Label inventoryLabel;
+	private HashMap<String, Label> inventoryLabels = new HashMap<String, Label>();
 	private MirrorInventory mirrorInventory;
 	private Label tipText;
 	private boolean fluffVisible;
 	private Stage gameStage;
+	private String activeMirrorType = MirrorInventory.MIRROR_TYPE_NORMAL;
 
+	public Ui(TiledLevelScreen tiledLevelScreen, Stage gameStage,
+			Stage uiStage, MirrorInventory mirrorInventory,
+			MapProperties properties) {
 
-	public Ui(TiledLevelScreen tiledLevelScreen,
-			Stage gameStage, Stage uiStage, MirrorInventory mirrorInventory, MapProperties properties) {
 		this.mirrorInventory = mirrorInventory;
 
 		this.uiStage = uiStage;
@@ -43,19 +47,53 @@ public class Ui {
 		final Texture img = tiledLevelScreen.manage(new Texture("ui_tab.png"));
 		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		UiImageActor leftUiImage = new UiImageActor(img, 70f);
-		UiImageActor rightUiImage = new UiImageActor(img, 70f, true);
+		UiImageActor leftUiImage = new UiImageActor(img, 140f, 56f);
 		uiStage.addActor(leftUiImage);
+
+		final Texture normalMirrorIconTexture = tiledLevelScreen
+				.manage(new Texture("mirror.png"));
+		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		UiImageActor normalMirrorIcon = new UiImageActor(
+				normalMirrorIconTexture, 16f, 16f);
+		uiStage.addActor(normalMirrorIcon);
+		normalMirrorIcon.setPosition(UI_HORIZONTAL_MARGIN, 5);
+		normalMirrorIcon.setRotation(45);
+
+		Label normalMirrorsLabel = new Label(
+				UI_INVENTORY_STRING
+						+ mirrorInventory
+								.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_NORMAL),
+				new LabelStyle(new BitmapFont(), Color.WHITE));
+		inventoryLabels.put(MirrorInventory.MIRROR_TYPE_NORMAL,
+				normalMirrorsLabel);
+		uiStage.addActor(normalMirrorsLabel);
+		normalMirrorsLabel.setFontScale(1f);
+		normalMirrorsLabel.setPosition(UI_HORIZONTAL_MARGIN * 2, 5);
+
+		final Texture splitterMirrorIconTexture = tiledLevelScreen
+				.manage(new Texture("mirror.png"));
+		img.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		UiImageActor splitterMirrorIcon = new UiImageActor(
+				splitterMirrorIconTexture, 16f, 16f);
+		uiStage.addActor(splitterMirrorIcon);
+		splitterMirrorIcon.setPosition(UI_HORIZONTAL_MARGIN * 4, 5);
+		splitterMirrorIcon.setRotation(45);
+
+		Label splitterMirrorsLabel = new Label(
+				UI_INVENTORY_STRING
+						+ mirrorInventory
+								.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_SPLITTER),
+				new LabelStyle(new BitmapFont(), Color.WHITE));
+		inventoryLabels.put(MirrorInventory.MIRROR_TYPE_SPLITTER,
+				splitterMirrorsLabel);
+		uiStage.addActor(splitterMirrorsLabel);
+		splitterMirrorsLabel.setFontScale(1f);
+		splitterMirrorsLabel.setPosition(UI_HORIZONTAL_MARGIN * 5, 5);
+
+		UiImageActor rightUiImage = new UiImageActor(img, 140f, 56f, true);
 		uiStage.addActor(rightUiImage);
 		rightUiImage.setPosition(uiStage.getWidth() - rightUiImage.getWidth(),
 				0);
-
-		inventoryLabel = new Label(UI_INVENTORY_STRING + mirrorInventory.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_NORMAL)
-				+ "/" + mirrorInventory.getMirrorsTotal(MirrorInventory.MIRROR_TYPE_NORMAL), new LabelStyle(new BitmapFont(),
-				Color.WHITE));
-		uiStage.addActor(inventoryLabel);
-		inventoryLabel.setFontScale(1f);
-		inventoryLabel.setPosition(UI_HORIZONTAL_MARGIN, 5);
 
 		Label restartInfo = new Label("'R' to restart", new LabelStyle(
 				new BitmapFont(), Color.WHITE));
@@ -80,7 +118,9 @@ public class Ui {
 				+ properties.get(MAP_PROPERTIES_TIP) : "";
 		tipText = new Label(tip.replace("#", "\n"), new LabelStyle(
 				new BitmapFont(), Color.WHITE));
+
 		tipText.setAlignment(Align.center);
+
 		uiStage.addActor(tipText);
 		fluffVisible = true;
 		tipText.setPosition(uiStage.getWidth() / 2 - tipText.getMinWidth() / 2,
@@ -100,27 +140,21 @@ public class Ui {
 		}
 	}
 
-	public void setMirrorsLeftText(String mirrorsLeft,String mirrorType) {
-		inventoryLabel.setText(UI_INVENTORY_STRING + mirrorsLeft + "/"
-				+ mirrorInventory.getMirrorsTotal(mirrorType));
-
-	}
-
 	private class UiImageActor extends Actor {
 
 		private final Texture mTexture;
 		private boolean flippedHorizontally;
 
-		public UiImageActor(Texture tex, final float size) {
-			this(tex, size, false);
+		public UiImageActor(Texture tex, final float width, final float height) {
+			this(tex, width, height, false);
 
 		}
 
-		public UiImageActor(Texture tex, final float size,
+		public UiImageActor(Texture tex, final float width, final float height,
 				boolean flippedHorizontally) {
 			this.flippedHorizontally = flippedHorizontally;
 			mTexture = tex;
-			setSize(size * 2, size * 0.8f);
+			setSize(width, height);
 
 		}
 
@@ -146,6 +180,35 @@ public class Ui {
 						.parallel(Actions.fadeOut(2f, Interpolation.sine),
 								Actions.moveBy(0,
 										-UI_TEXT_GHOSTLY_FALL_DISTANCE, 4f))));
+
+	}
+
+	public void setActiveMirrorType(String mirrorType) {
+		this.activeMirrorType = mirrorType;
+
+	}
+
+	public void performMirrorAction(int add) {
+		mirrorInventory.addMirror(add, activeMirrorType);
+		final Label activeLabel = inventoryLabels.get(activeMirrorType);
+		activeLabel.addAction(Actions.sequence(
+				
+				Actions.moveBy(0, 5f, 0.2f, Interpolation.sineIn),
+				Actions.run(new Runnable() {
+					
+					@Override
+					public void run() {
+						activeLabel.setText(UI_INVENTORY_STRING
+								+ mirrorInventory.getMirrorsLeft(activeMirrorType));
+						
+					}
+				}),
+				Actions.moveBy(0, -5f, 0.4f, Interpolation.bounceOut)));
+
+	}
+
+	public boolean hasMirrorLeft() {
+		return mirrorInventory.hasMirrorLeft(activeMirrorType);
 
 	}
 }

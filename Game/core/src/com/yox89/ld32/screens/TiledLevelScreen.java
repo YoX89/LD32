@@ -268,8 +268,8 @@ public class TiledLevelScreen extends BaseScreen implements
 		} else if (keycode == Keys.E) {
 			if (mFocus instanceof Mirror) {
 				mFocus.remove();
-				mirrorInventory.addMirror(MirrorInventory.MIRROR_TYPE_NORMAL);
-				updateMirrorsLabel();
+				
+				ui.performMirrorAction(1);
 				return true;
 			}
 			return true;
@@ -283,22 +283,23 @@ public class TiledLevelScreen extends BaseScreen implements
 				}
 			});
 			return true;
+		} else if(keycode == Keys.NUM_1){
+			ui.setActiveMirrorType(MirrorInventory.MIRROR_TYPE_NORMAL);
+		} else if(keycode == Keys.NUM_2){
+			ui.setActiveMirrorType(MirrorInventory.MIRROR_TYPE_SPLITTER);
+			
 		}
+		
 		return super.keyDown(keycode);
 	}
 
-	private void updateMirrorsLabel() {
-		ui.setMirrorsLeftText(""+mirrorInventory.getMirrorsLeft(mirrorInventory.MIRROR_TYPE_NORMAL), mirrorInventory.MIRROR_TYPE_NORMAL);
-		
-	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		mouseMoved(screenX, screenY);
 		if (mouseIsInRangeOfPlayer()) {
-			if (mFocus == null && mirrorInventory.hasMirrorLeft(mirrorInventory.MIRROR_TYPE_NORMAL)) {
-				mirrorInventory.consumeMirror(mirrorInventory.MIRROR_TYPE_NORMAL);		
-				updateMirrorsLabel();
+			if (mFocus == null && ui.hasMirrorLeft()) {
+				ui.performMirrorAction(-1);
 				final Mirror mirror = new Mirror(mPhysics, Mirror.TYPE_90_DEG);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
 						(int) mLastHoverCoords.y);
