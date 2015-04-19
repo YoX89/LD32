@@ -223,14 +223,23 @@ public class TiledLevelScreen extends BaseScreen implements
 		}
 		mPhysics.world.rayCast(new RayCastCallback() {
 
+			float nearestMatch = 99999f;
+
 			@Override
 			public float reportRayFixture(Fixture fixture, Vector2 point,
 					Vector2 normal, float fraction) {
-				if (fixture.getUserData() instanceof Wall) {
-					foundWall[0] = true;
-					return 0;
+				if (fraction < nearestMatch) {
+					final Object ud = fixture.getUserData();
+					if (ud instanceof Wall) {
+						foundWall[0] = true;
+						nearestMatch = fraction;
+					} else if (ud instanceof Mirror) {
+						foundWall[0] = false;
+						nearestMatch = fraction;
+					}
+
 				}
-				return 1;
+				return fraction * .9f;
 			}
 		}, new Vector2(mPlayer.getX(), mPlayer.getY()), dst);
 		if (foundWall[0]) {
