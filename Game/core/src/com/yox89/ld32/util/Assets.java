@@ -10,13 +10,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Assets {
+	private static Array<Disposable> sDisposables = new Array<Disposable>();
 
-	private static Array<Texture> sTextures = new Array<Texture>();
 	private static ObjectMap<String, TextureRegion> sRegions = new ObjectMap<String, TextureRegion>();
 
 	public static TextureAtlas atlas;
@@ -28,8 +29,12 @@ public class Assets {
 	public static SoundRef beaver_death;
 	public static Music bg_music;
 
+	public static Texture sound_on, sound_off;
+
+	private static boolean sSoundEnabled = true;
+
 	public static void init() throws IOException {
-		atlas = new TextureAtlas(Gdx.files.internal("pack.atlas"));
+		atlas = manage(new TextureAtlas(Gdx.files.internal("pack.atlas")));
 
 		background = find("background");
 
@@ -45,10 +50,15 @@ public class Assets {
 		pool = find("pool");
 		tower = find("tower");
 		top_fin_rocket = find("rocket");
-		beaver_death = new SoundRef(Gdx.audio.newSound(Gdx.files
-				.internal("aaaah.ogg")));
-		bg_music = Gdx.audio.newMusic(Gdx.files
-				.internal("background_music.mp3"));
+		beaver_death = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
+				.internal("aaaah.ogg"))));
+		bg_music = manage(Gdx.audio.newMusic(Gdx.files
+				.internal("background_music.mp3")));
+		bg_music.setLooping(true);
+		bg_music.play();
+
+		sound_on = manage(new Texture(Gdx.files.internal("sound_on.png")));
+		sound_off = manage(new Texture(Gdx.files.internal("sound_off.png")));
 
 		final XmlReader reader = new XmlReader();
 		FileHandle root = Gdx.files.internal("Spritesheet");
@@ -59,8 +69,7 @@ public class Assets {
 				final FileHandle imgHandle = root.child(name.substring(0,
 						name.indexOf('.'))
 						+ ".png");
-				Texture tex = new Texture(imgHandle);
-				sTextures.add(tex);
+				Texture tex = manage(new Texture(imgHandle));
 
 				for (int i = 0; i < sheetDef.getChildCount(); i++) {
 					final Element regionDef = sheetDef.getChild(i);
@@ -78,6 +87,12 @@ public class Assets {
 		}
 	}
 
+	private static <T extends Disposable> T manage(T d) {
+		sDisposables.add(d);
+		return d;
+
+	}
+
 	private static TextureRegion find(String name) {
 		return atlas.findRegion(name);
 	}
@@ -86,7 +101,7 @@ public class Assets {
 		return sRegions.get(name);
 	}
 
-	public static class SoundRef {
+	public static class SoundRef implements Disposable {
 		public Sound sound;
 
 		public SoundRef(Sound s) {
@@ -94,7 +109,9 @@ public class Assets {
 		}
 
 		public void play() {
-			sound.play(0.5f);
+			if (sSoundEnabled) {
+				sound.play(0.5f);
+			}
 		}
 
 		public void dispose() {
@@ -103,15 +120,25 @@ public class Assets {
 	}
 
 	public static void dispose() {
-		for (Texture tex : sTextures) {
-			tex.dispose();
+		for (Disposable d : sDisposables) {
+			d.dispose();
 		}
-		sTextures.clear();
+		sDisposables.clear();
 		sRegions.clear();
+	}
 
-		atlas.dispose();
-		beaver_death.dispose();
-		bg_music.dispose();
+	public static boolean isSoundEnabled() {
+		return sSoundEnabled;
+	}
 
+	public static void setSoundEnabled(boolean enabled) {
+		if (enabled != sSoundEnabled) {
+			sSoundEnabled = enabled;
+			if (!sSoundEnabled) {
+				bg_music.pause();
+			} else {
+				bg_music.play();
+			}
+		}
 	}
 }

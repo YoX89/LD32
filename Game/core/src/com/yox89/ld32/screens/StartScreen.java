@@ -67,7 +67,8 @@ public class StartScreen extends BaseScreen {
 		final Label titleLbl = new Label("LD32 Work in progress",
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
 		titleLbl.setPosition(
-				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(), Gdx.graphics.getHeight() * 0.8f);
+				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(),
+				Gdx.graphics.getHeight() * 0.8f);
 		titleLbl.setFontScale(2f);
 
 		final Label copyLbl = new Label(
@@ -76,7 +77,10 @@ public class StartScreen extends BaseScreen {
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
 		copyLbl.setAlignment(Align.center);
 		copyLbl.setFontScale(0.9f);
-		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth() / copyLbl.getFontScaleX()) / 2 , 50);
+		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth()
+				/ copyLbl.getFontScaleX()) / 2, 50);
+
+		ui.addActor(new MuteButton());
 
 		ui.addActor(titleLbl);
 		ui.addActor(copyLbl);
@@ -125,7 +129,6 @@ public class StartScreen extends BaseScreen {
 		public void act(float delta) {
 			super.act(delta);
 
-			
 			if (Gdx.input.isKeyPressed(Keys.A)) {
 				gajm.setScreen(new TiledLevelScreen(gajm, 5));
 			}
@@ -141,5 +144,53 @@ public class StartScreen extends BaseScreen {
 
 		}
 	}
-	
+
+	private class MuteButton extends Actor {
+
+		public MuteButton() {
+			final float size = Math.min(Gdx.graphics.getWidth(),
+					Gdx.graphics.getHeight()) / 8f;
+			setSize(size, size);
+			setY(Gdx.graphics.getHeight() - getHeight());
+
+			addListener(new InputListener() {
+
+				public boolean touchDown(InputEvent event, float x, float y,
+						int pointer, int button) {
+					Assets.setSoundEnabled(!Assets.isSoundEnabled());
+					return true;
+				};
+
+				@Override
+				public void enter(InputEvent event, float x, float y,
+						int pointer, Actor fromActor) {
+					setColor(Color.WHITE);
+					super.enter(event, x, y, pointer, fromActor);
+				}
+
+				@Override
+				public void exit(InputEvent event, float x, float y,
+						int pointer, Actor toActor) {
+					setColor(Color.LIGHT_GRAY);
+					super.exit(event, x, y, pointer, toActor);
+				}
+			});
+			setColor(Color.LIGHT_GRAY);
+
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			batch.enableBlending();
+			batch.setColor(getColor());
+			final Texture tex = Assets.isSoundEnabled() ? Assets.sound_on
+					: Assets.sound_off;
+			batch.draw(tex, getX(), getY(), getOriginX(), getOriginY(),
+					getWidth(), getHeight(), getScaleX(), getScaleY(),
+					getRotation(), 0, 0, tex.getWidth(), tex.getHeight(),
+					false, false);
+
+		}
+	}
+
 }
