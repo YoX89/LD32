@@ -2,8 +2,25 @@ package com.yox89.ld32.raytracing;
 
 import com.badlogic.gdx.math.Vector2;
 
-public enum Direction {
-	WEST, EAST, NORTH, SOUTH, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST;
+public class Direction {
+	public static final Direction WEST = new Direction();
+	public static final Direction EAST = new Direction();
+	public static final Direction NORTH = new Direction();
+	public static final Direction SOUTH = new Direction();
+	public static final Direction NORTHEAST = new Direction();
+
+	public static final Direction NORTHWEST = new Direction();
+	public static final Direction SOUTHEAST = new Direction();
+	public static final Direction SOUTHWEST = new Direction();
+
+	private static Direction[] VALUES;
+	static {
+		VALUES = new Direction[] { WEST, EAST, NORTH, SOUTH, NORTHEAST,
+				NORTHWEST, SOUTHEAST };
+	}
+
+	public Direction() {
+	}
 
 	public static Direction fromAngle(float degrees) {
 		while (degrees < 0f) {
@@ -11,7 +28,7 @@ public enum Direction {
 		}
 		float rounded = 45f * Math.round(degrees / 45f);
 		rounded %= 360f;
-		for (Direction d : Direction.values()) {
+		for (Direction d : VALUES) {
 			if (Math.abs(d.getAngleDegrees() - rounded) < .01f) {
 				return d;
 			}
@@ -31,6 +48,7 @@ public enum Direction {
 	public Direction add45() {
 		return fromAngle(getAngleDegrees() + 45f);
 	}
+
 	public Direction sub45() {
 		return fromAngle(getAngleDegrees() - 45f);
 	}
@@ -40,46 +58,48 @@ public enum Direction {
 	}
 
 	public float getAngleDegrees() {
-		switch (this) {
-		default:
-		case EAST:
+		if (this == EAST) {
 			return 0;
-		case NORTHEAST:
+		} else if (this == NORTHEAST) {
 			return 45;
-		case NORTH:
+		} else if (this == NORTH) {
 			return 90;
-		case NORTHWEST:
+		} else if (this == NORTHWEST) {
 			return 135;
-		case WEST:
+		} else if (this == WEST) {
 			return 180;
-		case SOUTHWEST:
+		} else if (this == SOUTHWEST) {
 			return 225;
-		case SOUTH:
+		} else if (this == SOUTH) {
 			return 270;
-		case SOUTHEAST:
+		} else if (this == SOUTHEAST) {
 			return 315;
+		} else {
+			System.err.println("Unknown direction " + this);
+			return 0;
 		}
 	}
 
 	public Vector2 getAngleVec2() {
-		switch (this) {
-		default:
-		case EAST:
+		if (this == EAST) {
 			return new Vector2(1, 0);
-		case NORTHEAST:
+		} else if (this == NORTHEAST) {
 			return new Vector2(1, 1);
-		case NORTH:
+		} else if (this == NORTH) {
 			return new Vector2(0, 1);
-		case NORTHWEST:
+		} else if (this == NORTHWEST) {
 			return new Vector2(-1, 1);
-		case WEST:
+		} else if (this == WEST) {
 			return new Vector2(-1, 0);
-		case SOUTHWEST:
+		} else if (this == SOUTHWEST) {
 			return new Vector2(-1, -1);
-		case SOUTH:
+		} else if (this == SOUTH) {
 			return new Vector2(0, -1);
-		case SOUTHEAST:
+		} else if (this == SOUTHEAST) {
 			return new Vector2(1, -1);
+		} else {
+			System.err.println("Unknown direction " + this);
+			return new Vector2(1, 0);
 		}
 	}
 

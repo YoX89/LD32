@@ -176,55 +176,55 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 		super.draw(batch, parentAlpha);
 		batch.setColor(Color.WHITE);
 
-		if (DEBUG_LASERS) {
-			if (mDirections != null && mDirections.length != 0) {
-				batch.end();
-				mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-				mShapeRenderer.begin();
-
-				final float LIGHT_LEN = 10f;
-				mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f,
-						0f, .25f));
-
-				for (Direction d : mDirections) {
-					switch (d) {
-					case EAST:
-						mShapeRenderer.rect(getX() + getWidth(), getY(),
-								LIGHT_LEN, getHeight());
-						break;
-					case SOUTH:
-						mShapeRenderer.rect(getX(), getY() - LIGHT_LEN,
-								getWidth(), LIGHT_LEN);
-						break;
-					case WEST:
-						mShapeRenderer.rect(getX() - LIGHT_LEN, getY(),
-								LIGHT_LEN, getHeight());
-						break;
-					case NORTH:
-						mShapeRenderer.rect(getX(), getY() + getHeight(),
-								getWidth(), LIGHT_LEN);
-						break;
-					default:
-						System.err
-								.println("Illegal direction for light source "
-										+ d);
-						break;
-					}
-				}
-				if (res != null) {
-					mShapeRenderer.setColor(Color.MAGENTA);
-					Gdx.gl.glLineWidth(.1f);
-					mShapeRenderer.set(ShapeType.Line);
-
-					for (Ray ray : res) {
-						mShapeRenderer.line(ray.src, ray.dst);
-					}
-				}
-
-				mShapeRenderer.end();
-				batch.begin();
-			}
-		}
+//		if (DEBUG_LASERS) {
+//			if (mDirections != null && mDirections.length != 0) {
+//				batch.end();
+//				mShapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+//				mShapeRenderer.begin();
+//
+//				final float LIGHT_LEN = 10f;
+//				mShapeRenderer.setColor(new Color(mColor.toColor()).sub(0f, 0f,
+//						0f, .25f));
+//
+//				for (Direction d : mDirections) {
+//					switch (d) {
+//					case EAST:
+//						mShapeRenderer.rect(getX() + getWidth(), getY(),
+//								LIGHT_LEN, getHeight());
+//						break;
+//					case SOUTH:
+//						mShapeRenderer.rect(getX(), getY() - LIGHT_LEN,
+//								getWidth(), LIGHT_LEN);
+//						break;
+//					case WEST:
+//						mShapeRenderer.rect(getX() - LIGHT_LEN, getY(),
+//								LIGHT_LEN, getHeight());
+//						break;
+//					case NORTH:
+//						mShapeRenderer.rect(getX(), getY() + getHeight(),
+//								getWidth(), LIGHT_LEN);
+//						break;
+//					default:
+//						System.err
+//								.println("Illegal direction for light source "
+//										+ d);
+//						break;
+//					}
+//				}
+//				if (res != null) {
+//					mShapeRenderer.setColor(Color.MAGENTA);
+//					Gdx.gl.glLineWidth(.1f);
+//					mShapeRenderer.set(ShapeType.Line);
+//
+//					for (Ray ray : res) {
+//						mShapeRenderer.line(ray.src, ray.dst);
+//					}
+//				}
+//
+//				mShapeRenderer.end();
+//				batch.begin();
+//			}
+//		}
 
 	}
 
