@@ -19,9 +19,6 @@ public class Gajm extends Game {
 			throw new GdxRuntimeException(e);
 		}
 
-		Assets.bg_music.setLooping(true);
-		Assets.bg_music.play();
-
 		setScreen(new StartScreen(this));
 	}
 

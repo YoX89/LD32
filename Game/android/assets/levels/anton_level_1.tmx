@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="1" tileheight="1" nextobjectid="24">
+ <layer name="Tile Layer" width="16" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <properties>
+   <property name="mirror_normal" value="2"/>
+   <property name="tip" value="Not all ghosts have to be killed at once"/>
+  </properties>
+  <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
+  <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>
+  <object id="3" type="Wall" x="15" y="1" width="1" height="11"/>
+  <object id="4" type="Wall" x="1" y="11" width="14" height="1"/>
+  <object id="6" type="Wall" x="6" y="1" width="1" height="6"/>
+  <object id="7" type="Ghost" x="13" y="2" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="270"/>
+   </properties>
+  </object>
+  <object id="8" type="Player" x="2" y="3" width="1" height="1"/>
+  <object id="9" type="Torch" x="14" y="10" width="1" height="1"/>
+  <object id="10" type="Torch" x="1" y="10" width="1" height="1"/>
+  <object id="11" type="GreenLaser" x="3" y="1" width="1" height="1"/>
+  <object id="13" type="Wall" x="10" y="5" width="5" height="1"/>
+  <object id="14" type="Ghost" x="8" y="2" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="0"/>
+   </properties>
+  </object>
+  <object id="15" type="GreenLaser" x="14" y="8" width="1" height="1"/>
+  <object id="23" type="Ghost" x="6" y="9.5">
+   <polyline points="0,0 -3,0 -3,-1 0,-1 0,0"/>
+  </object>
+ </objectgroup>
+</map>

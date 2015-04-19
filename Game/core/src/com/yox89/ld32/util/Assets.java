@@ -31,7 +31,7 @@ public class Assets {
 
 	public static Texture sound_on, sound_off;
 
-	private static boolean sSoundEnabled = true;
+	private static boolean sSoundEnabled = false;
 
 	public static void init() throws IOException {
 		atlas = manage(new TextureAtlas(Gdx.files.internal("pack.atlas")));
@@ -54,8 +54,11 @@ public class Assets {
 				.internal("aaaah.ogg"))));
 		bg_music = manage(Gdx.audio.newMusic(Gdx.files
 				.internal("background_music.mp3")));
-		bg_music.setLooping(true);
-		bg_music.play();
+		
+		if (sSoundEnabled) {
+			bg_music.setLooping(true);
+			bg_music.play();
+		};
 
 		sound_on = manage(new Texture(Gdx.files.internal("sound_on.png")));
 		sound_off = manage(new Texture(Gdx.files.internal("sound_off.png")));

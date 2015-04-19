@@ -190,7 +190,6 @@ public class Ui {
 
 	public void performMirrorAction(int add) {
 		performMirrorAction(add, activeMirrorType);
-		
 
 	}
 
@@ -198,24 +197,27 @@ public class Ui {
 		mirrorInventory.addMirror(add, mirrorType);
 		final Label activeLabel = inventoryLabels.get(mirrorType);
 		activeLabel.addAction(Actions.sequence(
-				
-				Actions.moveBy(0, 5f, 0.2f, Interpolation.sineIn),
+
+		Actions.moveBy(0, 5f, 0.2f, Interpolation.sineIn),
 				Actions.run(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						activeLabel.setText(UI_INVENTORY_STRING
 								+ mirrorInventory.getMirrorsLeft(mirrorType));
-						
+
 					}
-				}),
-				Actions.moveBy(0, -5f, 0.4f, Interpolation.bounceOut)));
-		
+				}), Actions.moveBy(0, -5f, 0.4f, Interpolation.bounceOut)));
+
 	}
-	
+
 	public boolean hasMirrorLeft() {
 		return mirrorInventory.hasMirrorLeft(activeMirrorType);
 
+	}
+
+	public String getActiveMirrorType() {
+		return activeMirrorType;
 	}
 
 }

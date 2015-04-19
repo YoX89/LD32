@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="1" tileheight="1" nextobjectid="24">
+ <layer name="Tile Layer" width="16" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <properties>
+   <property name="mirror_splitter" value="1"/>
+   <property name="tip" value="Some mirrors split light"/>
+  </properties>
+  <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
+  <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>
+  <object id="3" type="Wall" x="15" y="1" width="1" height="11"/>
+  <object id="4" type="Wall" x="1" y="11" width="7" height="1"/>
+  <object id="6" type="Wall" x="1" y="5" width="6" height="1"/>
+  <object id="7" type="Ghost" x="13" y="2" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="180"/>
+   </properties>
+  </object>
+  <object id="8" type="Player" x="11" y="9" width="1" height="1"/>
+  <object id="9" type="Torch" x="14" y="10" width="1" height="1"/>
+  <object id="10" type="Torch" x="1" y="10" width="1" height="1"/>
+  <object id="13" type="Wall" x="10" y="5" width="5" height="1"/>
+  <object id="14" type="Ghost" x="3" y="2" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="0"/>
+   </properties>
+  </object>
+  <object id="15" type="GreenLaser" x="8" y="11" width="1" height="1"/>
+  <object id="23" type="Wall" x="9" y="11" width="6" height="1"/>
+ </objectgroup>
+</map>

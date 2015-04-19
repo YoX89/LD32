@@ -84,8 +84,8 @@ public class TiledLevelScreen extends BaseScreen implements
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
 
-		final TiledMap levelMap = manage(new TmxMapLoader().load("levels/demo_level_"
-				+ level + ".tmx"));
+		final TiledMap levelMap = manage(new TmxMapLoader()
+				.load("levels/anton_level_" + level + ".tmx"));
 
 		TiledMapTileLayer levelMapLayer = (TiledMapTileLayer) levelMap
 				.getLayers().get("Tile Layer");
@@ -303,8 +303,15 @@ public class TiledLevelScreen extends BaseScreen implements
 		mouseMoved(screenX, screenY);
 		if (mouseIsInRangeOfPlayer()) {
 			if (mFocus == null && ui.hasMirrorLeft()) {
+				final int mirrorType;
+				if (ui.getActiveMirrorType().equals(
+						MirrorInventory.MIRROR_TYPE_SPLITTER)) {
+					mirrorType = Mirror.TYPE_SPLITTER;
+				} else {
+					mirrorType = Mirror.TYPE_90_DEG;
+				}
 				ui.performMirrorAction(-1);
-				final Mirror mirror = new Mirror(mPhysics, Mirror.TYPE_90_DEG);
+				final Mirror mirror = new Mirror(mPhysics, mirrorType);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
 						(int) mLastHoverCoords.y);
 				mFocus = mirror;
@@ -322,8 +329,8 @@ public class TiledLevelScreen extends BaseScreen implements
 		super.render(delta);
 
 		if (mouseIsInRangeOfPlayer()
-				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mirrorInventory
-						.hasMirrorLeft(MirrorInventory.MIRROR_TYPE_NORMAL))) {
+				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || ui
+						.hasMirrorLeft())) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
