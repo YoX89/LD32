@@ -228,6 +228,10 @@ public class TiledLevelScreen extends BaseScreen implements
 		} else {
 			dst = mLastHoverCoords;
 		}
+		final Vector2 src = new Vector2(mPlayer.getX(), mPlayer.getY());
+		if (src.equals(dst)) {
+			return true;
+		}
 		mPhysics.world.rayCast(new RayCastCallback() {
 
 			float nearestMatch = 99999f;
@@ -248,7 +252,7 @@ public class TiledLevelScreen extends BaseScreen implements
 				}
 				return fraction * .9f;
 			}
-		}, new Vector2(mPlayer.getX(), mPlayer.getY()), dst);
+		}, src, dst);
 		if (foundWall[0]) {
 			return false;
 		}
