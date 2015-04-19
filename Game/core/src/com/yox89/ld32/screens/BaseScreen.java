@@ -99,7 +99,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mRayHandler.useCustomViewport(vp.getScreenX(), vp.getScreenY(),
 				vp.getScreenWidth(), vp.getScreenHeight());
 		mRayHandler.setCombinedMatrix(gameProj);
-		mRayHandler.setAmbientLight(new Color(.7f, .7f, .7f, .1f));
+		mRayHandler.setAmbientLight(new Color(.7f, .7f, .7f, .125f));
 		mRayHandler.updateAndRender();
 
 		mUiStage.getViewport().apply();

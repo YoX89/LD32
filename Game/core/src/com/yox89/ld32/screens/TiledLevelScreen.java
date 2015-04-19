@@ -440,8 +440,13 @@ CollisionManagerListener {
 
 					@Override
 					public void run() {
-						mGajm.setScreen(new TiledLevelScreen(mGajm,
-								mLevelId + 1));
+						if (mLevelId == 3) {
+							mGajm.setScreen(new EndScreen(mGajm));	
+						} else {
+							mGajm.setScreen(new TiledLevelScreen(mGajm,
+									mLevelId + 1));
+						}
+						
 					}
 				});
 
