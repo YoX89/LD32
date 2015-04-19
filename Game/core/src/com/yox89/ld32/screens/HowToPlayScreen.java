@@ -23,9 +23,11 @@ public class HowToPlayScreen extends BaseScreen {
 	protected void init(Stage game, Stage ui, Physics physics) {
 		this.game = game;
 
-		final String helpMsg = "Place mirrors by clicking somewhere near you in the world.\n"
+		final String helpMsg = "Place mirrors by clicking near you in the levels.\n"
 				+ "Click them again to rotate them.\n"
 				+ "Each level is won by destroying all ghosts visible on the screen.\n"
+				+ "Click the gemstones to activate them and fire out the lasers\n"
+				+ "If you position your mirrors correctly, the lasers will bounce and spread to all the ghosts\n"
 				+ "\n"
 				+ "Move around using WASD or the arrow keys\n"
 				+ "You can press 'E' while holding your mouse above a mirror to pick it back up.\n"
@@ -40,15 +42,15 @@ public class HowToPlayScreen extends BaseScreen {
 		game.addActor(torchUpCorner);
 
 
-		final Label copyLbl = new Label(
+		final Label helpLbl = new Label(
 				helpMsg,
 				new LabelStyle(manage(new BitmapFont()), Color.WHITE));
-		copyLbl.setAlignment(Align.center);
-		copyLbl.setFontScale(1.2f);
-		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth()
-				/ copyLbl.getFontScaleX()) / 2, Gdx.graphics.getHeight()/2);
+		helpLbl.setAlignment(Align.center);
+		helpLbl.setFontScale(1.2f);
+		helpLbl.setPosition((Gdx.graphics.getWidth() - helpLbl.getMinWidth()
+				/ helpLbl.getFontScaleX()) / 2, Gdx.graphics.getHeight()/2 - helpLbl.getMinHeight()/(2 * helpLbl.getFontScaleY()));
 
-		ui.addActor(copyLbl);
+		ui.addActor(helpLbl);
 	}
 	
 	@Override
