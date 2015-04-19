@@ -52,16 +52,22 @@ public class StartScreen extends BaseScreen {
 
 		final float BTN_SIDE = 48f;
 		final float PADDING = .2f * BTN_SIDE;
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 10; i++) {
 			final Vector2 pos = new Vector2(startPos.x, startPos.y - 1.5f
 					* BTN_SIDE);
-			pos.x += (PADDING + BTN_SIDE) * ((i % 4) - 2);
-			pos.y -= (PADDING + BTN_SIDE) * (i / 4);
+			pos.x += (PADDING + BTN_SIDE) * ((i % 5) - 2.5);
+			pos.y -= (PADDING + BTN_SIDE) * (i / 5);
 			final LevelJumpButton skip = new LevelJumpButton(i + 1);
 			skip.setPosition(pos.x + PADDING / 2, pos.y + PADDING / 2);
 			skip.setSize(BTN_SIDE, BTN_SIDE);
 			ui.addActor(skip);
 		}
+
+		final HelpButton howToPlay = new HelpButton();
+		howToPlay.setSize(3 * BTN_SIDE, BTN_SIDE);
+		howToPlay.setPosition(Gdx.graphics.getWidth() / 2,
+				Gdx.graphics.getHeight() / 6, Align.center);
+		ui.addActor(howToPlay);
 
 		PhysicsUtil.createBody(new BodyParams(physics.world) {
 
@@ -82,7 +88,7 @@ public class StartScreen extends BaseScreen {
 		game.addActor(new Torch(physics, 270));
 		game.addActor(torchUpCorner);
 
-		final Label titleLbl = new Label("LD32 Work in progress",
+		final Label titleLbl = new Label("Ghosts in the pants",
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
 		titleLbl.setPosition(
 				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(),
@@ -91,12 +97,12 @@ public class StartScreen extends BaseScreen {
 
 		final Label copyLbl = new Label(
 				"Made by: Kevlanche, Jonathan Hagberg, "
-						+ "\nAdam Nilsson & Marie Versland in ~24 hours so far",
+						+ "\nAdam Nilsson & Marie Versland for LD32 in 48 hours",
 				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
 		copyLbl.setAlignment(Align.center);
 		copyLbl.setFontScale(0.9f);
 		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth()
-				/ copyLbl.getFontScaleX()) / 2, 50);
+				/ copyLbl.getFontScaleX()) / 2, 30);
 
 		ui.addActor(new MuteButton());
 
@@ -209,7 +215,7 @@ public class StartScreen extends BaseScreen {
 					manage(new BitmapFont()), Color.WHITE));
 			setAlignment(Align.center);
 
-			final boolean enabled = Gajm.maxClearedLevel >= levelId -1;
+			final boolean enabled = Gajm.maxClearedLevel >= levelId - 1;
 			if (!enabled) {
 				setColor(Color.DARK_GRAY);
 			} else {
@@ -251,6 +257,57 @@ public class StartScreen extends BaseScreen {
 			if (Gajm.maxClearedLevel < 0) {
 				return;
 			}
+			batch.enableBlending();
+			batch.setColor(getColor());
+			final Texture tex = Assets.skipLevelButton;
+			batch.draw(tex, getX(), getY(), getOriginX(), getOriginY(),
+					getWidth(), getHeight(), getScaleX(), getScaleY(),
+					getRotation(), 0, 0, tex.getWidth(), tex.getHeight(),
+					false, false);
+			super.draw(batch, parentAlpha);
+
+		}
+	}
+
+	private class HelpButton extends Label {
+
+		public HelpButton() {
+			super("How to play", new LabelStyle(manage(new BitmapFont()), Color.WHITE));
+			setAlignment(Align.center);
+
+			addListener(new InputListener() {
+
+				public boolean touchDown(InputEvent event, float x, float y,
+						int pointer, int button) {
+					switchScreen(new Runnable() {
+						@Override
+						public void run() {
+							gajm.setScreen(new HowToPlayScreen(gajm));
+						}
+					});
+					return true;
+				};
+
+				@Override
+				public void enter(InputEvent event, float x, float y,
+						int pointer, Actor fromActor) {
+					setColor(Color.WHITE);
+					super.enter(event, x, y, pointer, fromActor);
+				}
+
+				@Override
+				public void exit(InputEvent event, float x, float y,
+						int pointer, Actor toActor) {
+					setColor(Color.LIGHT_GRAY);
+					super.exit(event, x, y, pointer, toActor);
+				}
+			});
+			setColor(Color.LIGHT_GRAY);
+
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
 			batch.enableBlending();
 			batch.setColor(getColor());
 			final Texture tex = Assets.skipLevelButton;

@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
@@ -37,7 +39,7 @@ public class Ui {
 
 	public Ui(TiledLevelScreen tiledLevelScreen, Stage gameStage,
 			Stage uiStage, MirrorInventory mirrorInventory,
-			MapProperties properties) {
+			MapProperties properties, int currentLevelId) {
 
 		this.mirrorInventory = mirrorInventory;
 
@@ -52,7 +54,8 @@ public class Ui {
 
 		final Texture normalMirrorIconTexture = tiledLevelScreen
 				.manage(new Texture("mirror.png"));
-		normalMirrorIconTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		normalMirrorIconTexture.setFilter(TextureFilter.Linear,
+				TextureFilter.Linear);
 		UiImageActor normalMirrorIcon = new UiImageActor(
 				normalMirrorIconTexture, 16f, 16f);
 		uiStage.addActor(normalMirrorIcon);
@@ -64,7 +67,8 @@ public class Ui {
 						+ mirrorInventory
 								.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_NORMAL),
 				new LabelStyle(new BitmapFont(), Color.WHITE));
-		inventoryImages.put(MirrorInventory.MIRROR_TYPE_NORMAL, normalMirrorIcon);
+		inventoryImages.put(MirrorInventory.MIRROR_TYPE_NORMAL,
+				normalMirrorIcon);
 		inventoryLabels.put(MirrorInventory.MIRROR_TYPE_NORMAL,
 				normalMirrorsLabel);
 		uiStage.addActor(normalMirrorsLabel);
@@ -73,7 +77,8 @@ public class Ui {
 
 		final Texture splitterMirrorIconTexture = tiledLevelScreen
 				.manage(new Texture("mirror_splitter.png"));
-		normalMirrorIconTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		normalMirrorIconTexture.setFilter(TextureFilter.Linear,
+				TextureFilter.Linear);
 		UiImageActor splitterMirrorIcon = new UiImageActor(
 				splitterMirrorIconTexture, 16f, 16f);
 		uiStage.addActor(splitterMirrorIcon);
@@ -134,8 +139,27 @@ public class Ui {
 		tipText.addAction(Actions.sequence(Actions.delay(10f), Actions
 				.parallel(Actions.fadeOut(1f, Interpolation.sine),
 						Actions.moveBy(0, -UI_TEXT_GHOSTLY_FALL_DISTANCE, 1f))));
-		
+
 		setActiveMirrorType(MirrorInventory.MIRROR_TYPE_NORMAL);
+
+		if (currentLevelId == 1) {
+			final UiImageActor arrow = new UiImageActor(
+					tiledLevelScreen.manage(new Texture("arrow.png")), 32f, 64f);
+			arrow.setPosition(leftUiImage.getX() + leftUiImage.getWidth() / 3,
+					leftUiImage.getY() + leftUiImage.getHeight());
+
+			final SequenceAction bounceSeq = Actions.sequence(
+					Actions.moveBy(0f, -20f, .5f, Interpolation.sine),
+					Actions.moveBy(0f, 20f, .5f, Interpolation.sine));
+			final RepeatAction bounce = Actions.repeat(3, bounceSeq);
+			arrow.addAction(Actions.sequence(
+					bounce,
+					Actions.parallel(Actions.fadeOut(.45f),
+							Actions.moveBy(0f, -20f, .5f, Interpolation.sine)),
+					Actions.removeActor()));
+
+			uiStage.addActor(arrow);
+		}
 	}
 
 	public void removeFluffText() {

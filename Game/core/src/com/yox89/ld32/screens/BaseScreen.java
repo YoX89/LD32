@@ -101,7 +101,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mGameStage.act(delta);
 		mGameStage.draw();
 		final Matrix4 gameProj = mGameStage.getCamera().combined;
-		 mPhysicsDebugger.render(mWorld, gameProj);
+//		 mPhysicsDebugger.render(mWorld, gameProj);
 		mRayHandler.useCustomViewport(vp.getScreenX(), vp.getScreenY(),
 				vp.getScreenWidth(), vp.getScreenHeight());
 		mRayHandler.setCombinedMatrix(gameProj);
@@ -114,6 +114,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 	}
 
 	protected void switchScreen(Runnable onSwitch) {
+		Gdx.input.setInputProcessor(null);
 		final Fade fade = new Fade();
 		fade.getColor().a = 0f;
 		fade.addAction(Actions.sequence(Actions.fadeIn(.25f),

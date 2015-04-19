@@ -108,7 +108,7 @@ public class TiledLevelScreen extends BaseScreen implements
 		mirrorInventory = new MirrorInventory(mObjectLayer.getProperties());
 
 		ui = new Ui(this, game, uiStage, mirrorInventory,
-				mObjectLayer.getProperties());
+				mObjectLayer.getProperties(), mLevelId);
 
 		mPhysics = physics;
 
