@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -242,6 +243,7 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 		float lowAlpha = Math.min(0.8f, MathUtils.random());
 		
 		this.addAction(Actions.forever(Actions.sequence(Actions.alpha(lowAlpha, duration), Actions.alpha(0.8f, duration))));
+		this.addAction(Actions.forever(Actions.sequence(Actions.scaleTo(1.05f, 1.05f, 1f, Interpolation.sineOut), Actions.scaleTo(0.95f, 0.95f, 1f, Interpolation.sineOut))));
 	}
 
 	public RotateToAction getRotateActionUsingClosestDirection(
