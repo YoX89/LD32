@@ -120,11 +120,12 @@ public class Ui {
 		tipText = new Label(tip.replace("#", "\n"), new LabelStyle(
 				new BitmapFont(), Color.WHITE));
 
+		tipText.setFontScale(1.25f);
 		tipText.setAlignment(Align.center);
 
 		uiStage.addActor(tipText);
 		fluffVisible = true;
-		tipText.setPosition(uiStage.getWidth() / 2 - tipText.getMinWidth() / 2,
+		tipText.setPosition(uiStage.getWidth() / 2 - tipText.getMinWidth() / (2*tipText.getFontScaleX()),
 				75);
 
 		tipText.addAction(Actions.sequence(Actions.delay(10f), Actions

@@ -211,7 +211,7 @@ public class StartScreen extends BaseScreen {
 
 			final boolean enabled = Gajm.maxClearedLevel >= levelId -1;
 			if (!enabled) {
-				setColor(Color.GRAY);
+				setColor(Color.DARK_GRAY);
 			} else {
 				addListener(new InputListener() {
 
