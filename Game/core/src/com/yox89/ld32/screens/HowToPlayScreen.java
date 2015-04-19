@@ -30,7 +30,6 @@ public class HowToPlayScreen extends BaseScreen {
 				+ "If you position your mirrors correctly, the lasers will bounce and spread to all the ghosts\n"
 				+ "\n"
 				+ "Move around using WASD or the arrow keys\n"
-				+ "You can press 'E' while holding your mouse above a mirror to pick it back up.\n"
 				+ "Press 'R' to restart the current level.\n"
 				+ "Press 'Q' to go to the main menu.\n"
 				+ "\n"
