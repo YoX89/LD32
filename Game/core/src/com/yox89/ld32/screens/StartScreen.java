@@ -99,7 +99,7 @@ public class StartScreen extends BaseScreen {
 		leftGhost.setPosition(Gdx.graphics.getWidth() / 10f,
 				Gdx.graphics.getHeight() / 2f);
 
-		final Label titleLbl = new Label("Ghosts in the pants", new LabelStyle(
+		final Label titleLbl = new Label("Mirror mirror", new LabelStyle(
 				manage(new BitmapFont()), Color.CYAN));
 		titleLbl.setPosition(
 				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(),

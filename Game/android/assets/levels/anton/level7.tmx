@@ -20,7 +20,11 @@
    <property name="tip" value=""/>
   </properties>
   <object id="4" type="Wall" x="0" y="9" width="13" height="1"/>
-  <object id="8" type="Player" x="10" y="8" width="1" height="1"/>
+  <object id="8" type="Player" x="10" y="8" width="1" height="1">
+   <properties>
+    <property name="fluff" value="Watch out!"/>
+   </properties>
+  </object>
   <object id="19" type="Torch" x="1" y="1" width="1" height="1"/>
   <object id="53" type="RedLaser" x="10" y="2" width="1" height="1"/>
   <object id="55" type="Wall" x="0" y="0" width="13" height="1"/>

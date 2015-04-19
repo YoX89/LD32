@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="18" height="7" tilewidth="1" tileheight="1" nextobjectid="26">
- <layer name="Tile Layer" width="18" height="7">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFIxEAAAH4AAE=
-  </data>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="9" tilewidth="1" tileheight="1" nextobjectid="17">
+ <layer name="Tile Layer" width="12" height="9">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+</data>
  </layer>
  <objectgroup name="Object Layer">
-  <object id="3" type="Wall" x="0" y="6" width="18" height="1"/>
-  <object id="4" type="Wall" x="17" y="0" width="1" height="6"/>
-  <object id="5" type="Wall" x="0" y="0" width="1" height="6"/>
-  <object id="6" type="Torch" x="16" y="1" width="1" height="1"/>
-  <object id="7" type="Torch" x="16" y="5" width="1" height="1"/>
-  <object id="8" type="Torch" x="1" y="1" width="1" height="1"/>
-  <object id="10" type="Player" x="1" y="3" width="1" height="1">
+  <properties>
+   <property name="mirror_normal" value="3"/>
+   <property name="tip" value=""/>
+  </properties>
+  <object id="1" type="Wall" x="0" y="0" width="12" height="1"/>
+  <object id="2" type="Wall" x="0" y="1" width="1" height="8"/>
+  <object id="3" type="Wall" x="11" y="1" width="1" height="8"/>
+  <object id="4" type="Wall" x="1" y="8" width="10" height="1"/>
+  <object id="5" type="GreenLaser" x="2" y="4" width="1" height="1"/>
+  <object id="6" type="Player" x="2" y="2" width="1" height="1">
    <properties>
-    <property name="fluff" value="I'm quick as a gazelle!"/>
+    <property name="fluff" value="Shhh! Don't wake them"/>
    </properties>
   </object>
-  <object id="11" type="GreenLaser" x="16" y="3" width="1" height="1"/>
-  <object id="16" type="Wall" x="1" y="0" width="16" height="1"/>
-  <object id="21" type="Ghost" x="10.5" y="5.5">
-   <polyline points="0,0 0,-4 1,-4 1,0"/>
+  <object id="8" type="Ghost" x="8" y="4" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="0"/>
+   </properties>
   </object>
-  <object id="24" type="Ghost" x="6.5" y="1.5">
-   <polyline points="0,0 0,4 1,4 1,0"/>
+  <object id="9" type="Torch" x="1" y="1" width="1" height="1"/>
+  <object id="11" type="Torch" x="10" y="7" width="1" height="1"/>
+  <object id="14" type="Ghost" x="7" y="2" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="90"/>
+   </properties>
+  </object>
+  <object id="15" type="Ghost" x="9" y="6" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="270"/>
+   </properties>
+  </object>
+  <object id="16" type="Ghost" x="7" y="7" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="180"/>
+   </properties>
   </object>
  </objectgroup>
 </map>

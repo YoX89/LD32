@@ -17,7 +17,7 @@
  <objectgroup name="Object Layer">
   <properties>
    <property name="mirror_normal" value="0"/>
-   <property name="tip" value="Click the mirror to rotate it."/>
+   <property name="tip" value="Move with WASD or the arrow keys.#Click the mirror to rotate it."/>
   </properties>
   <object id="4" type="Wall" x="0" y="9" width="12" height="1"/>
   <object id="8" type="Player" x="2" y="2" width="1" height="1"/>
