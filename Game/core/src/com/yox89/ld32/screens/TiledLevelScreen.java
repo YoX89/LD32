@@ -262,7 +262,7 @@ public class TiledLevelScreen extends BaseScreen implements
 			return false;
 		}
 		return new Vector2(mPlayer.getX(), mPlayer.getY())
-				.sub(mLastHoverCoords).len() < 4;
+				.sub(mLastHoverCoords).len() < 3;
 	}
 
 	@Override
