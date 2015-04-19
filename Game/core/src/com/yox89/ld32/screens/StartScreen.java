@@ -1,12 +1,12 @@
 package com.yox89.ld32.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -43,7 +43,7 @@ public class StartScreen extends BaseScreen {
 				Math.min(GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT) / 5f);
 		game.addActor(startBtn);
 		startBtn.setPosition(GAME_WORLD_WIDTH / 2 - startBtn.getWidth() / 2,
-				GAME_WORLD_HEIGHT / 2);
+				GAME_WORLD_HEIGHT / 4);
 
 		final Vector2 startPos = new Vector2(startBtn.getX()
 				+ startBtn.getWidth() / 2, startBtn.getY());
@@ -66,7 +66,7 @@ public class StartScreen extends BaseScreen {
 		final HelpButton howToPlay = new HelpButton();
 		howToPlay.setSize(3 * BTN_SIDE, BTN_SIDE);
 		howToPlay.setPosition(Gdx.graphics.getWidth() / 2,
-				Gdx.graphics.getHeight() / 6, Align.center);
+				Gdx.graphics.getHeight() / 6.2f, Align.center);
 		ui.addActor(howToPlay);
 
 		PhysicsUtil.createBody(new BodyParams(physics.world) {
@@ -88,11 +88,11 @@ public class StartScreen extends BaseScreen {
 		game.addActor(new Torch(physics, 270));
 		game.addActor(torchUpCorner);
 
-		final Label titleLbl = new Label("Ghosts in the pants",
-				new LabelStyle(manage(new BitmapFont()), Color.CYAN));
+		final Label titleLbl = new Label("Ghosts in the pants", new LabelStyle(
+				manage(new BitmapFont()), Color.CYAN));
 		titleLbl.setPosition(
-				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth(),
-				Gdx.graphics.getHeight() * 0.8f);
+				Gdx.graphics.getWidth() / 2 - titleLbl.getMinWidth() - 150f,
+				Gdx.graphics.getHeight() * 0.65f);
 		titleLbl.setFontScale(2f);
 
 		final Label copyLbl = new Label(
@@ -103,6 +103,22 @@ public class StartScreen extends BaseScreen {
 		copyLbl.setFontScale(0.9f);
 		copyLbl.setPosition((Gdx.graphics.getWidth() - copyLbl.getMinWidth()
 				/ copyLbl.getFontScaleX()) / 2, 30);
+
+		final Texture ghostTexture = manage(new Texture("story_ghost.png"));
+		ghostTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		final Actor ghost = new Actor() {
+			@Override
+			public void draw(Batch batch, float parentAlpha) {
+				batch.setColor(getColor());
+				float size = Math.min(Gdx.graphics.getWidth() / 4,
+						Gdx.graphics.getHeight() / 4);
+				batch.draw(ghostTexture, getX(), getY(), size, size);
+			}
+		};
+		ghost.setPosition(Gdx.graphics.getWidth() / 2,
+				Gdx.graphics.getHeight() / 2);
+
+		ui.addActor(ghost);
 
 		ui.addActor(new MuteButton());
 
@@ -272,7 +288,8 @@ public class StartScreen extends BaseScreen {
 	private class HelpButton extends Label {
 
 		public HelpButton() {
-			super("How to play", new LabelStyle(manage(new BitmapFont()), Color.WHITE));
+			super("How to play", new LabelStyle(manage(new BitmapFont()),
+					Color.WHITE));
 			setAlignment(Align.center);
 
 			addListener(new InputListener() {
