@@ -62,7 +62,7 @@ public class LightSource extends PhysicsActor implements Disposable {
 
 		mCanBeActivated = true;
 		Texture img;
-		if(mColor == LightColor.GREEN){
+		if (mColor == LightColor.GREEN) {
 			img = new Texture("green_lantern.png");
 		} else {
 			img = new Texture("red_lantern.png");
@@ -70,8 +70,6 @@ public class LightSource extends PhysicsActor implements Disposable {
 		this.mTexture = img;
 		mTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		
-		
 		initPhysicsBody(PhysicsUtil.createBody(new BodyParams(physics.world) {
 
 			@Override
@@ -162,6 +160,10 @@ public class LightSource extends PhysicsActor implements Disposable {
 		});
 	}
 
+	public boolean canBeAtivated() {
+		return mCanBeActivated;
+	}
+
 	@Override
 	public void act(float delta) {
 		mLight.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
@@ -187,13 +189,12 @@ public class LightSource extends PhysicsActor implements Disposable {
 		}
 	}
 
-
-
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		final Color c = getColor();
 		batch.setColor(new Color(c.r, c.g, c.b, 1f));
-		batch.draw(mTexture, getX(), getY(), getOriginX()-getWidth()/2, getOriginY()-getHeight()/2, getWidth(), getHeight(),
+		batch.draw(mTexture, getX(), getY(), getOriginX() - getWidth() / 2,
+				getOriginY() - getHeight() / 2, getWidth(), getHeight(),
 				getScaleX(), getScaleY(), getRotation(), 0, 0,
 				mTexture.getWidth(), mTexture.getHeight(), false, false);
 		batch.setColor(Color.WHITE);

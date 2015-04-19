@@ -153,12 +153,12 @@ public class TiledLevelScreen extends BaseScreen implements
 					float angleDegree = 0;
 					if (mapProperties.containsKey("AngleDegrees")) {
 						angleDegree = Float.parseFloat(mapProperties.get(
-								"AngleDegrees").toString());						
+								"AngleDegrees").toString());
 					} else {
-						Direction[] dirs = parseLightDirection((int)x, (int)y);
-						
+						Direction[] dirs = parseLightDirection((int) x, (int) y);
+
 						List<Direction> dirsList = Arrays.asList(dirs);
-						
+
 						if (!dirsList.contains(Direction.EAST)) {
 							angleDegree = 0;
 						} else if (!dirsList.contains(Direction.WEST)) {
@@ -201,7 +201,7 @@ public class TiledLevelScreen extends BaseScreen implements
 						ArrayList<Vector2> path = new ArrayList<Vector2>();
 						path.add(startPosition);
 						float angleDegree = Float.parseFloat(mapProperties.get(
-								"AngleDegrees").toString());
+								"AngleDegrees", "0", String.class));
 						GhostActor ghostActor = new GhostActor(this, physics,
 								path, angleDegree);
 
@@ -304,6 +304,7 @@ public class TiledLevelScreen extends BaseScreen implements
 				mFocus.remove();
 				ui.performMirrorAction(1,
 						((Mirror) mFocus).getHumanReadableType());
+				mFocus = null;
 				return true;
 			}
 			return true;
@@ -360,6 +361,12 @@ public class TiledLevelScreen extends BaseScreen implements
 		if (mouseIsInRangeOfPlayer()
 				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || ui
 						.hasMirrorLeft())) {
+
+			if (mFocus instanceof LightSource
+					&& !((LightSource) mFocus).canBeAtivated()) {
+				return;
+			}
+
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -433,8 +440,9 @@ public class TiledLevelScreen extends BaseScreen implements
 		final float length = diff.len();
 
 		final float duration = length / 5f;
-		
-		final Vector2 offset = ghost.isNotMoving ? new Vector2(-0.5f, -0.5f) : new Vector2(0.0f, 0.0f);
+
+		final Vector2 offset = ghost.isNotMoving ? new Vector2(-0.5f, -0.5f)
+				: new Vector2(0.0f, 0.0f);
 
 		Gdx.input.setInputProcessor(null);
 		mPlayer.mBlockInput = true;
@@ -448,7 +456,8 @@ public class TiledLevelScreen extends BaseScreen implements
 										diff.angle() - 180, duration / 4);
 						ghost.addAction(rotateToAction);
 					}
-				}), Actions.moveTo(mPlayer.getX() + offset.x, mPlayer.getY() + offset.y, duration));
+				}), Actions.moveTo(mPlayer.getX() + offset.x, mPlayer.getY()
+						+ offset.y, duration));
 
 		RunnableAction runnableAction = Actions.run(new Runnable() {
 

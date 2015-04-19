@@ -9,7 +9,7 @@ import com.yox89.ld32.util.Assets;
 
 public class Gajm extends Game {
 
-	public static int maxClearedLevel = 8;
+	public static int maxClearedLevel = 9;
 
 	@Override
 	public void create() {
