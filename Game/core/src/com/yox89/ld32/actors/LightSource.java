@@ -26,6 +26,7 @@ import com.yox89.ld32.raytracing.LightColor;
 import com.yox89.ld32.raytracing.RayDispatcher.Ray;
 import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
 import com.yox89.ld32.screens.TiledLevelScreen;
+import com.yox89.ld32.util.Assets;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
@@ -110,6 +111,8 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 					reqs.add(new RayRequest(mColor, lightPos, dir));
 				}
 
+				Assets.laser.play();
+
 				res = mPhysics.rayDispatcher.dispatch(reqs);
 				for (Ray ray : res) {
 					final float dist = new Vector2(ray.src).sub(ray.dst).len() * 2;
@@ -123,14 +126,15 @@ public class LightSource extends TexturedPhysicsActor implements Disposable {
 				ui.removeFluffText();
 
 				final Color blockColor = mColor.toColor();
-				addAction(Actions.sequence(Actions.fadeIn(.2f),
-						Actions.color(new Color(blockColor.r/2, blockColor.g/2, blockColor.b/2, 0f), .3f), Actions.run(new Runnable() {
+				addAction(Actions.sequence(Actions.fadeIn(.2f), Actions.color(
+						new Color(blockColor.r / 2, blockColor.g / 2,
+								blockColor.b / 2, 0f), .3f), Actions
+						.run(new Runnable() {
 
 							@Override
 							public void run() {
 								disposeRays();
 								mLight.setActive(false);
-								
 
 								for (Actor a : getStage().getActors()) {
 									if (a instanceof LightSource

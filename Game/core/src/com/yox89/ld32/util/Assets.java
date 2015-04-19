@@ -26,7 +26,7 @@ public class Assets {
 
 	public static TextureRegion alphabet, smiley, earthCore, island, pole,
 			silo, cloud, beaver, blood, pool, tower, top_fin_rocket;
-	public static SoundRef beaver_death;
+	public static SoundRef beaver_death, laser;
 	public static Music bg_music;
 
 	public static Texture sound_on, sound_off, skipLevelButton;
@@ -52,18 +52,21 @@ public class Assets {
 		top_fin_rocket = find("rocket");
 		beaver_death = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
 				.internal("aaaah.ogg"))));
+		laser = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
+				.internal("sfx/laser.wav"))));
 		bg_music = manage(Gdx.audio.newMusic(Gdx.files
 				.internal("background_music.mp3")));
-		
+
 		bg_music.setLooping(true);
 		if (sSoundEnabled) {
 			bg_music.play();
-		};
+		}
 
 		sound_on = manage(new Texture(Gdx.files.internal("sound_on.png")));
 		sound_off = manage(new Texture(Gdx.files.internal("sound_off.png")));
-		skipLevelButton = manage(new Texture(Gdx.files.internal("skip_level_btn.png")));
-		
+		skipLevelButton = manage(new Texture(
+				Gdx.files.internal("skip_level_btn.png")));
+
 		final XmlReader reader = new XmlReader();
 		FileHandle root = Gdx.files.internal("Spritesheet");
 		for (FileHandle child : root.list()) {
