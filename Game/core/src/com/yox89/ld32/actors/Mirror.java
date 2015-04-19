@@ -17,12 +17,13 @@ import com.yox89.ld32.raytracing.RayDispatcher.Ray;
 import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
 import com.yox89.ld32.raytracing.RayDispatcher.RayTarget;
 import com.yox89.ld32.util.Collision;
+import com.yox89.ld32.util.MirrorInventory;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
 
 public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 
-	public static int TYPE_90_DEG = 0, TYPE_SPLITTER = 1;
+	public static final int TYPE_90_DEG = 0, TYPE_SPLITTER = 1;
 
 	private Texture mTexture;
 
@@ -105,5 +106,18 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable {
 	@Override
 	public void dispose() {
 		mTexture.dispose();
+	}
+
+	public String getHumanReadableType() {
+		switch (mType) {
+		case TYPE_90_DEG:
+			return MirrorInventory.MIRROR_TYPE_NORMAL;
+		case TYPE_SPLITTER:
+			return MirrorInventory.MIRROR_TYPE_SPLITTER;
+		default:
+			return ""+mType;
+		}
+		
+		
 	}
 }

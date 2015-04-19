@@ -189,8 +189,14 @@ public class Ui {
 	}
 
 	public void performMirrorAction(int add) {
-		mirrorInventory.addMirror(add, activeMirrorType);
-		final Label activeLabel = inventoryLabels.get(activeMirrorType);
+		performMirrorAction(add, activeMirrorType);
+		
+
+	}
+
+	public void performMirrorAction(int add, final String mirrorType) {
+		mirrorInventory.addMirror(add, mirrorType);
+		final Label activeLabel = inventoryLabels.get(mirrorType);
 		activeLabel.addAction(Actions.sequence(
 				
 				Actions.moveBy(0, 5f, 0.2f, Interpolation.sineIn),
@@ -199,16 +205,17 @@ public class Ui {
 					@Override
 					public void run() {
 						activeLabel.setText(UI_INVENTORY_STRING
-								+ mirrorInventory.getMirrorsLeft(activeMirrorType));
+								+ mirrorInventory.getMirrorsLeft(mirrorType));
 						
 					}
 				}),
 				Actions.moveBy(0, -5f, 0.4f, Interpolation.bounceOut)));
-
+		
 	}
-
+	
 	public boolean hasMirrorLeft() {
 		return mirrorInventory.hasMirrorLeft(activeMirrorType);
 
 	}
+
 }
