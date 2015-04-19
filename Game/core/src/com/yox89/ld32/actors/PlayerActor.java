@@ -185,7 +185,7 @@ public class PlayerActor extends PhysicsActor {
 			urgeToMutter++;
 			if(urgeToMutter > URGE_TO_MUTTER){
 				if(urgeToMutter%URGE_TO_MUTTER == 0 && Math.random() < 0.4f){
-					ui.showMutter(mapProperties.get(MAP_PROPERTIES_FLUFF)+"", new Vector2(getX(),getY()));
+					ui.showMutter(mapProperties.containsKey(MAP_PROPERTIES_FLUFF)?""+mapProperties.get(MAP_PROPERTIES_FLUFF):"Urgh...", new Vector2(getX(),getY()));
 					hasMuttered = true;
 				} 
 			}
