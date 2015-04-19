@@ -1,16 +1,13 @@
 package com.yox89.ld32.actors;
 
-import java.util.Arrays;
-
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -71,6 +68,7 @@ public class LightSource extends PhysicsActor implements Disposable {
 			img = new Texture("red_lantern.png");
 		}
 		this.mTexture = img;
+		mTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		
 		
