@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -52,7 +53,10 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 		mOwner = owner;
 		final Texture img = new Texture("ghost_sprite.png");
 		this.mTexture = img;
-
+		Color color = getColor();
+		color.a = 0.8f;
+		this.setColor(color);
+		
 		mLightVision = new ConeLight(physicsWorld.rayHandler, 10, new Color(1,
 				0, 1, .75f), 6.25f, 0f, 0f, 0f, 30f);
 		mLightVision.setXray(true);
@@ -233,6 +237,11 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 			addAction(rotateToAction);
 			this.addAction(Actions.forever(moveActions));
 		}
+		
+		float duration = MathUtils.random() * 2f + 1f;
+		float lowAlpha = Math.min(0.8f, MathUtils.random());
+		
+		this.addAction(Actions.forever(Actions.sequence(Actions.alpha(lowAlpha, duration), Actions.alpha(0.8f, duration))));
 	}
 
 	public RotateToAction getRotateActionUsingClosestDirection(
@@ -310,6 +319,9 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 			originX = getOriginX() + getWidth() / 2;
 			originY = getOriginY() + getHeight() / 2;
 		}
+		
+		batch.setColor(getColor());
+		
 		batch.draw(mTexture, x, y, originX, originY, getWidth(), getHeight(),
 				getScaleX(), getScaleY(), getRotation() + 180f, 0, 0,
 				mTexture.getWidth(), mTexture.getHeight(), false, false);
