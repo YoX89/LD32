@@ -46,6 +46,7 @@ import com.yox89.ld32.actors.Torch;
 import com.yox89.ld32.actors.Wall;
 import com.yox89.ld32.raytracing.Direction;
 import com.yox89.ld32.raytracing.LightColor;
+import com.yox89.ld32.util.MirrorInventory;
 import com.yox89.ld32.util.Ui;
 
 public class TiledLevelScreen extends BaseScreen implements
@@ -67,8 +68,6 @@ public class TiledLevelScreen extends BaseScreen implements
 	private Actor mFocus;
 	final Vector2 mLastHoverCoords = new Vector2(-1f, -1f);
 
-	protected int mNumberRemainingMirrors;
-	protected int mNumberTotalMirrors;
 
 	private Physics mPhysics;
 
@@ -77,6 +76,7 @@ public class TiledLevelScreen extends BaseScreen implements
 	private final Gajm mGajm;
 	private final int mLevelId;
 	private Ui ui;
+	private MirrorInventory mirrorInventory;
 
 	public TiledLevelScreen(Gajm gajm, int level) {
 
@@ -84,8 +84,7 @@ public class TiledLevelScreen extends BaseScreen implements
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
 
-		mNumberRemainingMirrors = 5;
-		mNumberTotalMirrors = 5;
+		
 
 		final TiledMap levelMap = new TmxMapLoader().load("levels/demo_level_"
 				+ level + ".tmx");
@@ -102,14 +101,18 @@ public class TiledLevelScreen extends BaseScreen implements
 				"Object Layer");
 		this.mObjectLayer = objectLayer;
 
+
 		levelMap.dispose();
 	}
 
 	@Override
 	protected void init(Stage game, Stage uiStage, Physics physics) {
 
-		ui = new Ui(this, game, uiStage, mNumberTotalMirrors,
-				mObjectLayer.getProperties());
+
+		mirrorInventory = new MirrorInventory(mObjectLayer.getProperties());
+		
+		ui = new Ui(this,game,uiStage, mirrorInventory,mObjectLayer.getProperties());
+
 
 		mPhysics = physics;
 
@@ -265,7 +268,7 @@ public class TiledLevelScreen extends BaseScreen implements
 		} else if (keycode == Keys.E) {
 			if (mFocus instanceof Mirror) {
 				mFocus.remove();
-				mNumberRemainingMirrors++;
+				mirrorInventory.addMirror(MirrorInventory.MIRROR_TYPE_NORMAL);
 				updateMirrorsLabel();
 				return true;
 			}
@@ -284,12 +287,17 @@ public class TiledLevelScreen extends BaseScreen implements
 		return super.keyDown(keycode);
 	}
 
+	private void updateMirrorsLabel() {
+		ui.setMirrorsLeftText(""+mirrorInventory.getMirrorsLeft(mirrorInventory.MIRROR_TYPE_NORMAL), mirrorInventory.MIRROR_TYPE_NORMAL);
+		
+	}
+
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		mouseMoved(screenX, screenY);
 		if (mouseIsInRangeOfPlayer()) {
-			if (mFocus == null && mNumberRemainingMirrors > 0) {
-				mNumberRemainingMirrors--;
+			if (mFocus == null && mirrorInventory.hasMirrorLeft(mirrorInventory.MIRROR_TYPE_NORMAL)) {
+				mirrorInventory.consumeMirror(mirrorInventory.MIRROR_TYPE_NORMAL);		
 				updateMirrorsLabel();
 				final Mirror mirror = new Mirror(mPhysics, Mirror.TYPE_90_DEG);
 				add(mGameStage, mirror, (int) mLastHoverCoords.x,
@@ -304,16 +312,14 @@ public class TiledLevelScreen extends BaseScreen implements
 		return false;
 	}
 
-	private void updateMirrorsLabel() {
-		ui.setMirrorsLeftText(mNumberRemainingMirrors + "");
-	}
+
 
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 
 		if (mouseIsInRangeOfPlayer()
-				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mNumberRemainingMirrors > 0)) {
+				&& (mFocus instanceof Mirror || mFocus instanceof LightSource || mirrorInventory.hasMirrorLeft(MirrorInventory.MIRROR_TYPE_NORMAL))) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 

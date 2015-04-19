@@ -27,14 +27,16 @@ public class Ui {
 
 	private Stage uiStage;
 	private Label inventoryLabel;
-	private int numberTotalMirrors;
+	private MirrorInventory mirrorInventory;
 	private Label tipText;
 	private boolean fluffVisible;
 	private Stage gameStage;
 
-	public Ui(TiledLevelScreen tiledLevelScreen, Stage gameStage,
-			Stage uiStage, int numberTotalMirrors, MapProperties properties) {
-		this.numberTotalMirrors = numberTotalMirrors;
+
+	public Ui(TiledLevelScreen tiledLevelScreen,
+			Stage gameStage, Stage uiStage, MirrorInventory mirrorInventory, MapProperties properties) {
+		this.mirrorInventory = mirrorInventory;
+
 		this.uiStage = uiStage;
 		this.gameStage = gameStage;
 
@@ -48,8 +50,8 @@ public class Ui {
 		rightUiImage.setPosition(uiStage.getWidth() - rightUiImage.getWidth(),
 				0);
 
-		inventoryLabel = new Label(UI_INVENTORY_STRING + numberTotalMirrors
-				+ "/" + numberTotalMirrors, new LabelStyle(new BitmapFont(),
+		inventoryLabel = new Label(UI_INVENTORY_STRING + mirrorInventory.getMirrorsLeft(MirrorInventory.MIRROR_TYPE_NORMAL)
+				+ "/" + mirrorInventory.getMirrorsTotal(MirrorInventory.MIRROR_TYPE_NORMAL), new LabelStyle(new BitmapFont(),
 				Color.WHITE));
 		uiStage.addActor(inventoryLabel);
 		inventoryLabel.setFontScale(1f);
@@ -98,9 +100,9 @@ public class Ui {
 		}
 	}
 
-	public void setMirrorsLeftText(String mirrorsLeft) {
+	public void setMirrorsLeftText(String mirrorsLeft,String mirrorType) {
 		inventoryLabel.setText(UI_INVENTORY_STRING + mirrorsLeft + "/"
-				+ numberTotalMirrors);
+				+ mirrorInventory.getMirrorsTotal(mirrorType));
 
 	}
 

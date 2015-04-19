@@ -16,6 +16,7 @@
  <objectgroup name="Object Layer">
   <properties>
    <property name="tip" value="The ghosts perish in the light of the ancient lanterns.#Press the colored lantern with the mouse when you are near it."/>
+  <property name="mirror_normal" value="1"/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="12" height="1"/>
   <object id="2" type="Wall" x="0" y="1" width="1" height="8"/>
@@ -25,7 +26,7 @@
   <object id="6" type="Player" x="2" y="2" width="1" height="1"/>
   <object id="8" type="Ghost" x="8" y="4" width="1" height="1">
    <properties>
-    <property name="AngleDegrees" value="0"/>
+    <property name="AngleDegrees" value="90"/>
    </properties>
   </object>
   <object id="9" type="Torch" x="1" y="1" width="1" height="1"/>

@@ -19,6 +19,7 @@
  <objectgroup name="Object Layer">
   <properties>
    <property name="tip" value="Mirrors are an unconventional but a very effective weapon #against these ghosts. They can be placed and rotated with the mouse."/>
+  <property name="mirror_normal" value="1"/>
   </properties>
   <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
   <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>
