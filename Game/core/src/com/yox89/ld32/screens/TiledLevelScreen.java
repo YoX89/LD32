@@ -461,7 +461,7 @@ public class TiledLevelScreen extends BaseScreen implements
 
 					@Override
 					public void run() {
-						if (mLevelId == 6) {
+						if (mLevelId == 7) {
 							mGajm.setScreen(new EndScreen(mGajm));
 						} else {
 							mGajm.setScreen(new TiledLevelScreen(mGajm,
