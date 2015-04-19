@@ -69,7 +69,7 @@ public class PlayerActor extends PhysicsActor {
 		this.animation = setupAnimation();
 		this.speed = 5f;
 		this.angularSpeed = 10f;
-		setSize(2.3f, 2.3f);
+		setSize(1.3f, 1.3f);
 		initPhysicsBody(createBody(physics, BodyType.DynamicBody,
 				Collision.PLAYER, (short) (Collision.WORLD | Collision.GHOST_VISION)));
 
