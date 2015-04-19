@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -66,7 +68,6 @@ public class TiledLevelScreen extends BaseScreen implements
 	private boolean[][] mLightNotAllowed;
 	private CollisionManager mCollisionManager;
 
-	private ShapeRenderer mFocusRenderer;
 	private Actor mFocus;
 	final Vector2 mLastHoverCoords = new Vector2(-1f, -1f);
 
@@ -78,12 +79,12 @@ public class TiledLevelScreen extends BaseScreen implements
 	private final int mLevelId;
 	private Ui ui;
 	private MirrorInventory mirrorInventory;
+	private Texture mHoverHandTexture;
 
 	public TiledLevelScreen(Gajm gajm, int level) {
 
 		mGajm = gajm;
 		mLevelId = level;
-		mFocusRenderer = manage(new ShapeRenderer());
 
 		final TiledMap levelMap = manage(new TmxMapLoader()
 				.load("levels/demo_level_" + level + ".tmx"));
@@ -109,6 +110,8 @@ public class TiledLevelScreen extends BaseScreen implements
 
 		ui = new Ui(this, game, uiStage, mirrorInventory,
 				mObjectLayer.getProperties(), mLevelId);
+		
+		this.mHoverHandTexture = new Texture("hover_hand.png");
 
 		mPhysics = physics;
 
@@ -370,13 +373,15 @@ public class TiledLevelScreen extends BaseScreen implements
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-			mFocusRenderer.setProjectionMatrix(mGameStage.getCamera().combined);
-			mFocusRenderer.begin(ShapeType.Filled);
-			mFocusRenderer.setColor(1f, 1f, 1f, .15f);
-			mFocusRenderer.rect((int) mLastHoverCoords.x,
-					(int) mLastHoverCoords.y, 1f, 1f);
-
-			mFocusRenderer.end();
+			Batch hoverHand = mGameStage.getBatch();
+			hoverHand.setProjectionMatrix(mGameStage.getCamera().combined);
+			hoverHand.begin();
+			hoverHand.setColor(1f, 1f, 1f, 0.25f);
+			hoverHand.draw(mHoverHandTexture, 
+					(int)mLastHoverCoords.x, (int)mLastHoverCoords.y,
+					1f, 1f);
+			hoverHand.end();
+			
 
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
