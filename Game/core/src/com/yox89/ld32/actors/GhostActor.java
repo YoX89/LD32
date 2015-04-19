@@ -258,7 +258,9 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget, G
 
 		final float diff = targetAngle - curr;
 
-		if (Math.abs(diff) > 180f) {
+		if (diff > 180f) {
+			setRotation(curr + 360f);
+		} else if (diff < -180) {
 			setRotation(curr - 360f);
 		}
 		return Actions.rotateTo(targetAngle, duration);
