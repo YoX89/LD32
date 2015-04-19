@@ -50,7 +50,7 @@ import com.yox89.ld32.raytracing.LightColor;
 import com.yox89.ld32.util.Ui;
 
 public class TiledLevelScreen extends BaseScreen implements
-		CollisionManagerListener {
+CollisionManagerListener {
 
 	private static final String WALL = "Wall";
 	private static final String RED_LASER = "RedLaser";
@@ -171,23 +171,21 @@ public class TiledLevelScreen extends BaseScreen implements
 						ArrayList<Vector2> path = getPathForGhost(ghostObject);
 						Vector2 startPosition = path.get(0);
 
-						GhostActor ghostActor = new GhostActor(this, physics,
-								path);
+						GhostActor ghostActor = new GhostActor(this, physics,path,0);
 
 						add(game, ghostActor, startPosition.x, startPosition.y);
 					} else {
-						Vector2 startPosition = new Vector2(x, y);
+						Vector2 startPosition = new Vector2(x,y);
 						ArrayList<Vector2> path = new ArrayList<Vector2>();
 						path.add(startPosition);
-						GhostActor ghostActor = new GhostActor(this, physics,
-								path);
-						System.out.println(Float.parseFloat(mapProperties.get(
-								"AngleDegrees").toString()));
+						float angleDegree = Float.parseFloat(mapProperties.get("AngleDegrees").toString());
+						GhostActor ghostActor = new GhostActor(this,physics, path,angleDegree);
 
-						ghostActor.setRotation(Float.parseFloat(mapProperties
-								.get("AngleDegrees").toString()));
+						ghostActor.setRotation(angleDegree);
 
-						add(game, ghostActor, startPosition.x, startPosition.y);
+
+						add(game, ghostActor, startPosition.x,
+								startPosition.y);
 					}
 				} else if (type.equals(MIRROR)) {
 					add(game, new Mirror(physics), x, y);
@@ -236,7 +234,7 @@ public class TiledLevelScreen extends BaseScreen implements
 			return false;
 		}
 		return new Vector2(mPlayer.getX(), mPlayer.getY())
-				.sub(mLastHoverCoords).len() < 5;
+		.sub(mLastHoverCoords).len() < 5;
 	}
 
 	@Override

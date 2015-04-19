@@ -28,11 +28,14 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 	private static final float SPEED = 3f;
 	private final Texture mTexture;
+	private final boolean isNotMoving;
+	private float angleDegree;
 
 	private final TiledLevelScreen mOwner;
 
-	public GhostActor(TiledLevelScreen owner, Physics physicsWorld,
-			ArrayList<Vector2> positions) {
+	public GhostActor(TiledLevelScreen owner,Physics physicsWorld, ArrayList<Vector2> positions, float angleDegree) {
+		isNotMoving = positions.size() <=1;
+		this.angleDegree = angleDegree;
 		mOwner = owner;
 		final Texture img = new Texture("ghost_pixelart.png");
 		this.mTexture = img;
@@ -80,11 +83,27 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 	private Vector2[] getShapeVertices() {
 		Vector2[] vertices = new Vector2[3];
-
-		vertices[0] = new Vector2(0f, 0f);
-		vertices[1] = new Vector2(4f, -2f);
-		vertices[2] = new Vector2(4f, 2f);
-
+		float offset = 0f;
+		if(isNotMoving){
+			offset = 0.5f;
+		}
+		if(angleDegree<90){
+			vertices[0] = new Vector2(0f+offset, 0f+offset);
+			vertices[1] = new Vector2(4f+offset, -2f+offset);
+			vertices[2] = new Vector2(4f+offset, 2f+offset);
+		}else if(angleDegree<180){
+			vertices[0] = new Vector2(0f+offset, 0f-offset);
+			vertices[1] = new Vector2(4f+offset, -2f-offset);
+			vertices[2] = new Vector2(4f+offset, 2f-offset);
+		}else if(angleDegree<270){
+			vertices[0] = new Vector2(0f-offset, 0f-offset);
+			vertices[1] = new Vector2(4f-offset, -2f-offset);
+			vertices[2] = new Vector2(4f-offset, 2f-offset);
+		}else{
+			vertices[0] = new Vector2(0f-offset, 0f+offset);
+			vertices[1] = new Vector2(4f-offset, -2f+offset);
+			vertices[2] = new Vector2(4f-offset, 2f+offset);
+		}
 		return vertices;
 	}
 
@@ -176,8 +195,8 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 		Array<RayRequest> reqs = new Array<RayRequest>();
 		reqs.add(new RayRequest(ray.color, ray.dst, ray.direction));
 		dispatcher.dispatch(reqs);
-		
-		
+
+
 		for (Actor a : getStage().getActors()) {
 			if (a instanceof GhostActor && !((GhostActor) a).mIsHit) {
 				return;		
@@ -188,8 +207,21 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		batch.draw(mTexture, getX() - getWidth() / 2, getY() - getHeight() / 2,
-				getOriginX() + getWidth() / 2, getOriginY() + getHeight() / 2,
+		float x,y,originX, originY;
+
+		if(isNotMoving){
+			x= getX();
+			y=getY();
+			originX=getOriginX()+ getWidth() / 2;
+			originY = getOriginY() + getHeight() / 2;
+		}else{
+			x =getX() - getWidth() / 2;
+			y = getY() - getHeight() / 2;
+			originX = getOriginX() + getWidth() / 2;
+			originY = getOriginY() + getHeight() / 2;
+		}
+		batch.draw(mTexture, x, y,
+				originX, originY,
 				getWidth(), getHeight(), getScaleX(), getScaleY(),
 				getRotation() + 180f, 0, 0, mTexture.getWidth(),
 				mTexture.getHeight(), false, false);
