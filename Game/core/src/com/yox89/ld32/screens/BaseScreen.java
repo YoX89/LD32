@@ -50,18 +50,19 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mGameStage = manage(new Stage(new StretchViewport(GAME_WORLD_WIDTH,
 				GAME_WORLD_HEIGHT)));
 		mUiStage = manage(new Stage());
-		
+
 		final FloorActor shady = manage(new FloorActor());
 		shady.setBounds(0, 0, GAME_WORLD_WIDTH, GAME_WORLD_HEIGHT);
 		mGameStage.addActor(shady);
-		
+
 		mWorld = manage(new World(new Vector2(0f, 0f), false));
 		mRayHandler = manage(new RayHandler(mWorld));
 
 		mPhysicsDebugger = new Box2DDebugRenderer();
 		mRayDispatcher = new RayDispatcher(mWorld);
 
-		Light.setContactFilter((short) ~0, (short) 0, (short) ~Collision.GHOST_VISION);
+		Light.setContactFilter((short) ~0, (short) 0,
+				(short) ~Collision.GHOST_VISION);
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this, mUiStage,
 				mGameStage));
@@ -100,7 +101,7 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		mGameStage.act(delta);
 		mGameStage.draw();
 		final Matrix4 gameProj = mGameStage.getCamera().combined;
-//		mPhysicsDebugger.render(mWorld, gameProj);
+		// mPhysicsDebugger.render(mWorld, gameProj);
 		mRayHandler.useCustomViewport(vp.getScreenX(), vp.getScreenY(),
 				vp.getScreenWidth(), vp.getScreenHeight());
 		mRayHandler.setCombinedMatrix(gameProj);
@@ -139,6 +140,8 @@ public abstract class BaseScreen extends InputAdapter implements Screen {
 		vp.setWorldSize(sw, sh);
 		vp.update(width, height);
 		vp.apply();
+
+		mUiStage.getViewport().update(width, height);
 	}
 
 	@Override
