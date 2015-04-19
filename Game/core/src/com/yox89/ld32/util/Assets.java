@@ -55,8 +55,7 @@ public class Assets {
 		laser = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
 				.internal("sfx/laser.wav"))));
 		bg_music = manage(Gdx.audio.newMusic(Gdx.files
-				.internal("background_music.mp3")));
-
+				.internal("LD32.ogg")));
 		bg_music.setLooping(true);
 		if (sSoundEnabled) {
 			bg_music.play();
