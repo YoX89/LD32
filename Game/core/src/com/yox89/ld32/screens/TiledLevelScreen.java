@@ -84,8 +84,8 @@ public class TiledLevelScreen extends BaseScreen implements
 		mLevelId = level;
 		mFocusRenderer = manage(new ShapeRenderer());
 
-		final TiledMap levelMap = new TmxMapLoader().load("levels/demo_level_"
-				+ level + ".tmx");
+		final TiledMap levelMap = manage(new TmxMapLoader().load("levels/demo_level_"
+				+ level + ".tmx"));
 
 		TiledMapTileLayer levelMapLayer = (TiledMapTileLayer) levelMap
 				.getLayers().get("Tile Layer");
@@ -99,7 +99,6 @@ public class TiledLevelScreen extends BaseScreen implements
 				"Object Layer");
 		this.mObjectLayer = objectLayer;
 
-		levelMap.dispose();
 	}
 
 	@Override
