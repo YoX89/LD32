@@ -34,7 +34,7 @@
   <object id="19" type="Torch" x="9" y="1" width="1" height="1"/>
   <object id="21" type="Torch" x="14" y="10" width="1" height="1"/>
   <object id="23" type="Wall" x="5" y="1" width="1" height="8"/>
-  <object id="24" type="Ghost" x="2.5" y="2">
+  <object id="24" type="Ghost" x="2.5" y="1.5">
    <polyline points="0,0 0,6"/>
   </object>
  </objectgroup>
