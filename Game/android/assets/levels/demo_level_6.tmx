@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="1" tileheight="1" nextobjectid="50">
+ <layer name="Tile Layer" width="16" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <properties>
+   <property name="tip" value="Ghosts are evil by heart and will attack you as soon as#they lay their eyes upon you."/>
+  </properties>
+  <object id="1" type="Wall" x="0" y="0" width="16" height="1"/>
+  <object id="2" type="Wall" x="0" y="1" width="1" height="11"/>
+  <object id="3" type="Wall" x="15" y="1" width="1" height="11"/>
+  <object id="4" type="Wall" x="1" y="11" width="14" height="1"/>
+  <object id="8" type="Player" x="12" y="8" width="1" height="1"/>
+  <object id="10" type="Torch" x="14" y="10" width="1" height="1"/>
+  <object id="11" type="RedLaser" x="11" y="6" width="1" height="1"/>
+  <object id="19" type="Torch" x="14" y="1" width="1" height="1"/>
+  <object id="39" type="Ghost" x="2" y="9" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="0"/>
+   </properties>
+  </object>
+  <object id="42" type="Ghost" x="3.5" y="2.5">
+   <polyline points="0,0 0,3"/>
+  </object>
+  <object id="45" type="Wall" x="1" y="7" width="7" height="1"/>
+  <object id="49" type="Ghost" x="5.5" y="1.5">
+   <polyline points="0,0 7,0"/>
+  </object>
+ </objectgroup>
+</map>
