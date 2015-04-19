@@ -31,7 +31,7 @@ public class Assets {
 
 	public static Texture sound_on, sound_off, skipLevelButton, ectoplasm;
 
-	private static boolean sSoundEnabled = false;
+	private static boolean sSoundEnabled = true;
 
 	public static ParticlePool particlePool;
 

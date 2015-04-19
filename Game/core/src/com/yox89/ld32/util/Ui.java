@@ -142,7 +142,7 @@ public class Ui {
 
 		setActiveMirrorType(MirrorInventory.MIRROR_TYPE_NORMAL);
 
-		if (currentLevelId == 5 || currentLevelId == 11) {
+		if (currentLevelId == 5 || currentLevelId == 10) {
 			final UiImageActor arrow = new UiImageActor(
 					tiledLevelScreen.manage(new Texture("arrow.png")), 32f, 64f);
 			arrow.setPosition(leftUiImage.getX() + leftUiImage.getWidth() / 3,
