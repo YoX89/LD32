@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="1" tileheight="1" nextobjectid="26">
+ <properties>
+  <property name="mirror_normal" value="2"/>
+ </properties>
  <layer name="Tile Layer" width="16" height="12">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
