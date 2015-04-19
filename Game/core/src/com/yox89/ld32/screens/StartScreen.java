@@ -53,7 +53,7 @@ public class StartScreen extends BaseScreen {
 
 		final float BTN_SIDE = 48f;
 		final float PADDING = .2f * BTN_SIDE;
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 17; i++) {
 			final Vector2 pos = new Vector2(startPos.x, startPos.y - 1.5f
 					* BTN_SIDE);
 			pos.x += (PADDING + BTN_SIDE) * ((i % 5) - 2.5);
