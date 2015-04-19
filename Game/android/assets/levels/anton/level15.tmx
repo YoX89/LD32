@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="11" height="10" tilewidth="1" tileheight="1" nextobjectid="25">
+ <layer name="Tile Layer" width="11" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Object Layer">
+  <properties>
+   <property name="mirror_normal" value="3"/>
+   <property name="tip" value="The ghosts perish in the light of the ancient lanterns.#Press the colored lantern with the mouse when you are near it."/>
+  </properties>
+  <object id="1" type="Wall" x="0" y="0" width="10" height="1"/>
+  <object id="2" type="Wall" x="0" y="1" width="1" height="9"/>
+  <object id="3" type="Wall" x="10" y="0" width="1" height="10"/>
+  <object id="4" type="Wall" x="1" y="9" width="9" height="1"/>
+  <object id="5" type="GreenLaser" x="5" y="1" width="1" height="1"/>
+  <object id="6" type="Player" x="1" y="1" width="1" height="1"/>
+  <object id="9" type="Torch" x="5" y="5" width="1" height="1"/>
+  <object id="16" type="Ghost" x="5" y="7" width="1" height="1">
+   <properties>
+    <property name="AngleDegrees" value="270"/>
+   </properties>
+  </object>
+  <object id="17" type="Wall" x="1" y="5" width="1" height="2"/>
+  <object id="18" type="Wall" x="9" y="5" width="1" height="2"/>
+  <object id="19" type="Wall" x="3" y="5" width="1" height="2"/>
+  <object id="20" type="Wall" x="7" y="5" width="1" height="2"/>
+  <object id="21" type="Wall" x="4" y="6" width="3" height="1">
+   <properties>
+    <property name="AngleDegrees" value="270"/>
+   </properties>
+  </object>
+  <object id="22" type="Ghost" x="6.5" y="7.5">
+   <polyline points="0,0 0,1.25 2,1.25 2,0"/>
+  </object>
+  <object id="24" type="Ghost" x="4.5" y="7.5">
+   <polyline points="0,0 0,1.25 -2,1.25 -2,0"/>
+  </object>
+ </objectgroup>
+</map>

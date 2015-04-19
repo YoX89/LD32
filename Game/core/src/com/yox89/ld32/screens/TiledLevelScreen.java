@@ -87,7 +87,7 @@ public class TiledLevelScreen extends BaseScreen implements
 		mLevelId = level;
 
 		final TiledMap levelMap = manage(new TmxMapLoader()
-				.load("levels/demo_level_" + level + ".tmx"));
+				.load("levels/anton/level" + level + ".tmx"));
 
 		TiledMapTileLayer levelMapLayer = (TiledMapTileLayer) levelMap
 				.getLayers().get("Tile Layer");
