@@ -18,11 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.yox89.ld32.Physics;
+import com.yox89.ld32.particles.ParticleEffect;
+import com.yox89.ld32.particles.ParticlePool;
 import com.yox89.ld32.raytracing.RayDispatcher.Dispatcher;
 import com.yox89.ld32.raytracing.RayDispatcher.Ray;
 import com.yox89.ld32.raytracing.RayDispatcher.RayRequest;
 import com.yox89.ld32.raytracing.RayDispatcher.RayTarget;
 import com.yox89.ld32.screens.TiledLevelScreen;
+import com.yox89.ld32.util.Assets;
 import com.yox89.ld32.util.Collision;
 import com.yox89.ld32.util.PhysicsUtil;
 import com.yox89.ld32.util.PhysicsUtil.BodyParams;
@@ -212,6 +215,20 @@ public class GhostActor extends PhysicsActor implements Disposable, RayTarget {
 	public void onHitWithRay(Ray ray, Dispatcher dispatcher) {
 		mIsHit = true;
 		addAction(Actions.removeActor());
+		
+
+		ParticleEffect pe = ParticlePool.get();
+//		pe.setColor(Color.CYAN);
+		float ang = getRotation();
+		Vector2 sides = new Vector2( getWidth(), getHeight());
+		sides.rotate(ang);
+		pe.setPosition(getX(), getY());
+		pe.setSize(getWidth(), getHeight());
+		pe.init(Assets.blood, 200.0f, 25, .5f);
+		getParent().addActor(pe);
+		Assets.beaver_death.play();
+		
+
 
 		mLightVision.remove();
 
