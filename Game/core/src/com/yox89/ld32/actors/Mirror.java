@@ -134,6 +134,7 @@ public class Mirror extends PhysicsActor implements RayTarget, Disposable,
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		batch.setColor(Color.WHITE);
 		batch.draw(mTexture, getX() - .5f, getY() - .5f, .5f, .5f, getWidth(),
 				getHeight(), getScaleX(), getScaleY(), getRotation(), 0, 0,
 				mTexture.getWidth(), mTexture.getHeight(), false, false);
