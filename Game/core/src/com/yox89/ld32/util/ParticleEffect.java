@@ -30,7 +30,7 @@ public class ParticleEffect extends Group {
 	public void reset() {
 		clearActions();
 		setColor(Color.WHITE);
-		init(Assets.smiley, 0.001f, 100);
+		init(Assets.ectoplasm, 0.001f, 100);
 	}
 
 	public boolean remove() {

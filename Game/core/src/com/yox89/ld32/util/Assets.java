@@ -20,40 +20,23 @@ public class Assets {
 
 	private static ObjectMap<String, TextureRegion> sRegions = new ObjectMap<String, TextureRegion>();
 
-	public static TextureAtlas atlas;
-
-	public static TextureRegion background;
-
-	public static TextureRegion alphabet, smiley, earthCore, island, pole,
-			silo, cloud, beaver, blood, pool, tower, top_fin_rocket;
 	public static SoundRef beaver_death, laser;
 	public static Music bg_music;
 
-	public static Texture sound_on, sound_off, skipLevelButton, ectoplasm;
+	public static Texture sound_on, sound_off, skipLevelButton;
+
+	public static TextureRegion ectoplasm;
 
 	private static boolean sSoundEnabled = true;
 
 	public static ParticlePool particlePool;
 
 	public static void init() throws IOException {
-		atlas = manage(new TextureAtlas(Gdx.files.internal("pack.atlas")));
 
 		particlePool = new ParticlePool();
-		background = find("background");
 
-		alphabet = find("alphabet");
-		smiley = find("smiley");
-		earthCore = find("earthcore");
-		island = find("island");
-		pole = find("pole");
-		silo = find("silo");
-		cloud = find("cloud");
-		beaver = find("beaver");
-		blood = find("blood");
-		pool = find("pool");
-		tower = find("tower");
-		top_fin_rocket = find("rocket");
-		ectoplasm = manage(new Texture(Gdx.files.internal("ectoplasm.png")));
+		ectoplasm = new TextureRegion(manage(new Texture(
+				Gdx.files.internal("ectoplasm.png"))));
 		beaver_death = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
 				.internal("aaaah.ogg"))));
 		laser = manage(new SoundRef(Gdx.audio.newSound(Gdx.files
@@ -71,8 +54,18 @@ public class Assets {
 
 		final XmlReader reader = new XmlReader();
 		FileHandle root = Gdx.files.internal("Spritesheet");
-		for (FileHandle child : root.list()) {
-			String name = child.name();
+		final String[] sheetNames = new String[] { "spritesheet_backtiles.xml",
+				"spritesheet_balls.xml", "spritesheet_coins.xml",
+				"spritesheet_paddles.xml", "spritesheet_particles.xml",
+				"spritesheet_pipes.xml", "spritesheet_tilesBlack.xml",
+				"spritesheet_tilesBlue.xml", "spritesheet_tilesGreen.xml",
+				"spritesheet_tilesGrey.xml", "spritesheet_tilesOranges.xml",
+				"spritesheet_tilesPink.xml", "spritesheet_tilesRed.xml",
+				"spritesheet_tilesYellow.xml", };
+		for (String sheetName : sheetNames) {
+			final FileHandle child = Gdx.files.internal("Spritesheet/"
+					+ sheetName);
+			final String name = child.name();
 			if (name.endsWith(".xml")) {
 				final Element sheetDef = reader.parse(child);
 				final FileHandle imgHandle = root.child(name.substring(0,
@@ -100,10 +93,6 @@ public class Assets {
 		sDisposables.add(d);
 		return d;
 
-	}
-
-	private static TextureRegion find(String name) {
-		return atlas.findRegion(name);
 	}
 
 	public static TextureRegion get(String name) {

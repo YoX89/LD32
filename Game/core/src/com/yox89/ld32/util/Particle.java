@@ -45,7 +45,7 @@ public class Particle extends Actor implements Poolable {
 	public void reset() {
 		clearActions();
 		setColor(Color.WHITE);
-		sprite = Assets.smiley;
+		sprite = Assets.ectoplasm;
 	}
 
 }

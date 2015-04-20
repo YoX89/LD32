@@ -87,7 +87,7 @@ public class TiledLevelScreen extends BaseScreen implements
 		mLevelId = level;
 
 		final TiledMap levelMap = manage(new TmxMapLoader()
-				.load("levels/anton/level" + level + ".tmx"));
+				.load("levels/release/level" + level + ".tmx"));
 
 		TiledMapTileLayer levelMapLayer = (TiledMapTileLayer) levelMap
 				.getLayers().get("Tile Layer");
@@ -495,7 +495,7 @@ public class TiledLevelScreen extends BaseScreen implements
 			return;
 		}
 		final Label msg = new Label(
-				"No more laser charges\nPress 'R' to restart", new LabelStyle(
+				"No more gemstone charges\nPress 'R' to restart", new LabelStyle(
 						manage(new BitmapFont()), Color.CYAN));
 		msg.setAlignment(Align.center);
 		msg.getColor().a = 0f;
